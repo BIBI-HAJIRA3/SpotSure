@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>SpotSure – Service Details</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #020617;
+      color: #e5e7eb;
+    }
+    .page {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      gap: 8px;
+    }
+    .back-link {
+      color: #93c5fd;
+      text-decoration: none;
+      font-size: 14px;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid #2563eb;
+    }
+    .back-link:hover {
+      background: #1d4ed8;
+      color: #f9fafb;
+    }
+    .service-header {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #111827;
+      padding-bottom: 10px;
+    }
+    .service-thumb {
+      width: 80px;
+      height: 80px;
+      border-radius: 12px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .service-main h1 {
+      margin: 0 0 4px;
+      font-size: 22px;
+      color: #f9fafb;
+    }
+    .service-main p {
+      margin: 2px 0;
+      font-size: 13px;
+      color: #9ca3af;
+    }
+    .rating-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: #e5e7eb;
+      margin-top: 4px;
+    }
+    .stars {
+      color: #fbbf24;
+      font-size: 14px;
+      letter-spacing: 1px;
+    }
+    .stars-empty {
+      color: #4b5563;
+    }
+
+    .columns {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 16px;
+    }
+    .card {
+      background: #020617;
+      border-radius: 12px;
+      border: 1px solid #111827;
+      padding: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.5);
+    }
+    .card h2 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      color: #f9fafb;
+    }
+    .review-item {
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+    .review-meta {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+    .review-images {
+      margin-top: 4px;
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+    .review-thumb {
+      width: 40px;
+      height: 40px;
+      border-radius: 4px;
+      object-fit: cover;
+      cursor: pointer;
+      border: 1px solid #4b5563;
+    }
+    .no-reviews {
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    .label-small {
+      display: block;
+      font-size: 13px;
+      margin-top: 4px;
+      margin-bottom: 2px;
+      color: #e5e7eb;
+    }
+    .input-field {
+      width: 100%;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid #374151;
+      background: #020617;
+      color: #e5e7eb;
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+    .input-file {
+      margin-top: 4px;
+      font-size: 12px;
+      color: #e5e7eb;
+    }
+    .btn {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: none;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: #16a34a;
+      color: #ffffff;
+    }
+    .btn-primary:hover {
+      background: #15803d;
+    }
+
+    @media (max-width: 900px) {
+      .columns {
+        grid-template-columns: 1fr;
+      }
+      .page {
+        padding: 12px;
+      }
+      .service-header {
+        flex-direction: column;
+      }
+      .top-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="top-bar">
+      <button class="back-link" type="button" onclick="goHome()">
+        ⬅ Home
+      </button>
+      <span id="userLine"></span>
+    </div>
+
+    <section id="serviceHeader"></section>
+
+    <div class="columns">
+      <div class="card">
+        <h2>Reviews</h2>
+        <div id="reviewsContainer"></div>
+      </div>
+
+      <div class="card">
+        <h2>Add Review</h2>
+        <form id="reviewForm">
+          <label class="label-small">Rating</label>
+          <div id="starRating" style="display:flex; gap:4px; margin-bottom:4px; cursor:pointer; font-size:18px;">
+            <span data-value="1">☆</span>
+            <span data-value="2">☆</span>
+            <span data-value="3">☆</span>
+            <span data-value="4">☆</span>
+            <span data-value="5">☆</span>
+          </div>
+          <input id="ratingInput" type="hidden" />
+
+          <label class="label-small">Comment (optional)</label>
+          <input id="commentInput" type="text" class="input-field" />
+
+          <label class="label-small">Images (optional)</label>
+          <input id="imagesInput" type="file" class="input-file" multiple accept="image/*" />
+
+          <button type="submit" class="btn btn-primary" style="margin-top:8px;">Submit review</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:5000/api';
+
+    function goHome() {
+      window.location.href = '/';
+    }
+
+    function getUsername() {
+      return localStorage.getItem('spotsureUsername') || null;
+    }
+    function updateUserLine() {
+      const el = document.getElementById('userLine');
+      const name = getUsername();
+      if (!el) return;
+      if (name) el.textContent = 'Welcome, ' + name;
+      else el.textContent = '';
+    }
+
+    function getServiceIdFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('id');
+    }
+
+    function getServiceImage(service) {
+      if (service.imagePath) return service.imagePath;
+      return 'https://placehold.co/80x80?text=Svc';
+    }
+
+    function buildStars(rating) {
+      const fullCount = Math.round(rating || 0);
+      const full = '★'.repeat(fullCount);
+      const empty = '☆'.repeat(5 - fullCount);
+      return '<span class="stars">' + full +
+             '</span><span class="stars stars-empty">' + empty + '</span>';
+    }
+
+    function setupStarRating() {
+      const stars = document.querySelectorAll('#starRating span');
+      const ratingInput = document.getElementById('ratingInput');
+      if (!stars.length || !ratingInput) return;
+
+      function setRating(val) {
+        ratingInput.value = val;
+        stars.forEach((star) => {
+          const v = Number(star.dataset.value);
+          star.textContent = v <= val ? '★' : '☆';
+        });
+      }
+
+      stars.forEach((star) => {
+        star.addEventListener('click', () => {
+          const val = Number(star.dataset.value);
+          setRating(val);
+        });
+      });
+    }
+
+    async function deleteWithCode(serviceId, serviceName) {
+      const code = prompt(
+        'Enter the delete code for "' + serviceName + '" to remove it permanently:'
+      );
+      if (!code) return;
+
+      try {
+        const res = await fetch(API_BASE + '/services/' + serviceId + '/delete-with-code', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code: code.trim() }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          alert(data.message || 'Failed to delete service. Check your code.');
+          return;
+        }
+        alert('Service deleted successfully.');
+        goHome();
+      } catch (err) {
+        console.error(err);
+        alert('Error deleting service');
+      }
+    }
+
+    async function loadServiceAndReviews() {
+      const id = getServiceIdFromUrl();
+      if (!id) {
+        document.getElementById('serviceHeader').innerHTML =
+          '<p>Missing service id.</p>';
+        return;
+      }
+      try {
+        const resService = await fetch(API_BASE + '/services/' + id);
+        if (!resService.ok) throw new Error('Failed to load service');
+        const service = await resService.json();
+
+        const ratingValue = Number(service.averageRating || 0);
+        const ratingText = ratingValue.toFixed(1);
+        const reviewCount = service.reviewCount || 0;
+
+        document.getElementById('serviceHeader').innerHTML = `
+          <div class="service-header">
+            <img class="service-thumb" src="${getServiceImage(service)}">
+            <div class="service-main">
+              <h1>${service.name}</h1>
+              <p>${service.category} • ${service.city} (PIN: ${service.pincode})</p>
+              <p>${service.address || ''}</p>
+              <div class="rating-row">
+                <span>${buildStars(ratingValue)}</span>
+                <span>${ratingText}</span>
+                <span>(${reviewCount} reviews)</span>
+              </div>
+              <button
+                class="btn"
+                style="margin-top:8px; background:#b91c1c; color:#fff;"
+                type="button"
+                onclick="deleteWithCode('${service._id}', '${service.name}')"
+              >
+                Delete this service (have code)
+              </button>
+            </div>
+          </div>
+        `;
+
+        await loadReviews(id);
+      } catch (err) {
+        console.error(err);
+        document.getElementById('serviceHeader').innerHTML =
+          '<p>Error loading service.</p>';
+      }
+    }
+
+    async function loadReviews(serviceId) {
+      try {
+        const res = await fetch(API_BASE + '/services/' + serviceId + '/reviews');
+        if (!res.ok) throw new Error('Failed to load reviews');
+        const data = await res.json();
+        const reviews = data.reviews || data;
+        const container = document.getElementById('reviewsContainer');
+        container.innerHTML = '';
+
+        if (!reviews.length) {
+          container.innerHTML =
+            '<p class="no-reviews">No reviews yet.</p>';
+          return;
+        }
+
+        reviews.forEach((r) => {
+          const item = document.createElement('div');
+          item.className = 'review-item';
+
+          const paths = r.imagePaths || r.imageUrls || [];
+          let imagesHtml = '';
+          if (paths.length > 0) {
+            imagesHtml =
+              '<div class="review-images">' +
+              paths
+                .map(
+                  (path) =>
+                    `<img src="${path}" class="review-thumb" onclick="window.open('${path}', '_blank')">`
+                )
+                .join('') +
+              '</div>';
+          }
+
+          item.innerHTML = `
+            <div>${buildStars(r.rating)} <span>${r.rating}</span> – ${r.comment || ''}</div>
+            <div class="review-meta">${r.username || 'Anonymous'}</div>
+            ${imagesHtml}
+          `;
+          container.appendChild(item);
+        });
+      } catch (err) {
+        console.error(err);
+        document.getElementById('reviewsContainer').innerHTML =
+          '<p class="no-reviews">Error loading reviews.</p>';
+      }
+    }
+
+    async function handleReviewSubmit(e) {
+      e.preventDefault();
+      const serviceId = getServiceIdFromUrl();
+      if (!serviceId) return;
+
+      const rating = Number(
+        document.getElementById('ratingInput').value
+      );
+      const comment = document
+        .getElementById('commentInput')
+        .value.trim();
+      const files = document.getElementById('imagesInput').files;
+      const username = getUsername() || 'Anonymous';
+
+      if (!rating || rating < 1 || rating > 5) {
+        alert('Please select a rating between 1 and 5.');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('rating', rating);
+      formData.append('username', username);
+      if (comment) formData.append('comment', comment);
+
+      if (files && files.length > 0) {
+        for (let i = 0; i < files.length; i++) {
+          formData.append('images', files[i]);
+        }
+      }
+
+      try {
+        const res = await fetch(
+          API_BASE + '/services/' + serviceId + '/reviews',
+          {
+            method: 'POST',
+            body: formData,
+          }
+        );
+        if (!res.ok) {
+          alert('Failed to submit review');
+          return;
+        }
+        document.getElementById('ratingInput').value = '';
+        document.getElementById('commentInput').value = '';
+        document.getElementById('imagesInput').value = '';
+        alert('Review added');
+        await loadServiceAndReviews();
+      } catch (err) {
+        console.error(err);
+        alert('Error submitting review');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateUserLine();
+      setupStarRating();
+      loadServiceAndReviews();
+      const form = document.getElementById('reviewForm');
+      if (form) form.addEventListener('submit', handleReviewSubmit);
+    });
+  </script>
+</body>
+</html>
