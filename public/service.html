@@ -3,106 +3,128 @@
 <head>
   <meta charset="UTF-8" />
   <title>SpotSure – Service Details</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <style>
     * { box-sizing: border-box; }
     body {
-      font-family: Arial, sans-serif;
+      font-family: Arial, Helvetica, sans-serif;
       margin: 0;
-      background: #020617;
-      color: #e5e7eb;
+      background: #f5f7fb;
+      color: #111827;
     }
     .page {
-      max-width: 960px;
+      max-width: 480px;
       margin: 0 auto;
-      padding: 16px;
+      padding: 12px;
+      min-height: 100vh;
     }
     .top-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       gap: 8px;
+      flex-wrap: wrap;
     }
     .back-link {
-      color: #93c5fd;
+      color: #2563eb;
       text-decoration: none;
-      font-size: 14px;
+      font-size: 13px;
       cursor: pointer;
-      background: transparent;
-      border: none;
-      padding: 4px 8px;
+      background: #ffffff;
+      border: 1px solid #d1d5db;
+      padding: 4px 10px;
       border-radius: 999px;
-      border: 1px solid #2563eb;
     }
     .back-link:hover {
-      background: #1d4ed8;
-      color: #f9fafb;
+      background: #e5e7eb;
     }
+    #userLine {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
     .service-header {
       display: flex;
-      gap: 14px;
+      gap: 10px;
       margin-bottom: 12px;
-      border-bottom: 1px solid #111827;
-      padding-bottom: 10px;
+      padding: 10px;
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
     .service-thumb {
-      width: 80px;
-      height: 80px;
-      border-radius: 12px;
+      width: 70px;
+      height: 70px;
+      border-radius: 10px;
       object-fit: cover;
       flex-shrink: 0;
+      background: #e5e7eb;
     }
     .service-main h1 {
       margin: 0 0 4px;
-      font-size: 22px;
-      color: #f9fafb;
+      font-size: 18px;
+      color: #111827;
     }
     .service-main p {
       margin: 2px 0;
-      font-size: 13px;
-      color: #9ca3af;
+      font-size: 12px;
+      color: #6b7280;
     }
     .rating-row {
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: 13px;
-      color: #e5e7eb;
+      font-size: 12px;
+      color: #111827;
       margin-top: 4px;
     }
     .stars {
-      color: #fbbf24;
+      color: #f59e0b;
       font-size: 14px;
       letter-spacing: 1px;
     }
     .stars-empty {
-      color: #4b5563;
+      color: #d1d5db;
+    }
+
+    .pill-danger {
+      margin-top: 8px;
+      border-radius: 999px;
+      padding: 5px 10px;
+      background: #b91c1c;
+      color: #ffffff;
+      border: none;
+      font-size: 12px;
+      cursor: pointer;
     }
 
     .columns {
-      display: grid;
-      grid-template-columns: 1.2fr 1fr;
-      gap: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 8px;
     }
     .card {
-      background: #020617;
+      background: #ffffff;
       border-radius: 12px;
-      border: 1px solid #111827;
-      padding: 12px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.5);
+      border: 1px solid #e5e7eb;
+      padding: 10px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
     .card h2 {
-      margin: 0 0 8px;
-      font-size: 16px;
-      color: #f9fafb;
+      margin: 0 0 6px;
+      font-size: 15px;
+      color: #111827;
     }
     .review-item {
       margin-bottom: 8px;
       font-size: 13px;
     }
     .review-meta {
-      font-size: 12px;
-      color: #9ca3af;
+      font-size: 11px;
+      color: #6b7280;
     }
     .review-images {
       margin-top: 4px;
@@ -116,7 +138,7 @@
       border-radius: 4px;
       object-fit: cover;
       cursor: pointer;
-      border: 1px solid #4b5563;
+      border: 1px solid #d1d5db;
     }
     .no-reviews {
       font-size: 13px;
@@ -125,28 +147,28 @@
 
     .label-small {
       display: block;
-      font-size: 13px;
+      font-size: 12px;
       margin-top: 4px;
       margin-bottom: 2px;
-      color: #e5e7eb;
+      color: #374151;
     }
     .input-field {
       width: 100%;
       padding: 6px 8px;
       border-radius: 8px;
-      border: 1px solid #374151;
-      background: #020617;
-      color: #e5e7eb;
+      border: 1px solid #d1d5db;
+      background: #ffffff;
+      color: #111827;
       margin-bottom: 4px;
       font-size: 13px;
     }
     .input-file {
       margin-top: 4px;
       font-size: 12px;
-      color: #e5e7eb;
+      color: #374151;
     }
     .btn {
-      padding: 6px 12px;
+      padding: 7px 12px;
       border-radius: 999px;
       border: none;
       font-size: 13px;
@@ -155,25 +177,15 @@
     .btn-primary {
       background: #16a34a;
       color: #ffffff;
+      width: 100%;
     }
     .btn-primary:hover {
       background: #15803d;
     }
 
-    @media (max-width: 900px) {
-      .columns {
-        grid-template-columns: 1fr;
-      }
+    @media (min-width: 600px) {
       .page {
-        padding: 12px;
-      }
-      .service-header {
-        flex-direction: column;
-      }
-      .top-bar {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 4px;
+        padding: 16px;
       }
     }
   </style>
@@ -199,7 +211,7 @@
         <h2>Add Review</h2>
         <form id="reviewForm">
           <label class="label-small">Rating</label>
-          <div id="starRating" style="display:flex; gap:4px; margin-bottom:4px; cursor:pointer; font-size:18px;">
+          <div id="starRating" style="display:flex; gap:4px; margin-bottom:4px; cursor:pointer; font-size:20px;">
             <span data-value="1">☆</span>
             <span data-value="2">☆</span>
             <span data-value="3">☆</span>
@@ -223,7 +235,6 @@
   <script>
     const API_BASE = window.location.origin + '/api';
 
-
     function goHome() {
       window.location.href = '/';
     }
@@ -245,7 +256,9 @@
     }
 
     function getServiceImage(service) {
-      if (service.imagePath) return service.imagePath;
+      if (service.imagePath) {
+        return '/image/' + encodeURIComponent(service.imagePath);
+      }
       return 'https://placehold.co/80x80?text=Svc';
     }
 
@@ -332,8 +345,7 @@
                 <span>(${reviewCount} reviews)</span>
               </div>
               <button
-                class="btn"
-                style="margin-top:8px; background:#b91c1c; color:#fff;"
+                class="pill-danger"
                 type="button"
                 onclick="deleteWithCode('${service._id}', '${service.name}')"
               >
@@ -461,4 +473,3 @@
   </script>
 </body>
 </html>
-
