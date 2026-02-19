@@ -438,7 +438,7 @@
       else line.textContent = '';
     }
 
-    // Home: reset filters/search, no splash
+    // Home: reset filters/search, no navigation
     function goHome() {
       const searchInput = document.getElementById('searchInput');
       if (searchInput) searchInput.value = '';
@@ -575,7 +575,7 @@
 
         info.innerHTML = `
           <h3>${s.name}</h3>
-          <p>${s.category} • ${s.city}</p>
+          <p>${s.category || 'Service'} • ${s.city || ''}</p>
           <div class="rating-row-mini">
             <span>${ratingText}</span>
           </div>
