@@ -191,8 +191,7 @@
 
   <div class="page">
     <div class="top-bar">
-      <!-- Back to home uses index.html -->
-      <button class="back-link" onclick="window.location.href='/index.html'">⬅ Home</button>
+      <button class="back-link" onclick="goHome()">⬅ Home</button>
       <div id="userLine"></div>
     </div>
 
@@ -230,8 +229,7 @@
     }
 
     function goHome() {
-      // If you ever want to call this from JS: go back to main list
-      window.location.href = '/index.html';
+      window.location.href = '/user';
     }
 
     function getUsername() {
@@ -393,16 +391,13 @@
         const reviewCount = Number(service.reviewCount || 0); // number of written reviews
         const hasReviews = reviewCount > 0;
 
-        // Updated wording
         const ratingsLabel =
-          ratingCount === 1
-            ? '1 person rated'
-            : ratingCount + ' people rated';
+          ratingCount === 1 ? '1 rating' : ratingCount + ' ratings';
         const reviewsLabel = hasReviews
           ? reviewCount === 1
-            ? '1 written review'
-            : reviewCount + ' written reviews'
-          : 'No written reviews yet';
+            ? '1 review'
+            : reviewCount + ' reviews'
+          : 'No reviews yet';
 
         const ratingHtml = `
           <div class="rating-row">
