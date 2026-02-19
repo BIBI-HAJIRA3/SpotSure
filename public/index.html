@@ -242,7 +242,7 @@
       z-index: 50;
     }
 
-    /* Toast */
+    /* Toast dialog */
     #toast {
       position: fixed;
       left: 50%;
@@ -250,8 +250,8 @@
       transform: translateX(-50%);
       background: #111827;
       color: #e5e7eb;
-      padding: 8px 12px;
-      border-radius: 999px;
+      padding: 10px 12px 8px;
+      border-radius: 12px;
       font-size: 13px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.6);
       opacity: 0;
@@ -259,8 +259,22 @@
       transition: opacity 0.2s ease, transform 0.2s ease;
       z-index: 60;
       max-width: 90%;
-      text-align: center;
+      text-align: left;
       white-space: pre-line;
+    }
+    #toastMessage {
+      margin-right: 60px;
+    }
+    #toastOkBtn {
+      margin-top: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid #2563eb;
+      background: #2563eb;
+      color: #fff;
+      font-size: 12px;
+      cursor: pointer;
+      float: right;
     }
 
     @media (min-width: 600px) {
@@ -359,11 +373,30 @@
       <button class="chip category-btn" data-category="Grocery">Grocery</button>
     </div>
 
+    <!-- Sort control -->
+    <div style="display:flex; justify-content:flex-end; margin-top:4px; margin-bottom:4px;">
+      <select id="sortSelect" style="
+        background:#020617;
+        color:#e5e7eb;
+        border:1px solid #374151;
+        border-radius:999px;
+        padding:4px 8px;
+        font-size:12px;
+      ">
+        <option value="default">Sort: Recently added</option>
+        <option value="top">Sort: Top rated</option>
+      </select>
+    </div>
+
     <div class="list-section-title">Nearby services</div>
     <div id="services" class="services-list"></div>
   </div>
 
-  <div id="toast"></div>
+  <div id="toast">
+    <div id="toastMessage"></div>
+    <button id="toastOkBtn">OK</button>
+    <div style="clear:both;"></div>
+  </div>
 
   <script>
     const API_BASE = window.location.origin + '/api';
@@ -373,14 +406,20 @@
 
     function showToast(message) {
       const t = document.getElementById('toast');
-      if (!t) return;
-      t.textContent = message;
+      const msg = document.getElementById('toastMessage');
+      const ok = document.getElementById('toastOkBtn');
+      if (!t || !msg || !ok) return;
+
+      msg.textContent = message;
       t.style.opacity = '1';
+      t.style.pointerEvents = 'auto';
       t.style.transform = 'translateX(-50%) translateY(-4px)';
-      setTimeout(() => {
+
+      ok.onclick = () => {
         t.style.opacity = '0';
+        t.style.pointerEvents = 'none';
         t.style.transform = 'translateX(-50%) translateY(0)';
-      }, 2200);
+      };
     }
 
     // Username stored locally
@@ -399,8 +438,20 @@
       else line.textContent = '';
     }
 
+    // Home: reset filters/search, no splash
     function goHome() {
-      window.location.href = '/';
+      const searchInput = document.getElementById('searchInput');
+      if (searchInput) searchInput.value = '';
+      currentCategory = 'All';
+      const buttons = document.querySelectorAll('.category-btn');
+      buttons.forEach((b) => b.classList.remove('active'));
+      const allBtn = document.querySelector('.category-btn[data-category="All"]');
+      if (allBtn) allBtn.classList.add('active');
+
+      const sortSel = document.getElementById('sortSelect');
+      if (sortSel) sortSel.value = 'default';
+
+      renderServices();
     }
 
     // Username overlay
@@ -454,12 +505,15 @@
     }
 
     function filterServices() {
-      const searchText = document
-        .getElementById('searchInput')
-        .value.trim()
-        .toLowerCase();
+      const searchInput = document.getElementById('searchInput');
+      const searchText = searchInput
+        ? searchInput.value.trim().toLowerCase()
+        : '';
 
-      return allServices.filter((s) => {
+      const sortSel = document.getElementById('sortSelect');
+      const sortMode = sortSel ? sortSel.value : 'default';
+
+      let list = allServices.filter((s) => {
         const matchesSidebarCategory =
           currentCategory === 'All' ||
           (s.category &&
@@ -478,6 +532,19 @@
 
         return matchesSidebarCategory && matchesSearch;
       });
+
+      if (sortMode === 'top') {
+        list = list.slice().sort((a, b) => {
+          const ra = Number(a.averageRating || 0);
+          const rb = Number(b.averageRating || 0);
+          if (rb !== ra) return rb - ra;
+          const ca = Number(a.reviewCount || 0);
+          const cb = Number(b.reviewCount || 0);
+          return cb - ca;
+        });
+      }
+
+      return list;
     }
 
     function openServicePage(serviceId) {
@@ -553,12 +620,20 @@
       }
     }
 
+    function setupSort() {
+      const sel = document.getElementById('sortSelect');
+      if (sel) {
+        sel.addEventListener('change', () => renderServices());
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       updateUserLine();
       setupUsernameOverlay();
       loadServices();
       setupCategoryFilters();
       setupSearch();
+      setupSort();
       showUsernameOverlayIfNeeded();
 
       const addServiceForm = document.getElementById('addServiceForm');
