@@ -1,22 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>SpotSure – Service Details</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <style>
     * { box-sizing: border-box; }
+
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       background: #020617;
       color: #e5e7eb;
     }
+
     .page {
       max-width: 520px;
       margin: 0 auto;
       padding: 20px 14px 28px;
       min-height: 100vh;
     }
+
     .top-bar {
       display: flex;
       align-items: center;
@@ -43,6 +47,7 @@
       font-size: 12px;
       color: #9ca3af;
     }
+
     .service-header {
       display: flex;
       gap: 14px;
@@ -92,6 +97,7 @@
     .stars-empty {
       color: #4b5563;
     }
+
     .actions-row {
       display: flex;
       gap: 10px;
@@ -113,6 +119,7 @@
       background: #020617;
       color: #93c5fd;
     }
+
     .card {
       background: #111827;
       border-radius: 14px;
@@ -153,7 +160,8 @@
       font-size: 13px;
       color: #6b7280;
     }
-    /* Toast (auto dismiss) */
+
+    /* Toast (auto dismiss, no OK button) */
     #toast {
       position: fixed;
       left: 50%;
@@ -173,6 +181,7 @@
       text-align: center;
       white-space: pre-line;
     }
+
     @media (min-width: 600px) {
       .page {
         padding: 22px 18px 30px;
@@ -187,25 +196,29 @@
   </style>
 </head>
 <body>
-  <div id="toast"><span id="toastMessage"></span></div>
-
   <div class="page">
     <div class="top-bar">
-      <button class="back-link" onclick="goHome()">⬅ Home</button>
-      <div id="userLine"></div>
+      <button class="back-link" type="button" onclick="goHome()">
+        ⬅ Home
+      </button>
+      <span id="userLine"></span>
     </div>
 
-    <div id="serviceHeader"></div>
+    <section id="serviceHeader"></section>
 
     <div class="actions-row">
-      <button class="btn-view" onclick="goToReviews()">View reviews</button>
-      <button class="btn-add" onclick="goToAddReview()">Add review</button>
+      <button type="button" class="btn-view" onclick="goToReviews()">View reviews</button>
+      <button type="button" class="btn-add" onclick="goToAddReview()">Add review</button>
     </div>
 
     <div class="card">
       <h2>Recent reviews</h2>
       <div id="reviewsContainer"></div>
     </div>
+  </div>
+
+  <div id="toast">
+    <span id="toastMessage"></span>
   </div>
 
   <script>
@@ -229,13 +242,13 @@
     }
 
     function goHome() {
+      // SpotSure home: service listing
       window.location.href = '/user';
     }
 
     function getUsername() {
       return localStorage.getItem('spotsureUsername') || null;
     }
-
     function updateUserLine() {
       const el = document.getElementById('userLine');
       const name = getUsername();
@@ -271,13 +284,8 @@
       const fullCount = Math.round(rating || 0);
       const full = '★'.repeat(fullCount);
       const empty = '☆'.repeat(5 - fullCount);
-      return (
-        '<span class="stars">' +
-        full +
-        '</span><span class="stars stars-empty">' +
-        empty +
-        '</span>'
-      );
+      return '<span class="stars">' + full +
+             '</span><span class="stars stars-empty">' + empty + '</span>';
     }
 
     function renderDeleteBox(service) {
@@ -346,21 +354,20 @@
     async function submitDeleteCode() {
       const serviceId = getServiceIdFromUrl();
       if (!serviceId) return;
+
       const input = document.getElementById('deleteCodeInput');
       const code = (input.value || '').trim();
       if (!code) {
         showToast('Enter your delete code to remove this service.');
         return;
       }
+
       try {
-        const res = await fetch(
-          API_BASE + '/services/' + serviceId + '/delete-with-code',
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ code }),
-          }
-        );
+        const res = await fetch(API_BASE + '/services/' + serviceId + '/delete-with-code', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code }),
+        });
         const data = await res.json().catch(() => ({}));
         if (!res.ok) {
           showToast(data.message || 'Incorrect delete code.');
@@ -387,16 +394,16 @@
         const service = await resService.json();
 
         const ratingValue = Number(service.averageRating || 0);
-        const ratingCount = Number(service.ratingCount || 0); // number of ratings
-        const reviewCount = Number(service.reviewCount || 0); // number of written reviews
+        const ratingCount = Number(service.ratingCount || 0);  // number of ratings
+        const reviewCount = Number(service.reviewCount || 0);  // number of reviews
         const hasReviews = reviewCount > 0;
 
-        const ratingsLabel =
-          ratingCount === 1 ? '1 rating' : ratingCount + ' ratings';
+        const ratingsLabel = ratingCount === 1
+          ? '1 rating'
+          : ratingCount + ' ratings';
+
         const reviewsLabel = hasReviews
-          ? reviewCount === 1
-            ? '1 review'
-            : reviewCount + ' reviews'
+          ? (reviewCount === 1 ? '1 review' : reviewCount + ' reviews')
           : 'No reviews yet';
 
         const ratingHtml = `
@@ -413,9 +420,7 @@
             <img class="service-thumb" src="${getServiceImage(service)}">
             <div class="service-main">
               <h1>${service.name}</h1>
-              <p>${service.category || 'Service'} • ${service.city || ''} (PIN: ${
-          service.pincode || ''
-        })</p>
+              <p>${service.category || 'Service'} • ${service.city || ''} (PIN: ${service.pincode || ''})</p>
               <p>${service.address || ''}</p>
               ${ratingHtml}
               ${renderDeleteBox(service)}
@@ -439,14 +444,17 @@
         const reviews = (data.reviews || data).slice(0, 3);
         const container = document.getElementById('reviewsContainer');
         container.innerHTML = '';
+
         if (!reviews.length) {
           container.innerHTML =
             '<p class="no-reviews">No reviews yet. Tap "Add review" to write one.</p>';
           return;
         }
+
         reviews.forEach((r) => {
           const item = document.createElement('div');
           item.className = 'review-item';
+
           const paths = r.imagePaths || r.imageUrls || [];
           let imagesHtml = '';
           if (paths.length > 0) {
@@ -460,10 +468,9 @@
                 .join('') +
               '</div>';
           }
+
           item.innerHTML = `
-            <div>${buildStars(r.rating)} <span>${r.rating}</span> – ${
-            r.comment || ''
-          }</div>
+            <div>${buildStars(r.rating)} <span>${r.rating}</span> – ${r.comment || ''}</div>
             <div class="review-meta">${r.username || 'Anonymous'}</div>
             ${imagesHtml}
           `;
