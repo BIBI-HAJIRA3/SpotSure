@@ -400,7 +400,7 @@
             <img class="service-thumb" src="${getServiceImage(service)}">
             <div class="service-main">
               <h1>${service.name}</h1>
-              <p>${service.category} • ${service.city} (PIN: ${service.pincode})</p>
+              <p>${service.category || 'Service'} • ${service.city || ''} (PIN: ${service.pincode || ''})</p>
               <p>${service.address || ''}</p>
               <div class="rating-row">
                 <span>${buildStars(ratingValue)}</span>
