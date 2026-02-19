@@ -15,9 +15,9 @@
     }
 
     .page {
-      max-width: 480px;
+      max-width: 520px;
       margin: 0 auto;
-      padding: 16px 12px 24px;
+      padding: 20px 14px 28px;
       min-height: 100vh;
     }
 
@@ -25,8 +25,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 12px;
-      gap: 8px;
+      margin-bottom: 16px;
+      gap: 10px;
       flex-wrap: wrap;
     }
     .back-link {
@@ -36,7 +36,7 @@
       cursor: pointer;
       background: #020617;
       border: 1px solid #2563eb;
-      padding: 5px 10px;
+      padding: 6px 12px;
       border-radius: 999px;
     }
     .back-link:hover {
@@ -57,18 +57,18 @@
     .service-sub {
       font-size: 12px;
       color: #9ca3af;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     .card {
       background: #111827;
-      border-radius: 12px;
+      border-radius: 14px;
       border: 1px solid #1f2937;
-      padding: 12px;
+      padding: 14px;
       box-shadow: 0 1px 4px rgba(0,0,0,0.6);
     }
     .card h2 {
-      margin: 0 0 6px;
+      margin: 0 0 8px;
       font-size: 15px;
       color: #f9fafb;
     }
@@ -76,13 +76,13 @@
     .label-small {
       display: block;
       font-size: 12px;
-      margin-top: 6px;
+      margin-top: 8px;
       margin-bottom: 2px;
       color: #e5e7eb;
     }
     .input-field {
       width: 100%;
-      padding: 6px 8px;
+      padding: 7px 8px;
       border-radius: 8px;
       border: 1px solid #374151;
       background: #020617;
@@ -96,8 +96,8 @@
       color: #e5e7eb;
     }
     .btn-primary {
-      margin-top: 10px;
-      padding: 8px 12px;
+      margin-top: 12px;
+      padding: 9px 12px;
       border-radius: 999px;
       border: none;
       font-size: 14px;
@@ -208,7 +208,7 @@
     function goBackToService() {
       const id = getServiceIdFromUrl();
       if (!id) {
-        window.location.href = '/';
+        window.location.href = '/user';
         return;
       }
       window.location.href = '/service.html?id=' + encodeURIComponent(id);
@@ -336,4 +336,3 @@
   </script>
 </body>
 </html>
-
