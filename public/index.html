@@ -271,7 +271,7 @@
   </style>
 </head>
 <body>
-  <!-- Splash screen -->
+  <!-- Splash screen (always 1.5s) -->
   <div id="splashScreen">
     <div style="font-size:28px; font-weight:bold; margin-bottom:8px;">
       SpotSure
@@ -417,20 +417,14 @@
       });
     }
 
+    // Always show 1.5s splash; show name overlay only if username missing
     function showUsernameOverlayIfNeeded() {
       const overlay = document.getElementById('usernameOverlay');
       const splash = document.getElementById('splashScreen');
-      const name = getUsername();
-
-      if (name) {
-        if (splash) splash.style.display = 'none';
-        if (overlay) overlay.style.display = 'none';
-        return;
-      }
 
       setTimeout(() => {
         if (splash) splash.style.display = 'none';
-        if (overlay) overlay.style.display = 'flex';
+        if (!getUsername() && overlay) overlay.style.display = 'flex';
       }, 1500);
     }
 
@@ -611,8 +605,9 @@
             const code = data.deleteCode;
             if (code) {
               showToast(
-                'Service added.\nDelete code: ' +
-                code +
+                'Service added.\nDelete code for "' +
+                (data.service?.name || name) +
+                '": ' + code +
                 '\nKeep this code safe.'
               );
             } else {
