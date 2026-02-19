@@ -15,9 +15,9 @@
     }
 
     .page {
-      max-width: 480px;
+      max-width: 520px;
       margin: 0 auto;
-      padding: 16px 12px 24px;
+      padding: 20px 14px 28px;
       min-height: 100vh;
     }
 
@@ -25,8 +25,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 12px;
-      gap: 8px;
+      margin-bottom: 16px;
+      gap: 10px;
       flex-wrap: wrap;
     }
     .back-link {
@@ -36,7 +36,7 @@
       cursor: pointer;
       background: #020617;
       border: 1px solid #2563eb;
-      padding: 5px 10px;
+      padding: 6px 12px;
       border-radius: 999px;
     }
     .back-link:hover {
@@ -50,24 +50,24 @@
 
     .service-header {
       display: flex;
-      gap: 10px;
-      margin-bottom: 10px;
-      padding: 12px;
+      gap: 14px;
+      margin-bottom: 14px;
+      padding: 14px;
       background: #111827;
-      border-radius: 12px;
+      border-radius: 14px;
       border: 1px solid #1f2937;
       box-shadow: 0 1px 4px rgba(0,0,0,0.6);
     }
     .service-thumb {
-      width: 70px;
-      height: 70px;
-      border-radius: 10px;
+      width: 76px;
+      height: 76px;
+      border-radius: 12px;
       object-fit: cover;
       flex-shrink: 0;
       background: #1f2937;
     }
     .service-main h1 {
-      margin: 0 0 4px;
+      margin: 0 0 6px;
       font-size: 18px;
       color: #f9fafb;
     }
@@ -82,7 +82,12 @@
       gap: 6px;
       font-size: 12px;
       color: #e5e7eb;
-      margin-top: 4px;
+      margin-top: 6px;
+    }
+    .rating-sub {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-top: 2px;
     }
     .stars {
       color: #fbbf24;
@@ -95,12 +100,12 @@
 
     .actions-row {
       display: flex;
-      gap: 8px;
-      margin: 8px 0 12px;
+      gap: 10px;
+      margin: 14px 0 16px;
     }
     .actions-row button {
       flex: 1;
-      padding: 7px 10px;
+      padding: 8px 12px;
       border-radius: 999px;
       border: 1px solid #2563eb;
       font-size: 13px;
@@ -117,23 +122,25 @@
 
     .card {
       background: #111827;
-      border-radius: 12px;
+      border-radius: 14px;
       border: 1px solid #1f2937;
-      padding: 12px;
+      padding: 14px;
       box-shadow: 0 1px 4px rgba(0,0,0,0.6);
+      margin-top: 10px;
     }
     .card h2 {
-      margin: 0 0 6px;
+      margin: 0 0 8px;
       font-size: 15px;
       color: #f9fafb;
     }
     .review-item {
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       font-size: 13px;
     }
     .review-meta {
       font-size: 11px;
       color: #9ca3af;
+      margin-top: 2px;
     }
     .review-images {
       margin-top: 4px;
@@ -177,7 +184,13 @@
 
     @media (min-width: 600px) {
       .page {
-        padding: 18px 16px 28px;
+        padding: 22px 18px 30px;
+      }
+      .service-header {
+        padding: 16px;
+      }
+      .card {
+        padding: 16px;
       }
     }
   </style>
@@ -229,7 +242,7 @@
     }
 
     function goHome() {
-      // go to user listing instead of welcome splash
+      // SpotSure home: service listing
       window.location.href = '/user';
     }
 
@@ -381,8 +394,26 @@
         const service = await resService.json();
 
         const ratingValue = Number(service.averageRating || 0);
-        const ratingText = ratingValue.toFixed(1);
-        const reviewCount = service.reviewCount || 0;
+        const ratingCount = Number(service.ratingCount || 0);  // number of ratings
+        const reviewCount = Number(service.reviewCount || 0);  // number of reviews
+        const hasReviews = reviewCount > 0;
+
+        const ratingsLabel = ratingCount === 1
+          ? '1 rating'
+          : ratingCount + ' ratings';
+
+        const reviewsLabel = hasReviews
+          ? (reviewCount === 1 ? '1 review' : reviewCount + ' reviews')
+          : 'No reviews yet';
+
+        const ratingHtml = `
+          <div class="rating-row">
+            <span>${buildStars(ratingValue)}</span>
+            <span>${ratingValue.toFixed(1)}</span>
+            <span>${ratingsLabel}</span>
+          </div>
+          <div class="rating-sub">${reviewsLabel}</div>
+        `;
 
         document.getElementById('serviceHeader').innerHTML = `
           <div class="service-header">
@@ -391,11 +422,7 @@
               <h1>${service.name}</h1>
               <p>${service.category || 'Service'} • ${service.city || ''} (PIN: ${service.pincode || ''})</p>
               <p>${service.address || ''}</p>
-              <div class="rating-row">
-                <span>${buildStars(ratingValue)}</span>
-                <span>${ratingText}</span>
-                <span>(${reviewCount} reviews)</span>
-              </div>
+              ${ratingHtml}
               ${renderDeleteBox(service)}
             </div>
           </div>
