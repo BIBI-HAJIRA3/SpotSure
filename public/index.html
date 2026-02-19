@@ -15,20 +15,20 @@
     }
 
     .app-shell {
-      max-width: 480px;
+      max-width: 520px;
       margin: 0 auto;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      padding: 16px 12px 24px;
+      padding: 20px 14px 28px;
     }
 
     .top-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 14px;
+      gap: 10px;
+      margin-bottom: 16px;
       flex-wrap: wrap;
     }
     .top-title {
@@ -109,7 +109,7 @@
     }
 
     .list-section-title {
-      margin: 6px 0;
+      margin: 8px 0;
       font-size: 14px;
       font-weight: 600;
       color: #e5e7eb;
@@ -118,29 +118,29 @@
     .services-list {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      margin-bottom: 18px;
+      gap: 12px;
+      margin-bottom: 20px;
     }
     .service-card {
       display: flex;
-      gap: 10px;
+      gap: 12px;
       background: #111827;
-      border-radius: 12px;
-      padding: 12px;
+      border-radius: 14px;
+      padding: 13px;
       box-shadow: 0 1px 4px rgba(0,0,0,0.6);
       cursor: pointer;
       border: 1px solid #1f2937;
     }
     .service-thumb {
-      width: 56px;
-      height: 56px;
+      width: 60px;
+      height: 60px;
       border-radius: 10px;
       object-fit: cover;
       flex-shrink: 0;
       background: #1f2937;
     }
     .service-info h3 {
-      margin: 0 0 3px 0;
+      margin: 0 0 4px 0;
       font-size: 15px;
       color: #f9fafb;
     }
@@ -240,6 +240,8 @@
       justify-content: center;
       color: #f9fafb;
       z-index: 50;
+      text-align: center;
+      padding: 0 24px;
     }
 
     /* Toast dialog */
@@ -279,7 +281,7 @@
 
     @media (min-width: 600px) {
       .app-shell {
-        padding: 18px 16px 28px;
+        padding: 22px 18px 30px;
       }
     }
   </style>
@@ -287,11 +289,11 @@
 <body>
   <!-- Splash screen (always 1.5s) -->
   <div id="splashScreen">
-    <div style="font-size:28px; font-weight:bold; margin-bottom:8px;">
-      SpotSure
+    <div style="font-size:26px; font-weight:bold; margin-bottom:6px;">
+      SpotSure – Discover. Decide. Trust.
     </div>
     <div style="font-size:14px; color:#9ca3af;">
-      Finding trusted places near you...
+      Loading trusted places around you...
     </div>
   </div>
 
