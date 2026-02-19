@@ -93,17 +93,6 @@
       color: #4b5563;
     }
 
-    .pill-danger {
-      margin-top: 8px;
-      border-radius: 999px;
-      padding: 5px 10px;
-      background: #b91c1c;
-      color: #ffffff;
-      border: none;
-      font-size: 12px;
-      cursor: pointer;
-    }
-
     .actions-row {
       display: flex;
       gap: 8px;
@@ -185,6 +174,12 @@
       text-align: center;
       white-space: pre-line;
     }
+
+    @media (min-width: 600px) {
+      .page {
+        padding: 18px 16px 28px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -203,7 +198,6 @@
       <button type="button" class="btn-add" onclick="goToAddReview()">Add review</button>
     </div>
 
-    <!-- Optional: brief reviews preview on details page -->
     <div class="card">
       <h2>Recent reviews</h2>
       <div id="reviewsContainer"></div>
@@ -280,24 +274,91 @@
              '</span><span class="stars stars-empty">' + empty + '</span>';
     }
 
-    async function deleteWithCode(serviceId, serviceName) {
-      const code = prompt(
-        'Enter the delete code for "' + serviceName + '" to remove it permanently:'
-      );
-      if (!code) return;
+    function renderDeleteBox(service) {
+      return `
+        <div id="deleteBox" style="margin-top:8px; font-size:12px;">
+          <span style="color:#9ca3af;">Have a delete code?</span>
+          <button
+            type="button"
+            style="
+              margin-left:6px;
+              padding:4px 8px;
+              border-radius:999px;
+              border:1px solid #b91c1c;
+              background:#020617;
+              color:#fecaca;
+              font-size:11px;
+              cursor:pointer;
+            "
+            onclick="toggleDeleteRow()"
+          >
+            Remove this service
+          </button>
+          <div id="deleteRow" style="margin-top:6px; display:none;">
+            <input
+              id="deleteCodeInput"
+              type="text"
+              placeholder="Enter delete code"
+              style="
+                width:60%;
+                padding:4px 6px;
+                border-radius:8px;
+                border:1px solid #4b5563;
+                background:#020617;
+                color:#e5e7eb;
+                font-size:12px;
+              "
+            />
+            <button
+              type="button"
+              style="
+                margin-left:6px;
+                padding:4px 8px;
+                border-radius:999px;
+                border:none;
+                background:#b91c1c;
+                color:#fff;
+                font-size:12px;
+                cursor:pointer;
+              "
+              onclick="submitDeleteCode()"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function toggleDeleteRow() {
+      const row = document.getElementById('deleteRow');
+      if (!row) return;
+      row.style.display = row.style.display === 'none' ? 'block' : 'none';
+    }
+
+    async function submitDeleteCode() {
+      const serviceId = getServiceIdFromUrl();
+      if (!serviceId) return;
+
+      const input = document.getElementById('deleteCodeInput');
+      const code = (input.value || '').trim();
+      if (!code) {
+        showToast('Enter your delete code to remove this service.');
+        return;
+      }
 
       try {
         const res = await fetch(API_BASE + '/services/' + serviceId + '/delete-with-code', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ code: code.trim() }),
+          body: JSON.stringify({ code }),
         });
         const data = await res.json().catch(() => ({}));
         if (!res.ok) {
-          showToast(data.message || 'Failed to delete service. Check your code.');
+          showToast(data.message || 'Incorrect delete code.');
           return;
         }
-        showToast('Service deleted successfully.');
+        showToast('Service deleted');
         setTimeout(goHome, 1200);
       } catch (err) {
         console.error(err);
@@ -333,13 +394,7 @@
                 <span>${ratingText}</span>
                 <span>(${reviewCount} reviews)</span>
               </div>
-              <button
-                class="pill-danger"
-                type="button"
-                onclick="deleteWithCode('${service._id}', '${service.name}')"
-              >
-                Delete this service (have code)
-              </button>
+              ${renderDeleteBox(service)}
             </div>
           </div>
         `;
@@ -357,7 +412,7 @@
         const res = await fetch(API_BASE + '/services/' + serviceId + '/reviews');
         if (!res.ok) throw new Error('Failed to load reviews');
         const data = await res.json();
-        const reviews = (data.reviews || data).slice(0, 3); // show first 3
+        const reviews = (data.reviews || data).slice(0, 3);
         const container = document.getElementById('reviewsContainer');
         container.innerHTML = '';
 
