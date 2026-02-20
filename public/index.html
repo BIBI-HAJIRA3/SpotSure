@@ -2,27 +2,23 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>SpotSure – Services</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>SpotSure – Service</title>
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <style>
     * { box-sizing: border-box; }
-
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       background: #020617;
       color: #e5e7eb;
     }
-
-    .app-shell {
+    .page {
       max-width: 520px;
       margin: 0 auto;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
       padding: 20px 14px 28px;
+      min-height: 100vh;
     }
-
     .top-bar {
       display: flex;
       align-items: center;
@@ -31,220 +27,81 @@
       margin-bottom: 16px;
       flex-wrap: wrap;
     }
-    .top-title {
-      font-size: 20px;
-      font-weight: 700;
+    .back-link {
+      color: #93c5fd;
+      text-decoration: none;
+      font-size: 13px;
+      cursor: pointer;
+      background: #020617;
+      border: 1px solid #2563eb;
+      padding: 6px 12px;
+      border-radius: 999px;
+    }
+    .back-link:hover {
+      background: #1d4ed8;
       color: #f9fafb;
     }
-    .top-sub {
+    #userLine {
       font-size: 12px;
       color: #9ca3af;
     }
-
-    .pill-btn {
-      border: 1px solid #2563eb;
-      background: #2563eb;
-      color: #ffffff;
-      border-radius: 999px;
-      padding: 6px 10px;
-      font-size: 12px;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-    .pill-btn.secondary {
-      background: #020617;
-      color: #93c5fd;
-    }
-    .pill-btn:hover {
-      background: #1d4ed8;
-    }
-
-    .search-section {
-      margin-bottom: 10px;
-    }
-    .search-input {
-      width: 100%;
-      padding: 8px 11px;
-      border-radius: 999px;
-      border: 1px solid #374151;
-      font-size: 13px;
-      outline: none;
-      background: #020617;
-      color: #e5e7eb;
-    }
-    .search-input::placeholder {
-      color: #6b7280;
-    }
-
-    .helper-text {
-      font-size: 12px;
-      color: #9ca3af;
-      margin-bottom: 4px;
-      margin-top: 4px;
-    }
-
-    .chip-row {
-      display: flex;
-      overflow-x: auto;
-      gap: 6px;
-      padding: 4px 0 10px;
-    }
-    .chip-row::-webkit-scrollbar {
-      display: none;
-    }
-    .chip {
-      flex-shrink: 0;
-      padding: 5px 10px;
-      border-radius: 999px;
-      border: 1px solid #374151;
-      font-size: 12px;
-      background: #020617;
-      color: #d1d5db;
-      cursor: pointer;
-    }
-    .chip.active {
-      border-color: #2563eb;
-      background: #2563eb;
-      color: #ffffff;
-    }
-
-    .list-section-title {
-      margin: 8px 0;
-      font-size: 14px;
+    .service-title {
+      font-size: 18px;
       font-weight: 600;
-      color: #e5e7eb;
+      margin-bottom: 4px;
+      color: #f9fafb;
     }
-
-    .services-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 20px;
+    .service-sub {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-bottom: 12px;
     }
-    .service-card {
-      display: flex;
-      gap: 12px;
+    .card {
       background: #111827;
       border-radius: 14px;
-      padding: 13px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.6);
-      cursor: pointer;
       border: 1px solid #1f2937;
+      padding: 14px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.6);
+      margin-bottom: 10px;
     }
-    .service-thumb {
-      width: 60px;
-      height: 60px;
-      border-radius: 10px;
-      object-fit: cover;
-      flex-shrink: 0;
-      background: #1f2937;
-    }
-    .service-info h3 {
-      margin: 0 0 4px 0;
+    .card h2 {
+      margin: 0 0 8px;
       font-size: 15px;
       color: #f9fafb;
     }
-    .service-info p {
-      margin: 0;
+    .service-meta {
       font-size: 12px;
       color: #9ca3af;
-      line-height: 1.3;
-    }
-    .rating-row-mini {
       display: flex;
+      gap: 8px;
       align-items: center;
-      gap: 4px;
-      margin-top: 4px;
-      font-size: 11px;
-      color: #9ca3af;
+      flex-wrap: wrap;
+      margin-bottom: 6px;
     }
-
-    /* Overlays */
-    .overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.92);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 40;
-    }
-    .panel {
-      background: #111827;
-      border-radius: 16px;
-      padding: 20px 18px;
-      width: 90%;
-      max-width: 420px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.8);
-      border: 1px solid #1f2937;
-      text-align: left;
-      color: #f9fafb;
-    }
-    .panel h1 {
-      margin: 0 0 6px;
-      font-size: 20px;
-      color: #f9fafb;
-    }
-    .panel p {
-      margin: 0 0 12px;
-      font-size: 13px;
-      color: #9ca3af;
-    }
-    .input-label {
-      display: block;
-      font-size: 12px;
-      margin-top: 6px;
-      margin-bottom: 2px;
-      color: #e5e7eb;
-    }
-    .input-field {
-      width: 100%;
-      padding: 7px 8px;
-      border-radius: 8px;
-      border: 1px solid #374151;
-      background: #020617;
-      color: #e5e7eb;
-      font-size: 13px;
-      margin-bottom: 4px;
-    }
-    .btn-full {
-      width: 100%;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: none;
+    .stars {
+      color: #fbbf24;
       font-size: 14px;
+      letter-spacing: 1px;
+    }
+    .stars-empty {
+      color: #4b5563;
+    }
+    .badge {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid #4b5563;
+      color: #d1d5db;
+    }
+    .primary-link {
+      margin-top: 10px;
+      display: inline-block;
+      font-size: 13px;
+      color: #93c5fd;
+      text-decoration: underline;
       cursor: pointer;
     }
-    .btn-primary-full {
-      background: #2563eb;
-      color: #ffffff;
-    }
-    .btn-primary-full:hover {
-      background: #1d4ed8;
-    }
-    .btn-secondary-full {
-      background: #111827;
-      color: #e5e7eb;
-      border: 1px solid #374151;
-      margin-top: 6px;
-    }
-
-    /* Splash */
-    #splashScreen {
-      position: fixed;
-      inset: 0;
-      background: #020617;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: #f9fafb;
-      z-index: 50;
-      text-align: center;
-      padding: 0 24px;
-    }
-
-    /* Toast dialog */
+    /* Toast */
     #toast {
       position: fixed;
       left: 50%;
@@ -252,8 +109,8 @@
       transform: translateX(-50%);
       background: #111827;
       color: #e5e7eb;
-      padding: 10px 12px 8px;
-      border-radius: 12px;
+      padding: 9px 14px;
+      border-radius: 999px;
       font-size: 13px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.6);
       opacity: 0;
@@ -261,450 +118,141 @@
       transition: opacity 0.2s ease, transform 0.2s ease;
       z-index: 60;
       max-width: 90%;
-      text-align: left;
+      text-align: center;
       white-space: pre-line;
-    }
-    #toastMessage {
-      margin-right: 60px;
-    }
-    #toastOkBtn {
-      margin-top: 6px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid #2563eb;
-      background: #2563eb;
-      color: #fff;
-      font-size: 12px;
-      cursor: pointer;
-      float: right;
-    }
-
-    @media (min-width: 600px) {
-      .app-shell {
-        padding: 22px 18px 30px;
-      }
     }
   </style>
 </head>
 <body>
-  <!-- Splash screen (always 1.5s) -->
-  <div id="splashScreen">
-    <div style="font-size:26px; font-weight:bold; margin-bottom:6px;">
-      SpotSure – Discover. Decide. Trust.
+  <div class="page">
+    <div class="top-bar">
+      <button class="back-link" type="button" onclick="goHome()">⬅ Home</button>
+      <span id="userLine"></span>
     </div>
-    <div style="font-size:14px; color:#9ca3af;">
-      Loading trusted places around you...
-    </div>
-  </div>
 
-  <!-- First-time username overlay -->
-  <div id="usernameOverlay" class="overlay" style="display:none;">
-    <div class="panel">
-      <h1>Welcome to SpotSure</h1>
-      <p>Tell us your name so we can greet you.</p>
-      <form id="usernameForm">
-        <label class="input-label">Your name</label>
-        <input id="usernameInput" type="text" required class="input-field" />
-        <button class="btn-full btn-primary-full" type="submit">
-          Continue
-        </button>
-      </form>
-    </div>
-  </div>
+    <div class="service-title" id="serviceTitle">Loading...</div>
+    <div class="service-sub" id="serviceSub"></div>
 
-  <!-- Add Service overlay -->
-  <div id="addServiceOverlay" class="overlay" style="display:none;">
-    <div class="panel">
-      <h1 style="text-align:center;">Add Service</h1>
-      <p style="text-align:center;">Create a new service in SpotSure.</p>
-
-      <form id="addServiceForm">
-        <label class="input-label">Name</label>
-        <input id="serviceName" type="text" required class="input-field" />
-        <label class="input-label">Category</label>
-        <input id="serviceCategory" type="text" placeholder="Hospital, Clinic, School, Restaurant, Grocery" class="input-field" />
-        <label class="input-label">City</label>
-        <input id="serviceCity" type="text" required class="input-field" />
-        <label class="input-label">Pincode</label>
-        <input id="servicePincode" type="text" required class="input-field" />
-        <label class="input-label">Address</label>
-        <input id="serviceAddress" type="text" required class="input-field" />
-        <label class="input-label">Image (optional)</label>
-        <input id="serviceImage" type="file" accept="image/*" class="input-field" />
-
-        <button class="btn-full btn-primary-full" type="submit">
-          Save service
-        </button>
-        <button class="btn-full btn-secondary-full" type="button" onclick="closeAddServiceOverlay()">
-          Cancel
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <div class="app-shell">
-    <header class="top-bar">
+    <div class="card">
+      <h2>Rating</h2>
+      <div class="service-meta">
+        <span id="ratingStars"></span>
+        <span id="ratingNumber"></span>
+        <span id="ratingCountBadge" class="badge"></span>
+        <span id="reviewCountBadge" class="badge"></span>
+      </div>
       <div>
-        <div class="top-title">SpotSure</div>
-        <div class="top-sub" id="welcomeUserLine"></div>
+        <span class="primary-link" onclick="goToReviews()">View all reviews</span>
+        <span class="primary-link" style="margin-left:10px;" onclick="goToAddReview()">+ Add a review</span>
       </div>
-      <div style="display:flex; gap:6px;">
-        <button class="pill-btn secondary" type="button" onclick="goHome()">Home</button>
-        <button class="pill-btn" type="button" onclick="openAddServiceOverlay()">
-          + Add
-        </button>
-      </div>
-    </header>
-
-    <section class="search-section">
-      <input
-        id="searchInput"
-        class="search-input"
-        type="text"
-        placeholder="Search by name, city, pincode, or category..."
-      />
-    </section>
-
-    <div class="helper-text">Filter by category</div>
-    <div class="chip-row">
-      <button class="chip active category-btn" data-category="All">All</button>
-      <button class="chip category-btn" data-category="Hospital">Hospitals</button>
-      <button class="chip category-btn" data-category="Clinic">Clinics</button>
-      <button class="chip category-btn" data-category="School">Schools</button>
-      <button class="chip category-btn" data-category="Restaurant">Restaurants</button>
-      <button class="chip category-btn" data-category="Grocery">Grocery</button>
     </div>
-
-    <!-- Sort control -->
-    <div style="display:flex; justify-content:flex-end; margin-top:4px; margin-bottom:4px;">
-      <select id="sortSelect" style="
-        background:#020617;
-        color:#e5e7eb;
-        border:1px solid #374151;
-        border-radius:999px;
-        padding:4px 8px;
-        font-size:12px;
-      ">
-        <option value="default">Sort: Recently added</option>
-        <option value="top">Sort: Top rated</option>
-      </select>
-    </div>
-
-    <div class="list-section-title">Nearby services</div>
-    <div id="services" class="services-list"></div>
   </div>
 
-  <div id="toast">
-    <div id="toastMessage"></div>
-    <button id="toastOkBtn">OK</button>
-    <div style="clear:both;"></div>
-  </div>
+  <div id="toast"><span id="toastMessage"></span></div>
 
   <script>
     const API_BASE = window.location.origin + '/api';
-
-    let allServices = [];
-    let currentCategory = 'All';
+    let toastTimer = null;
 
     function showToast(message) {
       const t = document.getElementById('toast');
       const msg = document.getElementById('toastMessage');
-      const ok = document.getElementById('toastOkBtn');
-      if (!t || !msg || !ok) return;
-
+      if (!t || !msg) return;
       msg.textContent = message;
       t.style.opacity = '1';
       t.style.pointerEvents = 'auto';
       t.style.transform = 'translateX(-50%) translateY(-4px)';
-
-      ok.onclick = () => {
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
         t.style.opacity = '0';
         t.style.pointerEvents = 'none';
         t.style.transform = 'translateX(-50%) translateY(0)';
-      };
+      }, 2000);
     }
 
-    // Username stored locally
+    function getServiceIdFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('id');
+    }
+
+    function goHome() {
+      // Always go to main services list
+      window.location.href = '/index.html';
+    }
+
+    function goToReviews() {
+      const id = getServiceIdFromUrl();
+      if (!id) return;
+      window.location.href = '/reviews.html?id=' + encodeURIComponent(id);
+    }
+
+    function goToAddReview() {
+      const id = getServiceIdFromUrl();
+      if (!id) return;
+      window.location.href = '/add-review.html?id=' + encodeURIComponent(id);
+    }
+
     function getUsername() {
       return localStorage.getItem('spotsureUsername') || null;
     }
-    function setUsername(name) {
-      localStorage.setItem('spotsureUsername', name);
-      updateUserLine();
-    }
+
     function updateUserLine() {
-      const line = document.getElementById('welcomeUserLine');
+      const el = document.getElementById('userLine');
       const name = getUsername();
-      if (!line) return;
-      if (name) line.textContent = 'Welcome back, ' + name;
-      else line.textContent = '';
-    }
-
-    // Home: reset filters/search, no navigation
-    function goHome() {
-      const searchInput = document.getElementById('searchInput');
-      if (searchInput) searchInput.value = '';
-      currentCategory = 'All';
-      const buttons = document.querySelectorAll('.category-btn');
-      buttons.forEach((b) => b.classList.remove('active'));
-      const allBtn = document.querySelector('.category-btn[data-category="All"]');
-      if (allBtn) allBtn.classList.add('active');
-
-      const sortSel = document.getElementById('sortSelect');
-      if (sortSel) sortSel.value = 'default';
-
-      renderServices();
-    }
-
-    // Username overlay
-    function setupUsernameOverlay() {
-      const form = document.getElementById('usernameForm');
-      if (!form) return;
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const input = document.getElementById('usernameInput');
-        const name = (input.value || '').trim();
-        if (!name) return;
-        setUsername(name);
-        document.getElementById('usernameOverlay').style.display = 'none';
-      });
-    }
-
-    // Always show 1.5s splash; show name overlay only if username missing
-    function showUsernameOverlayIfNeeded() {
-      const overlay = document.getElementById('usernameOverlay');
-      const splash = document.getElementById('splashScreen');
-
-      setTimeout(() => {
-        if (splash) splash.style.display = 'none';
-        if (!getUsername() && overlay) overlay.style.display = 'flex';
-      }, 1500);
-    }
-
-    // Add Service overlay
-    function openAddServiceOverlay() {
-      const el = document.getElementById('addServiceOverlay');
       if (!el) return;
-      el.style.display = 'flex';
-    }
-    function closeAddServiceOverlay() {
-      const el = document.getElementById('addServiceOverlay');
-      if (el) el.style.display = 'none';
+      el.textContent = name ? 'Welcome, ' + name : '';
     }
 
-    // Services rendering
-    function getServiceImage(service) {
-      if (service.imagePath) {
-        return '/image/' + encodeURIComponent(service.imagePath);
-      }
-      return 'https://placehold.co/80x80?text=Svc';
+    function buildStars(rating) {
+      const fullCount = Math.round(rating || 0);
+      const full = '★'.repeat(fullCount);
+      const empty = '☆'.repeat(5 - fullCount);
+      return '<span class="stars">' + full +
+             '</span><span class="stars stars-empty">' + empty + '</span>';
     }
 
-    function buildRatingText(s) {
-      const avg = Number(s.averageRating || 0).toFixed(1);
-      const count = s.reviewCount || 0;
-      return avg + ' ★ (' + count + ')';
-    }
-
-    function filterServices() {
-      const searchInput = document.getElementById('searchInput');
-      const searchText = searchInput
-        ? searchInput.value.trim().toLowerCase()
-        : '';
-
-      const sortSel = document.getElementById('sortSelect');
-      const sortMode = sortSel ? sortSel.value : 'default';
-
-      let list = allServices.filter((s) => {
-        const matchesSidebarCategory =
-          currentCategory === 'All' ||
-          (s.category &&
-            s.category.toLowerCase() === currentCategory.toLowerCase());
-
-        if (!searchText) return matchesSidebarCategory;
-
-        const fields = [
-          s.name || '',
-          s.city || '',
-          s.pincode || '',
-          s.category || '',
-        ].map((x) => String(x).toLowerCase());
-
-        const matchesSearch = fields.some((f) => f.includes(searchText));
-
-        return matchesSidebarCategory && matchesSearch;
-      });
-
-      if (sortMode === 'top') {
-        list = list.slice().sort((a, b) => {
-          const ra = Number(a.averageRating || 0);
-          const rb = Number(b.averageRating || 0);
-          if (rb !== ra) return rb - ra;
-          const ca = Number(a.reviewCount || 0);
-          const cb = Number(b.reviewCount || 0);
-          return cb - ca;
-        });
-      }
-
-      return list;
-    }
-
-    function openServicePage(serviceId) {
-      window.location.href = '/service.html?id=' + encodeURIComponent(serviceId);
-    }
-
-    function renderServices() {
-      const container = document.getElementById('services');
-      container.innerHTML = '';
-      const services = filterServices();
-      if (!services.length) {
-        container.innerHTML = '<p style="font-size:13px; color:#9ca3af;">No services found.</p>';
+    async function loadService() {
+      const id = getServiceIdFromUrl();
+      if (!id) {
+        document.getElementById('serviceTitle').textContent = 'Missing service id';
         return;
       }
-      services.forEach((s) => {
-        const card = document.createElement('div');
-        card.className = 'service-card';
-        card.addEventListener('click', () => openServicePage(s._id));
-
-        const img = document.createElement('img');
-        img.className = 'service-thumb';
-        img.src = getServiceImage(s);
-
-        const info = document.createElement('div');
-        info.className = 'service-info';
-
-        const ratingText = buildRatingText(s);
-
-        info.innerHTML = `
-          <h3>${s.name}</h3>
-          <p>${s.category || 'Service'} • ${s.city || ''}</p>
-          <div class="rating-row-mini">
-            <span>${ratingText}</span>
-          </div>
-        `;
-
-        card.appendChild(img);
-        card.appendChild(info);
-        container.appendChild(card);
-      });
-    }
-
-    async function loadServices() {
       try {
-        const res = await fetch(API_BASE + '/services');
-        if (!res.ok) throw new Error('Failed to load services');
-        const data = await res.json();
-        allServices = data.services || data;
-        renderServices();
-      } catch (err) {
-        console.error(err);
-        const container = document.getElementById('services');
-        container.innerHTML = '<p style="font-size:13px; color:#f97316;">Error loading services.</p>';
-      }
-    }
+        const res = await fetch(API_BASE + '/services/' + id);
+        if (!res.ok) throw new Error();
+        const s = await res.json();
 
-    function setupCategoryFilters() {
-      const buttons = document.querySelectorAll('.category-btn');
-      buttons.forEach((btn) => {
-        btn.addEventListener('click', () => {
-          buttons.forEach((b) => b.classList.remove('active'));
-          btn.classList.add('active');
-          currentCategory = btn.getAttribute('data-category');
-          renderServices();
-        });
-      });
-    }
+        document.getElementById('serviceTitle').textContent = s.name || 'Service';
+        document.getElementById('serviceSub').textContent =
+          (s.category || 'Service') + ' • ' + (s.city || '') +
+          (s.pincode ? ' (PIN: ' + s.pincode + ')' : '');
 
-    function setupSearch() {
-      const input = document.getElementById('searchInput');
-      if (input) {
-        input.addEventListener('input', () => renderServices());
-      }
-    }
+        const averageRating = s.averageRating || 0;
+        const ratingsCount = s.ratingsCount || 0; // people who rated
+        const reviewsCount = (s.reviewsCount != null
+                              ? s.reviewsCount
+                              : (s.reviewCount || 0)); // number of review docs
 
-    function setupSort() {
-      const sel = document.getElementById('sortSelect');
-      if (sel) {
-        sel.addEventListener('change', () => renderServices());
+        document.getElementById('ratingStars').innerHTML = buildStars(averageRating);
+        document.getElementById('ratingNumber').textContent = averageRating.toFixed(1);
+
+        const ratingBadge = document.getElementById('ratingCountBadge');
+        ratingBadge.textContent =
+          ratingsCount + ' rating' + (ratingsCount === 1 ? '' : 's');
+
+        const reviewBadge = document.getElementById('reviewCountBadge');
+        reviewBadge.textContent =
+          reviewsCount + ' review' + (reviewsCount === 1 ? '' : 's');
+      } catch (e) {
+        document.getElementById('serviceTitle').textContent = 'Error loading service';
+        document.getElementById('serviceSub').textContent = '';
+        showToast('Error loading service');
       }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
       updateUserLine();
-      setupUsernameOverlay();
-      loadServices();
-      setupCategoryFilters();
-      setupSearch();
-      setupSort();
-      showUsernameOverlayIfNeeded();
-
-      const addServiceForm = document.getElementById('addServiceForm');
-      if (addServiceForm) {
-        addServiceForm.addEventListener('submit', async (e) => {
-          e.preventDefault();
-          const name = document.getElementById('serviceName').value.trim();
-          const category = document
-            .getElementById('serviceCategory')
-            .value.trim() || 'Service';
-          const city = document.getElementById('serviceCity').value.trim();
-          const pincode = document
-            .getElementById('servicePincode')
-            .value.trim();
-          const address = document
-            .getElementById('serviceAddress')
-            .value.trim();
-          const imageFile = document.getElementById('serviceImage').files[0];
-
-          if (!name || !city || !pincode || !address) {
-            showToast('Please fill all required fields.');
-            return;
-          }
-
-          const formData = new FormData();
-          formData.append('name', name);
-          formData.append('category', category);
-          formData.append('city', city);
-          formData.append('pincode', pincode);
-          formData.append('address', address);
-          if (imageFile) formData.append('image', imageFile);
-
-          try {
-            const res = await fetch(API_BASE + '/services', {
-              method: 'POST',
-              body: formData,
-            });
-            const data = await res.json().catch(() => ({}));
-            if (!res.ok) {
-              showToast(data.message || 'Failed to add service');
-              return;
-            }
-
-            const code = data.deleteCode;
-            if (code) {
-              showToast(
-                'Service added.\nDelete code for "' +
-                (data.service?.name || name) +
-                '": ' + code +
-                '\nKeep this code safe.'
-              );
-            } else {
-              showToast('Service added.');
-            }
-
-            closeAddServiceOverlay();
-            document.getElementById('serviceName').value = '';
-            document.getElementById('serviceCategory').value = '';
-            document.getElementById('serviceCity').value = '';
-            document.getElementById('servicePincode').value = '';
-            document.getElementById('serviceAddress').value = '';
-            document.getElementById('serviceImage').value = '';
-            loadServices();
-          } catch (err) {
-            console.error(err);
-            showToast('Error adding service');
-          }
-        });
-      }
+      loadService();
     });
   </script>
 </body>
