@@ -198,9 +198,7 @@
 <body>
   <div class="page">
     <div class="top-bar">
-      <button class="back-link" type="button" onclick="goHome()">
-        ⬅ Home
-      </button>
+      <!-- Home button removed -->
       <span id="userLine"></span>
     </div>
 
@@ -239,11 +237,6 @@
         t.style.pointerEvents = 'none';
         t.style.transform = 'translateX(-50%) translateY(0)';
       }, 2000);
-    }
-
-    function goHome() {
-      // SpotSure home: service listing
-      window.location.href = '/user';
     }
 
     function getUsername() {
@@ -374,7 +367,7 @@
           return;
         }
         showToast('Service deleted');
-        setTimeout(goHome, 1200);
+        // rely on device back / manual navigation after deletion
       } catch (err) {
         console.error(err);
         showToast('Error deleting service');
@@ -394,8 +387,8 @@
         const service = await resService.json();
 
         const ratingValue = Number(service.averageRating || 0);
-        const ratingCount = Number(service.ratingCount || 0);  // number of ratings
-        const reviewCount = Number(service.reviewCount || 0);  // number of reviews
+        const ratingCount = Number(service.ratingCount || 0);  // people who rated
+        const reviewCount = Number(service.reviewCount || 0);  // people who commented
         const hasReviews = reviewCount > 0;
 
         const ratingsLabel = ratingCount === 1
