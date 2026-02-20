@@ -34,6 +34,8 @@ router.get('/services', async (req, res) => {
       s.avgRating = avg;
       s.reviewCount =
         typeof s.reviewCount === 'number' ? s.reviewCount : 0;
+      s.ratingCount =
+        typeof s.ratingCount === 'number' ? s.ratingCount : 0;
     });
 
     res.json({ services });
@@ -57,6 +59,8 @@ router.get('/services/:id', async (req, res) => {
     service.avgRating = avg;
     service.reviewCount =
       typeof service.reviewCount === 'number' ? service.reviewCount : 0;
+    service.ratingCount =
+      typeof service.ratingCount === 'number' ? service.ratingCount : 0;
 
     res.json(service);
   } catch (err) {
@@ -112,6 +116,7 @@ router.post('/services', upload.single('image'), async (req, res) => {
       imagePath,
       averageRating: 0,
       reviewCount: 0,
+      ratingCount: 0,
       isApproved: true,
       deleteCode,
     });
@@ -202,28 +207,40 @@ router.post(
         imageUrls,
       });
 
-      const stats = await Review.aggregate([
-        { $match: { service: newReview.service } },
-        {
-          $group: {
-            _id: '$service',
-            avgRating: { $avg: '$rating' },
-            count: { $sum: 1 },
-          },
-        },
-      ]);
+      // Recompute rating + review stats for this service
+      const allReviews = await Review.find({ service: newReview.service });
 
-      if (stats.length > 0) {
-        await Service.findByIdAndUpdate(newReview.service, {
-          averageRating: stats[0].avgRating,
-          reviewCount: stats[0].count,
-        });
-      } else {
-        await Service.findByIdAndUpdate(newReview.service, {
-          averageRating: 0,
-          reviewCount: 0,
-        });
-      }
+      // ratingCount: people who rated (valid numeric rating)
+      const ratingValues = allReviews
+        .filter(
+          (r) =>
+            typeof r.rating === 'number' &&
+            r.rating >= 1 &&
+            r.rating <= 5
+        )
+        .map((r) => r.rating);
+
+      const ratingCount = ratingValues.length;
+      const averageRating = ratingCount
+        ? ratingValues.reduce((sum, r) => sum + r, 0) / ratingCount
+        : 0;
+
+      // reviewCount: people who commented (non‑empty comment)
+      const reviewCount = allReviews.filter(
+        (r) =>
+          typeof r.comment === 'string' &&
+          r.comment.trim() !== ''
+      ).length;
+
+      await Service.findByIdAndUpdate(
+        newReview.service,
+        {
+          averageRating,
+          ratingCount,
+          reviewCount,
+        },
+        { new: true }
+      );
 
       res.status(201).json(newReview);
     } catch (err) {
