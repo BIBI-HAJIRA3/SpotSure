@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+service.html <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8" />
@@ -28,6 +28,20 @@
       margin-bottom: 16px;
       gap: 10px;
       flex-wrap: wrap;
+    }
+    .back-link {
+      color: #93c5fd;
+      text-decoration: none;
+      font-size: 13px;
+      cursor: pointer;
+      background: #020617;
+      border: 1px solid #2563eb;
+      padding: 6px 12px;
+      border-radius: 999px;
+    }
+    .back-link:hover {
+      background: #1d4ed8;
+      color: #f9fafb;
     }
     #userLine {
       font-size: 12px;
@@ -184,7 +198,7 @@
 <body>
   <div class="page">
     <div class="top-bar">
-      <!-- No Home/back button; rely on device/browser back -->
+      <!-- Home button removed -->
       <span id="userLine"></span>
     </div>
 
@@ -392,7 +406,7 @@
             <span>${ratingsLabel}</span>
           </div>
           <div class="rating-sub">${reviewsLabel}</div>
-        ];
+        `;
 
         document.getElementById('serviceHeader').innerHTML = `
           <div class="service-header">
@@ -468,4 +482,4 @@
     });
   </script>
 </body>
-</html>
+</html> 
