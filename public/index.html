@@ -229,21 +229,6 @@
       margin-top: 6px;
     }
 
-    /* Splash */
-    #splashScreen {
-      position: fixed;
-      inset: 0;
-      background: #020617;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: #f9fafb;
-      z-index: 50;
-      text-align: center;
-      padding: 0 24px;
-    }
-
     /* Toast dialog */
     #toast {
       position: fixed;
@@ -287,16 +272,6 @@
   </style>
 </head>
 <body>
-  <!-- Splash screen (always 1.5s) -->
-  <div id="splashScreen">
-    <div style="font-size:26px; font-weight:bold; margin-bottom:6px;">
-      SpotSure – Discover. Decide. Trust.
-    </div>
-    <div style="font-size:14px; color:#9ca3af;">
-      Loading trusted places around you...
-    </div>
-  </div>
-
   <!-- First-time username overlay -->
   <div id="usernameOverlay" class="overlay" style="display:none;">
     <div class="panel">
@@ -454,15 +429,9 @@
       });
     }
 
-    // Always show 1.5s splash; show name overlay only if username missing
     function showUsernameOverlayIfNeeded() {
       const overlay = document.getElementById('usernameOverlay');
-      const splash = document.getElementById('splashScreen');
-
-      setTimeout(() => {
-        if (splash) splash.style.display = 'none';
-        if (!getUsername() && overlay) overlay.style.display = 'flex';
-      }, 1500);
+      if (!getUsername() && overlay) overlay.style.display = 'flex';
     }
 
     // Add Service overlay
