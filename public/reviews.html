@@ -3,22 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <title>SpotSure – Reviews</title>
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <style>
     * { box-sizing: border-box; }
+
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       background: #020617;
       color: #e5e7eb;
     }
+
     .page {
       max-width: 520px;
       margin: 0 auto;
       padding: 20px 14px 28px;
       min-height: 100vh;
     }
+
     .top-bar {
       display: flex;
       align-items: center;
@@ -45,6 +47,7 @@
       font-size: 12px;
       color: #9ca3af;
     }
+
     .service-title {
       font-size: 16px;
       font-weight: 600;
@@ -56,6 +59,7 @@
       color: #9ca3af;
       margin-bottom: 12px;
     }
+
     .card {
       background: #111827;
       border-radius: 14px;
@@ -68,6 +72,7 @@
       font-size: 15px;
       color: #f9fafb;
     }
+
     .review-item {
       margin-bottom: 10px;
       font-size: 13px;
@@ -94,6 +99,7 @@
       font-size: 13px;
       color: #6b7280;
     }
+
     .primary-link {
       margin-top: 10px;
       display: inline-block;
@@ -102,6 +108,7 @@
       text-decoration: underline;
       cursor: pointer;
     }
+
     .stars {
       color: #fbbf24;
       font-size: 14px;
@@ -110,6 +117,7 @@
     .stars-empty {
       color: #4b5563;
     }
+
     /* Toast */
     #toast {
       position: fixed;
@@ -154,7 +162,9 @@
     </div>
   </div>
 
-  <div id="toast"><span id="toastMessage"></span></div>
+  <div id="toast">
+    <span id="toastMessage"></span>
+  </div>
 
   <script>
     const API_BASE = window.location.origin + '/api';
@@ -184,8 +194,7 @@
     function goBackToService() {
       const id = getServiceIdFromUrl();
       if (!id) {
-        // If no id, go to main list instead of /user
-        window.location.href = '/index.html';
+        window.location.href = '/user';
         return;
       }
       window.location.href = '/service.html?id=' + encodeURIComponent(id);
@@ -200,7 +209,6 @@
     function getUsername() {
       return localStorage.getItem('spotsureUsername') || null;
     }
-
     function updateUserLine() {
       const el = document.getElementById('userLine');
       const name = getUsername();
@@ -228,8 +236,7 @@
         const s = await res.json();
         document.getElementById('serviceTitle').textContent = s.name || 'Service';
         document.getElementById('serviceSub').textContent =
-          (s.category || 'Service') + ' • ' + (s.city || '') +
-          (s.pincode ? ' (PIN: ' + s.pincode + ')' : '');
+          (s.category || 'Service') + ' • ' + (s.city || '') + (s.pincode ? ' (PIN: ' + s.pincode + ')' : '');
       } catch (e) {
         document.getElementById('serviceTitle').textContent = 'Error loading service';
         document.getElementById('serviceSub').textContent = '';
@@ -280,8 +287,7 @@
         });
       } catch (e) {
         const container = document.getElementById('reviewsContainer');
-        container.innerHTML =
-          '<p class="no-reviews">Error loading reviews.</p>';
+        container.innerHTML = '<p class="no-reviews">Error loading reviews.</p>';
       }
     }
 
