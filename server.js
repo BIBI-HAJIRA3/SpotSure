@@ -69,13 +69,7 @@ const publicDir = path.join(__dirname, 'public');
 app.use(express.static(publicDir));
 
 // Pages
-// Intro page (separate file)
 app.get('/', (req, res) => {
-  res.sendFile(path.join(publicDir, 'intro.html'));
-});
-
-// Explicit route for services list page
-app.get('/index.html', (req, res) => {
   res.sendFile(path.join(publicDir, 'index.html'));
 });
 
