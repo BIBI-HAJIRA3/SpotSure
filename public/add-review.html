@@ -3,30 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <title>SpotSure – Add Review</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <style>
     * { box-sizing: border-box; }
-
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       background: #020617;
       color: #e5e7eb;
     }
-
     .page {
       max-width: 520px;
       margin: 0 auto;
       padding: 20px 14px 28px;
       min-height: 100vh;
     }
-
     .top-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 16px;
       gap: 10px;
+      margin-bottom: 16px;
       flex-wrap: wrap;
     }
     .back-link {
@@ -47,7 +45,6 @@
       font-size: 12px;
       color: #9ca3af;
     }
-
     .service-title {
       font-size: 16px;
       font-weight: 600;
@@ -59,7 +56,6 @@
       color: #9ca3af;
       margin-bottom: 12px;
     }
-
     .card {
       background: #111827;
       border-radius: 14px;
@@ -72,52 +68,48 @@
       font-size: 15px;
       color: #f9fafb;
     }
-
-    .label-small {
+    label {
       display: block;
       font-size: 12px;
       margin-top: 8px;
-      margin-bottom: 2px;
-      color: #e5e7eb;
+      margin-bottom: 4px;
     }
-    .input-field {
+    select, textarea, input[type="file"] {
       width: 100%;
-      padding: 7px 8px;
+      font-size: 13px;
+      padding: 6px 8px;
       border-radius: 8px;
       border: 1px solid #374151;
       background: #020617;
       color: #e5e7eb;
-      margin-bottom: 4px;
-      font-size: 13px;
     }
-    .input-file {
-      margin-top: 4px;
-      font-size: 12px;
-      color: #e5e7eb;
+    textarea {
+      resize: vertical;
+      min-height: 70px;
     }
-    .btn-primary {
+    .actions {
       margin-top: 12px;
-      padding: 9px 12px;
-      border-radius: 999px;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .primary-btn {
+      background: #2563eb;
+      color: #f9fafb;
       border: none;
-      font-size: 14px;
+      border-radius: 999px;
+      padding: 7px 16px;
+      font-size: 13px;
       cursor: pointer;
-      background: #16a34a;
-      color: #ffffff;
-      width: 100%;
     }
-    .btn-primary:hover {
-      background: #15803d;
+    .primary-btn:disabled {
+      opacity: 0.5;
+      cursor: default;
     }
-
-    #starRating {
-      display:flex;
-      gap:6px;
-      margin-bottom:4px;
-      cursor:pointer;
-      font-size:22px;
+    .hint {
+      font-size: 11px;
+      color: #6b7280;
+      margin-top: 4px;
     }
-
     /* Toast */
     #toast {
       position: fixed;
@@ -143,42 +135,43 @@
 <body>
   <div class="page">
     <div class="top-bar">
-      <button class="back-link" type="button" onclick="goBackToService()">
-        ⬅ Service
+      <button class="back-link" type="button" onclick="goBack()">
+        ⬅ Back
       </button>
       <span id="userLine"></span>
     </div>
 
-    <div class="service-title" id="serviceTitle">Loading...</div>
+    <div class="service-title" id="serviceTitle">Add review</div>
     <div class="service-sub" id="serviceSub"></div>
 
     <div class="card">
-      <h2>Add review</h2>
-      <form id="reviewForm">
-        <label class="label-small">Rating</label>
-        <div id="starRating">
-          <span data-value="1">☆</span>
-          <span data-value="2">☆</span>
-          <span data-value="3">☆</span>
-          <span data-value="4">☆</span>
-          <span data-value="5">☆</span>
+      <h2>Your review</h2>
+      <form id="reviewForm" enctype="multipart/form-data">
+        <label for="rating">Rating</label>
+        <select id="rating" name="rating" required>
+          <option value="">Select rating</option>
+          <option value="5">5 – Excellent</option>
+          <option value="4">4 – Good</option>
+          <option value="3">3 – OK</option>
+          <option value="2">2 – Poor</option>
+          <option value="1">1 – Very poor</option>
+        </select>
+
+        <label for="comment">Comment</label>
+        <textarea id="comment" name="comment" placeholder="Share your experience"></textarea>
+
+        <label for="images">Photos (optional)</label>
+        <input id="images" name="images" type="file" accept="image/*" multiple />
+        <div class="hint">You can add multiple photos.</div>
+
+        <div class="actions">
+          <button type="submit" class="primary-btn" id="submitBtn">Submit</button>
         </div>
-        <input id="ratingInput" type="hidden" />
-
-        <label class="label-small">Comment (optional)</label>
-        <input id="commentInput" type="text" class="input-field" />
-
-        <label class="label-small">Images (optional)</label>
-        <input id="imagesInput" type="file" class="input-file" multiple accept="image/*" />
-
-        <button type="submit" class="btn-primary">Submit review</button>
       </form>
     </div>
   </div>
 
-  <div id="toast">
-    <span id="toastMessage"></span>
-  </div>
+  <div id="toast"><span id="toastMessage"></span></div>
 
   <script>
     const API_BASE = window.location.origin + '/api';
@@ -205,18 +198,20 @@
       return params.get('id');
     }
 
-    function goBackToService() {
+    function goBack() {
       const id = getServiceIdFromUrl();
-      if (!id) {
-        window.location.href = '/user';
-        return;
+      if (id) {
+        window.location.href = '/service.html?id=' + encodeURIComponent(id);
+      } else {
+        // If no id, go to main list instead of /user
+        window.location.href = '/index.html';
       }
-      window.location.href = '/service.html?id=' + encodeURIComponent(id);
     }
 
     function getUsername() {
       return localStorage.getItem('spotsureUsername') || null;
     }
+
     function updateUserLine() {
       const el = document.getElementById('userLine');
       const name = getUsername();
@@ -224,111 +219,62 @@
       el.textContent = name ? 'Welcome, ' + name : '';
     }
 
-    function setupStarRating() {
-      const stars = document.querySelectorAll('#starRating span');
-      const ratingInput = document.getElementById('ratingInput');
-      if (!stars.length || !ratingInput) return;
-
-      function setRating(val) {
-        ratingInput.value = val;
-        stars.forEach((star) => {
-          const v = Number(star.dataset.value);
-          star.textContent = v <= val ? '★' : '☆';
-        });
-      }
-
-      stars.forEach((star) => {
-        star.addEventListener('click', () => {
-          const val = Number(star.dataset.value);
-          setRating(val);
-        });
-      });
-    }
-
     async function loadServiceHeader() {
       const id = getServiceIdFromUrl();
-      if (!id) {
-        document.getElementById('serviceTitle').textContent = 'Missing service id';
-        return;
-      }
+      if (!id) return;
       try {
         const res = await fetch(API_BASE + '/services/' + id);
         if (!res.ok) throw new Error();
         const s = await res.json();
-        document.getElementById('serviceTitle').textContent = s.name || 'Service';
+        document.getElementById('serviceTitle').textContent =
+          'Review: ' + (s.name || 'Service');
         document.getElementById('serviceSub').textContent =
-          (s.category || 'Service') + ' • ' + (s.city || '') + (s.pincode ? ' (PIN: ' + s.pincode + ')' : '');
+          (s.category || 'Service') + ' • ' + (s.city || '') +
+          (s.pincode ? ' (PIN: ' + s.pincode + ')' : '');
       } catch (e) {
-        document.getElementById('serviceTitle').textContent = 'Error loading service';
         document.getElementById('serviceSub').textContent = '';
       }
     }
 
-    async function handleReviewSubmit(e) {
-      e.preventDefault();
-      const serviceId = getServiceIdFromUrl();
-      if (!serviceId) return;
-
-      const rating = Number(
-        document.getElementById('ratingInput').value
-      );
-      const comment = document
-        .getElementById('commentInput')
-        .value.trim();
-      const files = document.getElementById('imagesInput').files;
-      const username = getUsername() || 'Anonymous';
-
-      if (!rating || rating < 1 || rating > 5) {
-        showToast('Please select a rating between 1 and 5.');
+    async function handleReviewSubmit(event) {
+      event.preventDefault();
+      const id = getServiceIdFromUrl();
+      if (!id) {
+        showToast('Missing service id');
         return;
       }
 
-      const formData = new FormData();
-      formData.append('rating', rating);
-      formData.append('username', username);
-      if (comment) formData.append('comment', comment);
-      if (files && files.length > 0) {
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+
+      try {
+        const formData = new FormData();
+        formData.append('rating', document.getElementById('rating').value);
+        formData.append('comment', document.getElementById('comment').value);
+        const files = document.getElementById('images').files;
         for (let i = 0; i < files.length; i++) {
           formData.append('images', files[i]);
         }
-      }
 
-      try {
-        const res = await fetch(
-          API_BASE + '/services/' + serviceId + '/reviews',
-          {
-            method: 'POST',
-            body: formData,
-          }
-        );
-        if (!res.ok) {
-          showToast('Failed to submit review');
-          return;
-        }
-
-        // clear fields
-        document.getElementById('ratingInput').value = '';
-        document.getElementById('commentInput').value = '';
-        document.getElementById('imagesInput').value = '';
-        // reset stars visually
-        const stars = document.querySelectorAll('#starRating span');
-        stars.forEach((star) => { star.textContent = '☆'; });
+        const res = await fetch(API_BASE + '/services/' + id + '/reviews', {
+          method: 'POST',
+          body: formData
+        });
+        if (!res.ok) throw new Error();
 
         showToast('Review added');
-
-        // after short delay, go back to reviews list
         setTimeout(() => {
-          window.location.href = '/reviews.html?id=' + encodeURIComponent(serviceId);
-        }, 2200);
-      } catch (err) {
-        console.error(err);
-        showToast('Error submitting review');
+          window.location.href = '/reviews.html?id=' + encodeURIComponent(id);
+        }, 800);
+      } catch (e) {
+        showToast('Error adding review');
+      } finally {
+        submitBtn.disabled = false;
       }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
       updateUserLine();
-      setupStarRating();
       loadServiceHeader();
       const form = document.getElementById('reviewForm');
       if (form) form.addEventListener('submit', handleReviewSubmit);
