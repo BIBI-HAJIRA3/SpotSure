@@ -500,10 +500,21 @@
       return 'https://placehold.co/80x80?text=Svc';
     }
 
+    // UPDATED: use ratingCount for ratings, reviewCount for comments
     function buildRatingText(s) {
       const avg = Number(s.averageRating || 0).toFixed(1);
-      const count = s.reviewCount || 0;
-      return avg + ' ★ (' + count + ')';
+      const ratingsCount = Number(s.ratingCount || 0);   // people who rated
+      const reviewsCount = Number(s.reviewCount || 0);   // people who commented
+
+      const ratingsLabel = ratingsCount === 1
+        ? '1 rating'
+        : ratingsCount + ' ratings';
+
+      const reviewsLabel = reviewsCount === 0
+        ? 'No reviews'
+        : (reviewsCount === 1 ? '1 review' : reviewsCount + ' reviews');
+
+      return avg + ' ★ • ' + ratingsLabel + ' • ' + reviewsLabel;
     }
 
     function filterServices() {
