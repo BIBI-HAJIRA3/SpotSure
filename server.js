@@ -56,13 +56,11 @@ app.use('/api', serviceRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/image', imageRoutes);
-const publicDir = path.join(__dirname, 'public');
-app.use(express.static(publicDir));
 
 const publicDir = path.join(__dirname, 'public');
 app.use(express.static(publicDir));
 
-// Root: intro (index.html)
+// Intro at root
 app.get('/', (req, res) => {
   res.sendFile(path.join(publicDir, 'index.html'));
 });
@@ -84,11 +82,11 @@ app.get('/add-review.html', (req, res) => {
   res.sendFile(path.join(publicDir, 'add-review.html'));
 });
 
+app.get('/add-service.html', (req, res) => {
+  res.sendFile(path.join(publicDir, 'add-service.html'));
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`SpotSure server running on http://localhost:${PORT}`);
 });
-
-
-
