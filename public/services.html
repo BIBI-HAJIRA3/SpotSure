@@ -286,7 +286,6 @@
 
     function getServiceImage(service) {
       if (service.imagePath) {
-        // Cloudinary public_id like "folder/abc123"
         return '/image/' + encodeURIComponent(service.imagePath);
       }
       if (service.imageUrl) {
