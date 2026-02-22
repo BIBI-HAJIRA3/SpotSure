@@ -95,6 +95,9 @@
       color: #ffffff;
       width: 100%;
     }
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
 
     /* Toast dialog */
     #toast {
@@ -119,6 +122,17 @@
     #toastMessage {
       margin-right: 40px;
     }
+    #toastOkBtn {
+      margin-top: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid #2563eb;
+      background: #2563eb;
+      color: #fff;
+      font-size: 12px;
+      cursor: pointer;
+      float: right;
+    }
   </style>
 </head>
 <body>
@@ -135,7 +149,7 @@
 
     <div class="card">
       <h2>Service details</h2>
-      <form id="addServiceForm">
+      <form id="addServiceForm" enctype="multipart/form-data">
         <label class="label-small">Name</label>
         <input id="serviceName" class="input-field" placeholder="Service name" />
 
@@ -161,6 +175,7 @@
 
   <div id="toast">
     <span id="toastMessage"></span>
+    <button id="toastOkBtn" type="button">OK</button>
   </div>
 
   <script>
@@ -171,20 +186,24 @@
       window.location.href = '/services.html';
     }
 
-    function showToast(message) {
+    function showToast(message, onOk) {
       const t = document.getElementById('toast');
       const msg = document.getElementById('toastMessage');
-      if (!t || !msg) return;
+      const ok = document.getElementById('toastOkBtn');
+      if (!t || !msg || !ok) return;
       msg.textContent = message;
       t.style.opacity = '1';
       t.style.pointerEvents = 'auto';
       t.style.transform = 'translateX(-50%) translateY(-4px)';
       if (toastTimer) clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => {
+      toastTimer = null;
+
+      ok.onclick = () => {
         t.style.opacity = '0';
         t.style.pointerEvents = 'none';
         t.style.transform = 'translateX(-50%) translateY(0)';
-      }, 2200);
+        if (typeof onOk === 'function') onOk();
+      };
     }
 
     async function handleAddService(e) {
@@ -227,15 +246,19 @@
             'Service added.\nDelete code for "' +
             (data.service?.name || name) +
             '": ' + code +
-            '\nKeep this code safe.'
+            '\nKeep this code safe and press OK to continue.',
+            () => {
+              window.location.href = '/services.html';
+            }
           );
         } else {
-          showToast('Service added.');
+          showToast(
+            'Service added. Press OK to continue.',
+            () => {
+              window.location.href = '/services.html';
+            }
+          );
         }
-
-        setTimeout(() => {
-          window.location.href = '/services.html';
-        }, 2300);
       } catch (err) {
         console.error(err);
         showToast('Error adding service');
