@@ -60,13 +60,14 @@ app.use('/image', imageRoutes);
 const publicDir = path.join(__dirname, 'public');
 app.use(express.static(publicDir));
 
-// Intro at root, services at /index.html
+// Root serves intro (now index.html)
 app.get('/', (req, res) => {
-  res.sendFile(path.join(publicDir, 'intro.html'));
+  res.sendFile(path.join(publicDir, 'index.html'));
 });
 
-app.get('/index.html', (req, res) => {
-  res.sendFile(path.join(publicDir, 'index.html'));
+// Services page at /services.html
+app.get('/services.html', (req, res) => {
+  res.sendFile(path.join(publicDir, 'services.html'));
 });
 
 app.get('/service.html', (req, res) => {
@@ -81,7 +82,9 @@ app.get('/add-review.html', (req, res) => {
   res.sendFile(path.join(publicDir, 'add-review.html'));
 });
 
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`SpotSure server running on http://localhost:${PORT}`);
 });
+
