@@ -1,3 +1,4 @@
+<!-- SpotSure/public/add-review.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,24 +25,10 @@
     .top-bar {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-end;
       margin-bottom: 16px;
       gap: 10px;
       flex-wrap: wrap;
-    }
-    .back-link {
-      color: #93c5fd;
-      text-decoration: none;
-      font-size: 13px;
-      cursor: pointer;
-      background: #020617;
-      border: 1px solid #2563eb;
-      padding: 6px 12px;
-      border-radius: 999px;
-    }
-    .back-link:hover {
-      background: #1d4ed8;
-      color: #f9fafb;
     }
     #userLine {
       font-size: 12px;
@@ -143,9 +130,6 @@
 <body>
   <div class="page">
     <div class="top-bar">
-      <button class="back-link" type="button" onclick="goBackToService()">
-        ⬅ Service
-      </button>
       <span id="userLine"></span>
     </div>
 
@@ -203,15 +187,6 @@
     function getServiceIdFromUrl() {
       const params = new URLSearchParams(window.location.search);
       return params.get('id');
-    }
-
-    function goBackToService() {
-      const id = getServiceIdFromUrl();
-      if (!id) {
-        window.location.href = '/user';
-        return;
-      }
-      window.location.href = '/service.html?id=' + encodeURIComponent(id);
     }
 
     function getUsername() {
@@ -306,17 +281,14 @@
           return;
         }
 
-        // clear fields
         document.getElementById('ratingInput').value = '';
         document.getElementById('commentInput').value = '';
         document.getElementById('imagesInput').value = '';
-        // reset stars visually
         const stars = document.querySelectorAll('#starRating span');
         stars.forEach((star) => { star.textContent = '☆'; });
 
         showToast('Review added');
 
-        // after short delay, go back to reviews list
         setTimeout(() => {
           window.location.href = '/reviews.html?id=' + encodeURIComponent(serviceId);
         }, 2200);
