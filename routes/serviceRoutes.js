@@ -88,15 +88,20 @@ router.post('/services', upload.single('image'), async (req, res) => {
     if (req.file) {
       const cloudinary = req.cloudinary;
 
-      const uploadedUrl = await new Promise((resolve, reject) => {
-        if (!cloudinary || !cloudinary.uploader || !cloudinary.uploader.upload_stream) {
+      const publicId = await new Promise((resolve, reject) => {
+        if (
+          !cloudinary ||
+          !cloudinary.uploader ||
+          !cloudinary.uploader.upload_stream
+        ) {
           return resolve('');
         }
         const stream = cloudinary.uploader.upload_stream(
           { folder: 'spotsure-services' },
           (err, result) => {
             if (err) return reject(err);
-            resolve(result.secure_url);
+            // Store public_id for use with /image/:publicId
+            resolve(result.public_id || '');
           }
         );
         stream.end(req.file.buffer);
@@ -105,7 +110,7 @@ router.post('/services', upload.single('image'), async (req, res) => {
         return '';
       });
 
-      imagePath = uploadedUrl || '';
+      imagePath = publicId || '';
     }
 
     const service = await Service.create({
@@ -114,7 +119,7 @@ router.post('/services', upload.single('image'), async (req, res) => {
       city,
       pincode,
       address,
-      imagePath,
+      imagePath,   // now holds Cloudinary public_id
       deleteCode,
       isApproved: true,
     });
@@ -175,7 +180,7 @@ router.post('/services/:id/delete-with-code', async (req, res) => {
 });
 
 // ------------------------------------------------------------------
-// Add a review to a service (UPDATED to keep counts correct)
+// Add a review to a service
 // POST /api/services/:id/reviews
 // ------------------------------------------------------------------
 router.post(
