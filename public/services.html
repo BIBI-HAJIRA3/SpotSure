@@ -313,9 +313,6 @@
         ? searchInput.value.trim().toLowerCase()
         : '';
 
-      const sortSel = document.getElementById('sortSelect');
-      const sortMode = sortSel ? sortSel.value : 'default';
-
       let list = allServices.filter((s) => {
         const matchesSidebarCategory =
           currentCategory === 'All' ||
@@ -335,17 +332,6 @@
 
         return matchesSidebarCategory && matchesSearch;
       });
-
-      if (sortMode === 'top') {
-        list = list.slice().sort((a, b) => {
-          const ra = Number(a.averageRating || 0);
-          const rb = Number(b.averageRating || 0);
-          if (rb !== ra) return rb - ra;
-          const ca = Number(a.reviewCount || 0);
-          const cb = Number(b.reviewCount || 0);
-          return cb - ca;
-        });
-      }
 
       return list;
     }
@@ -423,19 +409,11 @@
       }
     }
 
-    function setupSort() {
-      const sel = document.getElementById('sortSelect');
-      if (sel) {
-        sel.addEventListener('change', () => renderServices());
-      }
-    }
-
     document.addEventListener('DOMContentLoaded', () => {
       updateUserLine();
       loadServices();
       setupCategoryFilters();
       setupSearch();
-      setupSort();
     });
   </script>
 </body>
