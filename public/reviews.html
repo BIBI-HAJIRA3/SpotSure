@@ -1,3 +1,4 @@
+<!-- SpotSure/public/reviews.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -28,20 +29,6 @@
       margin-bottom: 16px;
       gap: 10px;
       flex-wrap: wrap;
-    }
-    .back-link {
-      color: #93c5fd;
-      text-decoration: none;
-      font-size: 13px;
-      cursor: pointer;
-      background: #020617;
-      border: 1px solid #2563eb;
-      padding: 6px 12px;
-      border-radius: 999px;
-    }
-    .back-link:hover {
-      background: #1d4ed8;
-      color: #f9fafb;
     }
     #userLine {
       font-size: 12px;
@@ -100,15 +87,6 @@
       color: #6b7280;
     }
 
-    .primary-link {
-      margin-top: 10px;
-      display: inline-block;
-      font-size: 13px;
-      color: #93c5fd;
-      text-decoration: underline;
-      cursor: pointer;
-    }
-
     .stars {
       color: #fbbf24;
       font-size: 14px;
@@ -143,9 +121,6 @@
 <body>
   <div class="page">
     <div class="top-bar">
-      <button class="back-link" type="button" onclick="goBackToService()">
-        ⬅ Service
-      </button>
       <span id="userLine"></span>
     </div>
 
@@ -155,10 +130,6 @@
     <div class="card">
       <h2>All reviews</h2>
       <div id="reviewsContainer"></div>
-    </div>
-
-    <div>
-      <span class="primary-link" onclick="goToAddReview()">+ Add a review</span>
     </div>
   </div>
 
@@ -189,21 +160,6 @@
     function getServiceIdFromUrl() {
       const params = new URLSearchParams(window.location.search);
       return params.get('id');
-    }
-
-    function goBackToService() {
-      const id = getServiceIdFromUrl();
-      if (!id) {
-        window.location.href = '/user';
-        return;
-      }
-      window.location.href = '/service.html?id=' + encodeURIComponent(id);
-    }
-
-    function goToAddReview() {
-      const id = getServiceIdFromUrl();
-      if (!id) return;
-      window.location.href = '/add-review.html?id=' + encodeURIComponent(id);
     }
 
     function getUsername() {
