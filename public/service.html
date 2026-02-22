@@ -187,6 +187,10 @@
 
       <div class="btn-row">
         <button class="btn-primary" type="button" onclick="openAddReview()">Add review</button>
+        <!-- NEW: delete service button (only change in HTML) -->
+        <button class="btn-primary" type="button" style="background:#b91c1c" onclick="promptDeleteService()">
+          Delete service
+        </button>
       </div>
     </div>
 
@@ -355,6 +359,37 @@
       } catch (e) {
         const container = document.getElementById('reviewsContainer');
         container.innerHTML = '<p class="no-reviews">Error loading reviews.</p>';
+      }
+    }
+
+    // NEW: delete service function (only change in JS)
+    async function promptDeleteService() {
+      const id = getServiceIdFromUrl();
+      if (!id) return;
+
+      const code = prompt('Enter the delete code for this service:');
+      if (!code) return;
+
+      try {
+        const res = await fetch(API_BASE + '/services/' + id + '/delete-with-code', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code }),
+        });
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok) {
+          showToast(data.message || 'Failed to delete service');
+          return;
+        }
+
+        showToast('Service deleted');
+        setTimeout(() => {
+          window.location.href = '/services.html';
+        }, 1000);
+      } catch (err) {
+        console.error(err);
+        showToast('Error deleting service');
       }
     }
 
