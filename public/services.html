@@ -1,4 +1,4 @@
-<!-- SpotSure/public/index.html -->
+<!-- SpotSure/public/services.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -210,7 +210,7 @@
         <div class="top-sub" id="welcomeUserLine"></div>
       </div>
       <div style="display:flex; gap:6px;">
-        <button class="pill-btn" type="button" onclick="openAddServiceOverlay()">
+        <button class="pill-btn" type="button" onclick="window.location.href='/add-service.html'">
           + Add
         </button>
       </div>
@@ -235,7 +235,6 @@
       <button class="chip category-btn" data-category="Grocery">Grocery</button>
     </div>
 
-    <!-- Label removed (kept an empty container) -->
     <div class="list-section-title"></div>
     <div id="services" class="services-list"></div>
   </div>
@@ -283,16 +282,6 @@
       if (!line) return;
       if (name) line.textContent = 'Welcome back, ' + name;
       else line.textContent = '';
-    }
-
-    function openAddServiceOverlay() {
-      const el = document.getElementById('addServiceOverlay');
-      if (!el) return;
-      el.style.display = 'flex';
-    }
-    function closeAddServiceOverlay() {
-      const el = document.getElementById('addServiceOverlay');
-      if (el) el.style.display = 'none';
     }
 
     function getServiceImage(service) {
@@ -447,74 +436,6 @@
       setupCategoryFilters();
       setupSearch();
       setupSort();
-
-      const addServiceForm = document.getElementById('addServiceForm');
-      if (addServiceForm) {
-        addServiceForm.addEventListener('submit', async (e) => {
-          e.preventDefault();
-          const name = document.getElementById('serviceName').value.trim();
-          const category = document
-            .getElementById('serviceCategory')
-            .value.trim() || 'Service';
-          const city = document.getElementById('serviceCity').value.trim();
-          const pincode = document
-            .getElementById('servicePincode')
-            .value.trim();
-          const address = document
-            .getElementById('serviceAddress')
-            .value.trim();
-          const imageFile = document.getElementById('serviceImage').files[0];
-
-          if (!name || !city || !pincode || !address) {
-            showToast('Please fill all required fields.');
-            return;
-          }
-
-          const formData = new FormData();
-          formData.append('name', name);
-          formData.append('category', category);
-          formData.append('city', city);
-          formData.append('pincode', pincode);
-          formData.append('address', address);
-          if (imageFile) formData.append('image', imageFile);
-
-          try {
-            const res = await fetch(API_BASE + '/services', {
-              method: 'POST',
-              body: formData,
-            });
-            const data = await res.json().catch(() => ({}));
-            if (!res.ok) {
-              showToast(data.message || 'Failed to add service');
-              return;
-            }
-
-            const code = data.deleteCode;
-            if (code) {
-              showToast(
-                'Service added.\nDelete code for "' +
-                (data.service?.name || name) +
-                '": ' + code +
-                '\nKeep this code safe.'
-              );
-            } else {
-              showToast('Service added.');
-            }
-
-            closeAddServiceOverlay();
-            document.getElementById('serviceName').value = '';
-            document.getElementById('serviceCategory').value = '';
-            document.getElementById('serviceCity').value = '';
-            document.getElementById('servicePincode').value = '';
-            document.getElementById('serviceAddress').value = '';
-            document.getElementById('serviceImage').value = '';
-            loadServices();
-          } catch (err) {
-            console.error(err);
-            showToast('Error adding service');
-          }
-        });
-      }
     });
   </script>
 </body>
