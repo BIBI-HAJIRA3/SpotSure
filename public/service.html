@@ -1,9 +1,9 @@
-<!-- SpotSure/public/add-service.html -->
+<!-- SpotSure/public/service.html -->
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>SpotSure – Add Service</title>
+  <title>SpotSure – Service</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <style>
     * { box-sizing: border-box; }
@@ -26,8 +26,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 16px;
       gap: 10px;
+      margin-bottom: 16px;
       flex-wrap: wrap;
     }
     .top-title {
@@ -55,51 +55,66 @@
       border: 1px solid #1f2937;
       padding: 14px;
       box-shadow: 0 1px 4px rgba(0,0,0,0.6);
-    }
-    .card h2 {
-      margin: 0 0 8px;
-      font-size: 16px;
-      color: #f9fafb;
+      margin-bottom: 14px;
     }
 
-    .label-small {
-      display: block;
-      font-size: 12px;
-      margin-top: 8px;
-      margin-bottom: 2px;
-      color: #e5e7eb;
+    .service-header {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 10px;
     }
-    .input-field {
-      width: 100%;
-      padding: 7px 8px;
-      border-radius: 8px;
-      border: 1px solid #374151;
-      background: #020617;
-      color: #e5e7eb;
-      margin-bottom: 4px;
-      font-size: 13px;
+    .service-thumb {
+      width: 72px;
+      height: 72px;
+      border-radius: 10px;
+      object-fit: cover;
+      flex-shrink: 0;
+      background: #1f2937;
     }
-    .input-file {
-      margin-top: 4px;
+    .service-main h1 {
+      margin: 0 0 4px;
+      font-size: 18px;
+      color: #f9fafb;
+    }
+    .service-main p {
+      margin: 0;
       font-size: 12px;
-      color: #e5e7eb;
+      color: #9ca3af;
+      line-height: 1.4;
+    }
+
+    .rating-row {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-top: 6px;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      flex-wrap: wrap;
     }
     .btn-primary {
-      margin-top: 12px;
-      padding: 9px 12px;
+      padding: 8px 12px;
       border-radius: 999px;
       border: none;
-      font-size: 14px;
+      font-size: 13px;
       cursor: pointer;
       background: #2563eb;
       color: #ffffff;
-      width: 100%;
     }
-    .btn-primary:hover {
-      background: #1d4ed8;
+    .btn-secondary {
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid #374151;
+      font-size: 13px;
+      cursor: pointer;
+      background: #020617;
+      color: #e5e7eb;
     }
 
-    /* Toast dialog */
+    /* Toast */
     #toast {
       position: fixed;
       left: 50%;
@@ -128,38 +143,30 @@
   <div class="page">
     <div class="top-bar">
       <div>
-        <div class="top-title">Add a service</div>
-        <div class="top-sub">Fill details so others can find it.</div>
+        <div class="top-title" id="serviceTitle">Service</div>
+        <div class="top-sub" id="serviceSub"></div>
       </div>
-      <button class="pill-btn" type="button" onclick="goBackToServices()">
-        ⬅ Services
-      </button>
+      <button class="pill-btn" type="button" onclick="goBackToServices()">⬅ Services</button>
     </div>
 
-    <div class="card">
-      <h2>Service details</h2>
-      <form id="addServiceForm">
-        <label class="label-small">Name</label>
-        <input id="serviceName" class="input-field" placeholder="Service name" />
+    <div class="card" id="serviceCard" style="display:none;">
+      <div class="service-header">
+        <img id="serviceImage" class="service-thumb" src="" alt="">
+        <div class="service-main">
+          <h1 id="serviceName"></h1>
+          <p id="serviceMeta"></p>
+          <div class="rating-row" id="serviceRating"></div>
+        </div>
+      </div>
+      <p id="serviceAddressText" style="font-size:13px; color:#e5e7eb; margin:4px 0 0;"></p>
 
-        <label class="label-small">Category</label>
-        <input id="serviceCategory" class="input-field" placeholder="e.g. Hospital, Grocery" />
-
-        <label class="label-small">City</label>
-        <input id="serviceCity" class="input-field" placeholder="City" />
-
-        <label class="label-small">Pincode</label>
-        <input id="servicePincode" class="input-field" placeholder="Pincode" />
-
-        <label class="label-small">Address</label>
-        <input id="serviceAddress" class="input-field" placeholder="Full address" />
-
-        <label class="label-small">Image (optional)</label>
-        <input id="serviceImage" type="file" class="input-file" accept="image/*" />
-
-        <button type="submit" class="btn-primary">Save service</button>
-      </form>
+      <div class="btn-row">
+        <button class="btn-primary" type="button" onclick="openReviews()">View reviews</button>
+        <button class="btn-secondary" type="button" onclick="openAddReview()">Add review</button>
+      </div>
     </div>
+
+    <p id="loadingText" style="font-size:13px; color:#9ca3af;">Loading service...</p>
   </div>
 
   <div id="toast">
@@ -170,8 +177,25 @@
     const API_BASE = window.location.origin + '/api';
     let toastTimer = null;
 
+    function getServiceIdFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('id');
+    }
+
     function goBackToServices() {
       window.location.href = '/services.html';
+    }
+
+    function openReviews() {
+      const id = getServiceIdFromUrl();
+      if (!id) return;
+      window.location.href = '/reviews.html?id=' + encodeURIComponent(id);
+    }
+
+    function openAddReview() {
+      const id = getServiceIdFromUrl();
+      if (!id) return;
+      window.location.href = '/add-review.html?id=' + encodeURIComponent(id);
     }
 
     function showToast(message) {
@@ -187,76 +211,71 @@
         t.style.opacity = '0';
         t.style.pointerEvents = 'none';
         t.style.transform = 'translateX(-50%) translateY(0)';
-      }, 2200);
+      }, 2000);
     }
 
-    async function handleAddService(e) {
-      e.preventDefault();
+    function getServiceImageUrl(svc) {
+      if (svc.imagePath) {
+        return '/image/' + encodeURIComponent(svc.imagePath);
+      }
+      return 'https://placehold.co/120x120?text=Svc';
+    }
 
-      const name = document.getElementById('serviceName').value.trim();
-      const category = document.getElementById('serviceCategory').value.trim() || 'Service';
-      const city = document.getElementById('serviceCity').value.trim();
-      const pincode = document.getElementById('servicePincode').value.trim();
-      const address = document.getElementById('serviceAddress').value.trim();
-      const imageFile = document.getElementById('serviceImage').files[0];
+    function buildRatingText(s) {
+      const avg = Number(s.averageRating || 0).toFixed(1);
+      const ratingsCount = Number(s.ratingCount || 0);
+      const reviewsCount = Number(s.reviewCount || 0);
 
-      if (!name || !city || !pincode || !address) {
-        showToast('Please fill all required fields.');
+      const ratingsLabel = ratingsCount === 1
+        ? '1 rating'
+        : ratingsCount + ' ratings';
+
+      const reviewsLabel = reviewsCount === 0
+        ? 'No reviews'
+        : (reviewsCount === 1 ? '1 review' : reviewsCount + ' reviews');
+
+      return avg + ' ★ • ' + ratingsLabel + ' • ' + reviewsLabel;
+    }
+
+    async function loadService() {
+      const id = getServiceIdFromUrl();
+      const loadingEl = document.getElementById('loadingText');
+      const cardEl = document.getElementById('serviceCard');
+      if (!id) {
+        if (loadingEl) loadingEl.textContent = 'Missing service id.';
         return;
       }
 
-      const formData = new FormData();
-      formData.append('name', name);
-      formData.append('category', category);
-      formData.append('city', city);
-      formData.append('pincode', pincode);
-      formData.append('address', address);
-      if (imageFile) formData.append('image', imageFile);
-
       try {
-        const res = await fetch(API_BASE + '/services', {
-          method: 'POST',
-          body: formData,
-        });
-        const data = await res.json().catch(() => ({}));
-        if (!res.ok) {
-          showToast(data.message || 'Failed to add service');
-          return;
-        }
+        const res = await fetch(API_BASE + '/services/' + id);
+        if (!res.ok) throw new Error();
+        const s = await res.json();
 
-        const code = data.deleteCode;
-        if (code) {
-          showToast(
-            'Service added.\nDelete code for "' +
-            (data.service?.name || name) +
-            '": ' + code +
-            '\nKeep this code safe.'
-          );
-        } else {
-          showToast('Service added.');
-        }
+        document.getElementById('serviceTitle').textContent = s.name || 'Service';
+        document.getElementById('serviceSub').textContent =
+          (s.category || 'Service') + ' • ' + (s.city || '');
+        document.getElementById('serviceName').textContent = s.name || 'Service';
+        document.getElementById('serviceMeta').textContent =
+          (s.city || '') + (s.pincode ? ' • PIN ' + s.pincode : '');
+        document.getElementById('serviceRating').textContent = buildRatingText(s);
+        document.getElementById('serviceAddressText').textContent =
+          s.address || '';
 
-        document.getElementById('serviceName').value = '';
-        document.getElementById('serviceCategory').value = '';
-        document.getElementById('serviceCity').value = '';
-        document.getElementById('servicePincode').value = '';
-        document.getElementById('serviceAddress').value = '';
-        document.getElementById('serviceImage').value = '';
+        const imgEl = document.getElementById('serviceImage');
+        imgEl.src = getServiceImageUrl(s);
+        imgEl.alt = s.name || 'Service';
 
-        setTimeout(() => {
-          window.location.href = '/services.html';
-        }, 2300);
+        if (loadingEl) loadingEl.style.display = 'none';
+        if (cardEl) cardEl.style.display = 'block';
       } catch (err) {
         console.error(err);
-        showToast('Error adding service');
+        if (loadingEl) loadingEl.textContent = 'Error loading service.';
+        showToast('Error loading service');
       }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      const form = document.getElementById('addServiceForm');
-      if (form) {
-        form.addEventListener('submit', handleAddService);
-      }
+      loadService();
     });
   </script>
 </body>
