@@ -1,4 +1,4 @@
-// routes/imageRoutes.js
+// SpotSure/routes/imageRoutes.js
 const express = require('express');
 const axios = require('axios');
 
