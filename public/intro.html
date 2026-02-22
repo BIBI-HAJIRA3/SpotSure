@@ -1,3 +1,4 @@
+<!-- SpotSure/public/intro.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,69 +7,70 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <style>
     * { box-sizing: border-box; }
-
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       background: #020617;
       color: #f9fafb;
+    }
+    .intro-shell {
       min-height: 100vh;
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 32px 16px 24px;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-    }
-
-    .intro-wrap {
       text-align: center;
-      padding: 0 24px;
-      max-width: 520px;
+      gap: 12px;
     }
-
     .intro-title {
-      font-size: 26px;
-      font-weight: bold;
-      margin-bottom: 8px;
+      font-size: 24px;
+      font-weight: 700;
     }
-
     .intro-sub {
       font-size: 14px;
       color: #9ca3af;
-      margin-bottom: 18px;
+      max-width: 360px;
     }
-
     .intro-btn {
+      margin-top: 18px;
+      padding: 10px 18px;
       border-radius: 999px;
-      border: none;
-      padding: 10px 22px;
-      font-size: 14px;
+      border: 1px solid #2563eb;
       background: #2563eb;
       color: #ffffff;
+      font-size: 14px;
       cursor: pointer;
+      min-width: 160px;
     }
-
-    .intro-btn:hover {
-      background: #1d4ed8;
-    }
-
     .intro-foot {
+      margin-top: 16px;
       font-size: 11px;
       color: #6b7280;
-      margin-top: 10px;
+      max-width: 360px;
     }
   </style>
 </head>
 <body>
-  <div class="intro-wrap">
+  <div class="intro-shell">
     <div class="intro-title">SpotSure – Discover. Decide. Trust.</div>
     <div class="intro-sub">
-      Find trusted services and see what real people say before you decide.
+      Find trusted services near you, see real ratings and reviews, and add your own experience.
     </div>
-    <button class="intro-btn" onclick="window.location.href='/index.html'">
+    <button class="intro-btn" type="button" onclick="enterApp()">
       Enter SpotSure
     </button>
     <div class="intro-foot">
       Tip: Use your phone’s Back button to exit or go to the previous screen.
     </div>
   </div>
+
+  <script>
+    function enterApp() {
+      window.location.href = '/index.html';
+    }
+  </script>
 </body>
 </html>
