@@ -60,7 +60,7 @@ app.use('/image', imageRoutes);
 const publicDir = path.join(__dirname, 'public');
 app.use(express.static(publicDir));
 
-// Intro at root, list at /index.html
+// Intro at root, services at /index.html
 app.get('/', (req, res) => {
   res.sendFile(path.join(publicDir, 'intro.html'));
 });
