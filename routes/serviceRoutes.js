@@ -3,6 +3,7 @@ const express = require('express');
 const Service = require('../models/Service');
 const Review = require('../models/Review');
 const multer = require('multer');
+const crypto = require('crypto');
 
 const router = express.Router();
 
@@ -40,16 +41,142 @@ async function recomputeServiceRatings(serviceId) {
 }
 
 // ------------------------------------------------------------------
-// existing service routes (list, create, etc.) stay as in your file
+// LIST services  GET /api/services
 // ------------------------------------------------------------------
+router.get('/services', async (req, res) => {
+  try {
+    const { category, city, pincode } = req.query;
 
-// Example only: keep your existing list/create/etc.
-// router.get('/services', ...)
-// router.post('/services', upload.single('image'), ...)
-// router.get('/services/:id', ...)
+    const filter = { isApproved: true };
+
+    if (category) {
+      filter.category = new RegExp('^' + category + '$', 'i');
+    }
+    if (city) {
+      filter.city = new RegExp(city, 'i');
+    }
+    if (pincode) {
+      filter.pincode = pincode;
+    }
+
+    const services = await Service.find(filter).sort({ createdAt: -1 });
+    res.json({ services });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// ------------------------------------------------------------------
+// CREATE service  POST /api/services
+// image field name: "image"
+// ------------------------------------------------------------------
+router.post('/services', upload.single('image'), async (req, res) => {
+  try {
+    const { name, category, city, pincode, address } = req.body;
+
+    if (!name || !city || !pincode || !address) {
+      return res
+        .status(400)
+        .json({ message: 'Name, city, pincode, and address are required.' });
+    }
+
+    const deleteCode = crypto.randomBytes(3).toString('hex'); // short secret
+
+    let imagePath = '';
+
+    if (req.file) {
+      const cloudinary = req.cloudinary;
+
+      const uploadedUrl = await new Promise((resolve, reject) => {
+        if (!cloudinary || !cloudinary.uploader || !cloudinary.uploader.upload_stream) {
+          return resolve('');
+        }
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: 'spotsure-services' },
+          (err, result) => {
+            if (err) return reject(err);
+            resolve(result.secure_url);
+          }
+        );
+        stream.end(req.file.buffer);
+      }).catch((err) => {
+        console.error('Cloudinary upload error:', err);
+        return '';
+      });
+
+      imagePath = uploadedUrl || '';
+    }
+
+    const service = await Service.create({
+      name,
+      category: category || 'Service',
+      city,
+      pincode,
+      address,
+      imagePath,
+      deleteCode,
+      isApproved: true,
+    });
+
+    res.status(201).json({
+      message: 'Service created',
+      service,
+      deleteCode,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// ------------------------------------------------------------------
+// GET single service  GET /api/services/:id
+// ------------------------------------------------------------------
+router.get('/services/:id', async (req, res) => {
+  try {
+    const serviceId = req.params.id;
+    const service = await Service.findById(serviceId);
+    if (!service) {
+      return res.status(404).json({ message: 'Service not found' });
+    }
+    res.json(service);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// ------------------------------------------------------------------
+// Delete service with code  POST /api/services/:id/delete-with-code
+// ------------------------------------------------------------------
+router.post('/services/:id/delete-with-code', async (req, res) => {
+  try {
+    const serviceId = req.params.id;
+    const { code } = req.body;
+
+    const service = await Service.findById(serviceId);
+    if (!service) {
+      return res.status(404).json({ message: 'Service not found' });
+    }
+
+    if (!code || code.trim() !== service.deleteCode) {
+      return res.status(403).json({ message: 'Incorrect delete code.' });
+    }
+
+    await Review.deleteMany({ service: serviceId });
+    await Service.findByIdAndDelete(serviceId);
+
+    res.json({ message: 'Service deleted.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
 // ------------------------------------------------------------------
 // Add a review to a service (UPDATED to keep counts correct)
+// POST /api/services/:id/reviews
 // ------------------------------------------------------------------
 router.post(
   '/services/:id/reviews',
@@ -72,7 +199,6 @@ router.post(
           .json({ message: 'Rating must be between 1 and 5' });
       }
 
-      // upload any images (if you already have Cloudinary logic, reuse it here)
       let imageUrls = [];
       if (req.files && req.files.length > 0) {
         const cloudinary = req.cloudinary;
@@ -103,7 +229,6 @@ router.post(
         imageUrls,
       });
 
-      // recompute averageRating, ratingCount, reviewCount
       await recomputeServiceRatings(serviceId);
 
       return res.status(201).json({
@@ -118,7 +243,7 @@ router.post(
 );
 
 // ------------------------------------------------------------------
-// Get all reviews for a service (unchanged)
+// Get all reviews for a service  GET /api/services/:id/reviews
 // ------------------------------------------------------------------
 router.get('/services/:id/reviews', async (req, res) => {
   try {
@@ -133,5 +258,4 @@ router.get('/services/:id/reviews', async (req, res) => {
   }
 });
 
-// export router
 module.exports = router;
