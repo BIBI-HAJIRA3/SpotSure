@@ -105,7 +105,7 @@
       color: #ffffff;
     }
 
-    /* Reviews section */
+    /* Reviews */
     .review-item {
       margin-bottom: 10px;
       font-size: 13px;
@@ -243,6 +243,9 @@
       if (svc.imagePath) {
         return '/image/' + encodeURIComponent(svc.imagePath);
       }
+      if (svc.imageUrl) {
+        return svc.imageUrl;
+      }
       return 'https://placehold.co/120x120?text=Svc';
     }
 
@@ -301,7 +304,7 @@
         if (loadingEl) loadingEl.style.display = 'none';
         if (cardEl) cardEl.style.display = 'block';
 
-        // Also load reviews automatically
+        // Automatically load reviews
         loadReviews();
       } catch (err) {
         console.error(err);
