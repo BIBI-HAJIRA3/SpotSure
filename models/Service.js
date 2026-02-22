@@ -1,4 +1,4 @@
-// models/Service.js
+// SpotSure/models/Service.js
 const mongoose = require('mongoose');
 
 const ServiceSchema = new mongoose.Schema(
@@ -11,6 +11,9 @@ const ServiceSchema = new mongoose.Schema(
     imagePath: { type: String, default: '' },
 
     averageRating: { type: Number, default: 0 },
+    // how many people have rated this service at least once
+    ratingCount: { type: Number, default: 0 },
+    // how many written reviews (non‑empty comments)
     reviewCount: { type: Number, default: 0 },
 
     // Always visible once created (no admin approval now)
