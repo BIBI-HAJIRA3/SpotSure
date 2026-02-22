@@ -1,3 +1,4 @@
+<!-- SpotSure/public/index.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -159,91 +160,6 @@
       color: #9ca3af;
     }
 
-    /* Overlays */
-    .overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.92);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 40;
-    }
-    .panel {
-      background: #111827;
-      border-radius: 16px;
-      padding: 20px 18px;
-      width: 90%;
-      max-width: 420px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.8);
-      border: 1px solid #1f2937;
-      text-align: left;
-      color: #f9fafb;
-    }
-    .panel h1 {
-      margin: 0 0 6px;
-      font-size: 20px;
-      color: #f9fafb;
-    }
-    .panel p {
-      margin: 0 0 12px;
-      font-size: 13px;
-      color: #9ca3af;
-    }
-    .input-label {
-      display: block;
-      font-size: 12px;
-      margin-top: 6px;
-      margin-bottom: 2px;
-      color: #e5e7eb;
-    }
-    .input-field {
-      width: 100%;
-      padding: 7px 8px;
-      border-radius: 8px;
-      border: 1px solid #374151;
-      background: #020617;
-      color: #e5e7eb;
-      font-size: 13px;
-      margin-bottom: 4px;
-    }
-    .btn-full {
-      width: 100%;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: none;
-      font-size: 14px;
-      cursor: pointer;
-    }
-    .btn-primary-full {
-      background: #2563eb;
-      color: #ffffff;
-    }
-    .btn-primary-full:hover {
-      background: #1d4ed8;
-    }
-    .btn-secondary-full {
-      background: #111827;
-      color: #e5e7eb;
-      border: 1px solid #374151;
-      margin-top: 6px;
-    }
-
-    /* Splash */
-    #splashScreen {
-      position: fixed;
-      inset: 0;
-      background: #020617;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: #f9fafb;
-      z-index: 50;
-      text-align: center;
-      padding: 0 24px;
-    }
-
     /* Toast dialog */
     #toast {
       position: fixed;
@@ -287,61 +203,6 @@
   </style>
 </head>
 <body>
-  <!-- Splash screen (always 1.5s) -->
-  <div id="splashScreen">
-    <div style="font-size:26px; font-weight:bold; margin-bottom:6px;">
-      SpotSure – Discover. Decide. Trust.
-    </div>
-    <div style="font-size:14px; color:#9ca3af;">
-      Loading trusted places around you...
-    </div>
-  </div>
-
-  <!-- First-time username overlay -->
-  <div id="usernameOverlay" class="overlay" style="display:none;">
-    <div class="panel">
-      <h1>Welcome to SpotSure</h1>
-      <p>Tell us your name so we can greet you.</p>
-      <form id="usernameForm">
-        <label class="input-label">Your name</label>
-        <input id="usernameInput" type="text" required class="input-field" />
-        <button class="btn-full btn-primary-full" type="submit">
-          Continue
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Add Service overlay -->
-  <div id="addServiceOverlay" class="overlay" style="display:none;">
-    <div class="panel">
-      <h1 style="text-align:center;">Add Service</h1>
-      <p style="text-align:center;">Create a new service in SpotSure.</p>
-
-      <form id="addServiceForm">
-        <label class="input-label">Name</label>
-        <input id="serviceName" type="text" required class="input-field" />
-        <label class="input-label">Category</label>
-        <input id="serviceCategory" type="text" placeholder="Hospital, Clinic, School, Restaurant, Grocery" class="input-field" />
-        <label class="input-label">City</label>
-        <input id="serviceCity" type="text" required class="input-field" />
-        <label class="input-label">Pincode</label>
-        <input id="servicePincode" type="text" required class="input-field" />
-        <label class="input-label">Address</label>
-        <input id="serviceAddress" type="text" required class="input-field" />
-        <label class="input-label">Image (optional)</label>
-        <input id="serviceImage" type="file" accept="image/*" class="input-field" />
-
-        <button class="btn-full btn-primary-full" type="submit">
-          Save service
-        </button>
-        <button class="btn-full btn-secondary-full" type="button" onclick="closeAddServiceOverlay()">
-          Cancel
-        </button>
-      </form>
-    </div>
-  </div>
-
   <div class="app-shell">
     <header class="top-bar">
       <div>
@@ -349,7 +210,6 @@
         <div class="top-sub" id="welcomeUserLine"></div>
       </div>
       <div style="display:flex; gap:6px;">
-        <!-- Home button removed -->
         <button class="pill-btn" type="button" onclick="openAddServiceOverlay()">
           + Add
         </button>
@@ -375,7 +235,6 @@
       <button class="chip category-btn" data-category="Grocery">Grocery</button>
     </div>
 
-    <!-- Sort control -->
     <div style="display:flex; justify-content:flex-end; margin-top:4px; margin-bottom:4px;">
       <select id="sortSelect" style="
         background:#020617;
@@ -424,7 +283,6 @@
       };
     }
 
-    // Username stored locally
     function getUsername() {
       return localStorage.getItem('spotsureUsername') || null;
     }
@@ -440,32 +298,6 @@
       else line.textContent = '';
     }
 
-    // Username overlay
-    function setupUsernameOverlay() {
-      const form = document.getElementById('usernameForm');
-      if (!form) return;
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const input = document.getElementById('usernameInput');
-        const name = (input.value || '').trim();
-        if (!name) return;
-        setUsername(name);
-        document.getElementById('usernameOverlay').style.display = 'none';
-      });
-    }
-
-    // Always show 1.5s splash; show name overlay only if username missing
-    function showUsernameOverlayIfNeeded() {
-      const overlay = document.getElementById('usernameOverlay');
-      const splash = document.getElementById('splashScreen');
-
-      setTimeout(() => {
-        if (splash) splash.style.display = 'none';
-        if (!getUsername() && overlay) overlay.style.display = 'flex';
-      }, 1500);
-    }
-
-    // Add Service overlay
     function openAddServiceOverlay() {
       const el = document.getElementById('addServiceOverlay');
       if (!el) return;
@@ -476,7 +308,6 @@
       if (el) el.style.display = 'none';
     }
 
-    // Services rendering
     function getServiceImage(service) {
       if (service.imagePath) {
         return '/image/' + encodeURIComponent(service.imagePath);
@@ -484,7 +315,6 @@
       return 'https://placehold.co/80x80?text=Svc';
     }
 
-    // ratingsCount = people who rated, reviewCount = people who commented
     function buildRatingText(s) {
       const avg = Number(s.averageRating || 0).toFixed(1);
       const ratingsCount = Number(s.ratingCount || 0);
@@ -626,12 +456,10 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       updateUserLine();
-      setupUsernameOverlay();
       loadServices();
       setupCategoryFilters();
       setupSearch();
       setupSort();
-      showUsernameOverlayIfNeeded();
 
       const addServiceForm = document.getElementById('addServiceForm');
       if (addServiceForm) {
@@ -677,10 +505,10 @@
             const code = data.deleteCode;
             if (code) {
               showToast(
-                'Service added.\\nDelete code for "' +
+                'Service added.\nDelete code for "' +
                 (data.service?.name || name) +
                 '": ' + code +
-                '\\nKeep this code safe.'
+                '\nKeep this code safe.'
               );
             } else {
               showToast('Service added.');
