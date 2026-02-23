@@ -188,13 +188,13 @@
 
       <div class="btn-row">
         <button class="btn-primary" type="button" onclick="openAddReview()">Add review</button>
-        <button class="btn-primary" type="button" style="background:#b91c1c" onclick="submitDeleteService()">
+        <button class="btn-primary" type="button" style="background:#b91c1c" onclick="toggleDeleteSlot()">
           Delete service
         </button>
       </div>
 
-      <!-- Inline delete code slot -->
-      <div style="margin-top:10px; font-size:12px; color:#9ca3af;">
+      <!-- Inline delete code slot, initially hidden -->
+      <div id="deleteSlot" style="display:none; margin-top:10px; font-size:12px; color:#9ca3af;">
         <label for="deleteCodeInput" style="display:block; margin-bottom:4px;">
           Enter delete code to remove this service:
         </label>
@@ -384,6 +384,13 @@
       }
     }
 
+    function toggleDeleteSlot() {
+      const slot = document.getElementById('deleteSlot');
+      if (!slot) return;
+      slot.style.display =
+        slot.style.display === 'none' || !slot.style.display ? 'block' : 'none';
+    }
+
     async function submitDeleteService() {
       const id = getServiceIdFromUrl();
       if (!id) return;
@@ -424,4 +431,3 @@
   </script>
 </body>
 </html>
-
