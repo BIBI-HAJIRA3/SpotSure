@@ -284,7 +284,7 @@
 
       const reviewsLabel = reviewsCount === 0
         ? 'No reviews'
-        : (reviewsCount === 1 ? '1 review' : reviewsCount + ' reviews');
+        : (reviewsCount === 1 ? '1 review' : reviewsCount + ' reviews';
 
       return avg + ' ★ • ' + ratingsLabel + ' • ' + reviewsLabel;
     }
@@ -405,7 +405,7 @@
       try {
         const res = await fetch(API_BASE + '/services/' + id + '/delete-with-code', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type':'application/json' },
           body: JSON.stringify({ code }),
         });
         const data = await res.json().catch(() => ({}));
