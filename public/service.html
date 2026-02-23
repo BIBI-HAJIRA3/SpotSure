@@ -187,10 +187,32 @@
 
       <div class="btn-row">
         <button class="btn-primary" type="button" onclick="openAddReview()">Add review</button>
-        <!-- NEW: delete service button (only change in HTML) -->
-        <button class="btn-primary" type="button" style="background:#b91c1c" onclick="promptDeleteService()">
+        <!-- CHANGED: now toggles inline delete UI instead of prompt() -->
+        <button class="btn-primary" type="button" style="background:#b91c1c" onclick="toggleDeleteSlot()">
           Delete service
         </button>
+      </div>
+
+      <!-- NEW inline delete UI (message comes from this page, hidden by default) -->
+      <div id="deleteSlot" style="display:none; margin-top:10px; font-size:12px; color:#9ca3af;">
+        <label for="deleteCodeInput" style="display:block; margin-bottom:4px;">
+          Enter delete code to remove this service:
+        </label>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          <input
+            id="deleteCodeInput"
+            type="text"
+            placeholder="Delete code"
+            style="flex:1; min-width:120px; padding:6px 8px; border-radius:8px; border:1px solid #374151; background:#020617; color:#e5e7eb; font-size:12px;"
+          />
+          <button
+            type="button"
+            onclick="submitDeleteService()"
+            style="padding:7px 10px; border-radius:999px; border:none; background:#b91c1c; color:#fff; font-size:12px; cursor:pointer;"
+          >
+            Delete
+          </button>
+        </div>
       </div>
     </div>
 
@@ -362,13 +384,25 @@
       }
     }
 
-    // NEW: delete service function (only change in JS)
-    async function promptDeleteService() {
+    // NEW: show/hide inline delete UI instead of using prompt()
+    function toggleDeleteSlot() {
+      const slot = document.getElementById('deleteSlot');
+      if (!slot) return;
+      slot.style.display =
+        slot.style.display === 'none' || !slot.style.display ? 'block' : 'none';
+    }
+
+    // NEW: use inline input value as delete code
+    async function submitDeleteService() {
       const id = getServiceIdFromUrl();
       if (!id) return;
 
-      const code = prompt('Enter the delete code for this service:');
-      if (!code) return;
+      const input = document.getElementById('deleteCodeInput');
+      const code = input ? input.value.trim() : '';
+      if (!code) {
+        showToast('Please enter the delete code.');
+        return;
+      }
 
       try {
         const res = await fetch(API_BASE + '/services/' + id + '/delete-with-code', {
