@@ -1,4 +1,5 @@
 <!--SpotSure/public/services.html-->
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -55,6 +56,7 @@
     .pill-btn.secondary {
       background: #020617;
       color: #93c5fd;
+      border-color: #4b5563;
     }
     .pill-btn:hover {
       background: #1d4ed8;
@@ -210,7 +212,9 @@
         <div class="top-sub" id="welcomeUserLine"></div>
       </div>
       <div style="display:flex; gap:6px;">
-        <!-- Only Add button; no visible Back -->
+        <button class="pill-btn secondary" type="button" onclick="exitApp()">
+          Exit
+        </button>
         <button class="pill-btn" type="button" onclick="window.location.href='/add-service.html'">
           + Add
         </button>
@@ -270,23 +274,10 @@
       };
     }
 
-    // History logic: if user landed directly on services.html and presses back,
-    // redirect out instead of showing intro page (/).
-    (function setupBackExit() {
-      const hasReferrerFromSameOrigin =
-        document.referrer && document.referrer.startsWith(window.location.origin);
-
-      if (!hasReferrerFromSameOrigin) {
-        // Push a dummy state so that first back triggers popstate here
-        window.history.pushState({ spotsureRoot: true }, '');
-        window.addEventListener('popstate', (event) => {
-          if (event.state && event.state.spotsureRoot) {
-            // User is trying to go "back" off the first app page: exit instead.
-            window.location.replace('about:blank');
-          }
-        });
-      }
-    })();
+    function exitApp() {
+      // Neutral "exit" – leaves SpotSure; system Home is still controlled by device.
+      window.location.replace('about:blank');
+    }
 
     function getUsername() {
       return localStorage.getItem('spotsureUsername') || null;
