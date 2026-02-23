@@ -56,7 +56,6 @@
     .pill-btn.secondary {
       background: #020617;
       color: #93c5fd;
-      border-color: #4b5563;
     }
     .pill-btn:hover {
       background: #1d4ed8;
@@ -212,9 +211,6 @@
         <div class="top-sub" id="welcomeUserLine"></div>
       </div>
       <div style="display:flex; gap:6px;">
-        <button class="pill-btn secondary" type="button" onclick="exitApp()">
-          Exit
-        </button>
         <button class="pill-btn" type="button" onclick="window.location.href='/add-service.html'">
           + Add
         </button>
@@ -272,11 +268,6 @@
         t.style.pointerEvents = 'none';
         t.style.transform = 'translateX(-50%) translateY(0)';
       };
-    }
-
-    function exitApp() {
-      // Neutral "exit" – leaves SpotSure; system Home is still controlled by device.
-      window.location.replace('about:blank');
     }
 
     function getUsername() {
