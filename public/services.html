@@ -6,12 +6,7 @@
   <title>SpotSure – Services</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-  <!-- Leaflet CSS -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  />
-  <!-- Font Awesome -->
+  <!-- Font Awesome (for icons used elsewhere if needed) -->
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -124,51 +119,6 @@
       color: #e5e7eb;
     }
 
-    .map-card {
-      background: #111827;
-      border-radius: 14px;
-      padding: 10px 10px 12px;
-      border: 1px solid #1f2937;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.6);
-      margin-top: 2px;
-      margin-bottom: 12px;
-    }
-    .map-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      color: #9ca3af;
-      margin-bottom: 6px;
-    }
-    .map-icon-btn {
-      border-radius: 999px;
-      padding: 5px 9px;
-      border: 1px solid #374151;
-      background: #020617;
-      color: #e5e7eb;
-      font-size: 11px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      white-space: nowrap;
-    }
-    .map-icon-btn i {
-      font-size: 13px;
-    }
-    .map-icon-btn:hover {
-      border-color: #0ea5e9;
-      color: #0ea5e9;
-    }
-    #servicesMap {
-      width: 100%;
-      height: 220px;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
     .services-list {
       display: flex;
       flex-direction: column;
@@ -212,25 +162,6 @@
       margin-top: 4px;
       font-size: 11px;
       color: #9ca3af;
-    }
-
-    .card-map-icon {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      border-radius: 999px;
-      padding: 4px 7px;
-      border: 1px solid #374151;
-      background: #020617;
-      color: #e5e7eb;
-      font-size: 11px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .card-map-icon i {
-      font-size: 12px;
     }
 
     #toast {
@@ -307,17 +238,6 @@
       <button class="chip category-btn" data-category="Grocery">Grocery</button>
     </div>
 
-    <section class="map-card">
-      <div class="map-header">
-        <span>Services map</span>
-        <button class="map-icon-btn" type="button" onclick="fitAllMarkers()">
-          <i class="fa fa-map-marker"></i>
-          Show all
-        </button>
-      </div>
-      <div id="servicesMap"></div>
-    </section>
-
     <div class="list-section-title"></div>
     <div id="services" class="services-list"></div>
   </div>
@@ -328,18 +248,11 @@
     <div style="clear:both;"></div>
   </div>
 
-  <!-- Leaflet JS (no integrity so browser doesn’t block it) -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
   <script>
     const API_BASE = window.location.origin + '/api';
 
     let allServices = [];
     let currentCategory = 'All';
-
-    let mapInstance = null;
-    let markersLayer = null;
-    let markersById = {};
 
     function showToast(message) {
       const t = document.getElementById('toast');
@@ -367,9 +280,14 @@
       line.textContent = name ? 'Welcome back, ' + name : '';
     }
 
+    // Real images: prefer imagePath -> /image/<path>, fall back to imageUrl, then placeholder.
     function getServiceImage(service) {
-      if (service.imagePath) return '/image/' + encodeURIComponent(service.imagePath);
-      if (service.imageUrl) return service.imageUrl;
+      if (service.imagePath) {
+        return '/image/' + encodeURIComponent(service.imagePath);
+      }
+      if (service.imageUrl) {
+        return service.imageUrl;
+      }
       return 'https://placehold.co/80x80?text=Svc';
     }
 
@@ -407,66 +325,12 @@
       window.location.href = '/service.html?id=' + encodeURIComponent(serviceId);
     }
 
-    function initMap() {
-      if (mapInstance) return;
-      const el = document.getElementById('servicesMap');
-      if (!el) return;
-      mapInstance = L.map('servicesMap').setView([13.935, 75.57], 13);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; OpenStreetMap contributors'
-      }).addTo(mapInstance);
-      markersLayer = L.layerGroup().addTo(mapInstance);
-      markersById = {};
-    }
-
-    function refreshMarkers(services) {
-      if (!mapInstance || !markersLayer) return;
-      markersLayer.clearLayers();
-      markersById = {};
-      const bounds = [];
-      services.forEach((s) => {
-        if (!s.location || typeof s.location.lat !== 'number' || typeof s.location.lng !== 'number') {
-          return;
-        }
-        const { lat, lng } = s.location;
-        const marker = L.marker([lat, lng]).addTo(markersLayer);
-        marker.bindPopup('<strong>' + (s.name || 'Service') + '</strong><br>' + (s.address || ''));
-        markersById[s._id] = marker;
-        bounds.push([lat, lng]);
-      });
-      if (bounds.length) {
-        mapInstance.fitBounds(bounds, { padding: [20, 20] });
-      }
-    }
-
-    function focusServiceOnMap(serviceId) {
-      if (!mapInstance) return;
-      const marker = markersById[serviceId];
-      if (!marker) return;
-      const latLng = marker.getLatLng();
-      mapInstance.setView(latLng, 16);
-      marker.openPopup();
-    }
-
-    function fitAllMarkers() {
-      if (!mapInstance || !markersLayer) return;
-      const bounds = [];
-      markersLayer.eachLayer((layer) => {
-        if (layer.getLatLng) bounds.push(layer.getLatLng());
-      });
-      if (bounds.length) {
-        mapInstance.fitBounds(bounds, { padding: [20, 20] });
-      }
-    }
-
     function renderServices() {
       const container = document.getElementById('services');
       container.innerHTML = '';
       const services = filterServices();
       if (!services.length) {
         container.innerHTML = '<p style="font-size:13px; color:#9ca3af;">No services found.</p>';
-        refreshMarkers([]);
         return;
       }
       services.forEach((s) => {
@@ -477,6 +341,7 @@
         const img = document.createElement('img');
         img.className = 'service-thumb';
         img.src = getServiceImage(s);
+        img.alt = s.name || 'Service';
 
         const info = document.createElement('div');
         info.className = 'service-info';
@@ -489,26 +354,14 @@
           </div>
         `;
 
-        const mapBtn = document.createElement('button');
-        mapBtn.type = 'button';
-        mapBtn.className = 'card-map-icon';
-        mapBtn.innerHTML = '<i class="fa fa-map-marker"></i>';
-        mapBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          focusServiceOnMap(s._id);
-        });
-
         card.appendChild(img);
         card.appendChild(info);
-        card.appendChild(mapBtn);
         container.appendChild(card);
       });
-      refreshMarkers(services);
     }
 
     async function loadServices() {
       try {
-        initMap();
         const res = await fetch(API_BASE + '/services');
         if (!res.ok) throw new Error('Failed to load services');
         const text = await res.text();
@@ -544,7 +397,6 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       updateUserLine();
-      initMap();
       loadServices();
       setupCategoryFilters();
       setupSearch();
