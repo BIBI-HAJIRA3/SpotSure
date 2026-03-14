@@ -1,0 +1,2661 @@
+{
+  "type": "FeatureCollection",
+  "generator": "overpass-turbo",
+  "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
+  "timestamp": "2026-03-14T08:26:44Z",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "relation/6154729",
+        "addr:full": "B H Road, Shimoga, Shivamogga, Durgigudi, Shivamogga, Karnataka",
+        "addr:state": "Karnataka",
+        "amenity": "college",
+        "building": "yes",
+        "name": "Government Girls P U College",
+        "type": "multipolygon",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5773035,
+          13.9312182
+        ]
+      },
+      "id": "relation/6154729"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/71089600",
+        "amenity": "college",
+        "key": "Education",
+        "name": "Sahyadri Science College",
+        "name:kn": "ಸಹಯಾದ್ರಿ ವಿಜ್ಞಾನ ಕಾಲೇಜು",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5929392,
+          13.9171912
+        ]
+      },
+      "id": "way/71089600"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/163201810",
+        "amenity": "college",
+        "name": "DVS College",
+        "name:kn": "ಡಿವಿಎಸ್ ಕಾಲೇಜು",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5777255,
+          13.9334779
+        ]
+      },
+      "id": "way/163201810"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/167744423",
+        "addr:district": "Shivamogga",
+        "addr:full": "Sagar Road",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "McGann Hospital",
+        "name:etymology:wikidata": "Q7668249",
+        "name:kn": "ಮಗಾನ್ ಆಸ್ಥೆತ್ರೆ",
+        "source": "OpenGovernmentData",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5645947,
+          13.9347323
+        ]
+      },
+      "id": "way/167744423"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/168436001",
+        "amenity": "college",
+        "name": "Shivamogga Institure of Medical Sciences",
+        "name:kn": "ಶಿವಮೊಗ್ಗ ವೈದ್ಯಕೀಯ ವಿಜ್ಞಾನಗಳ ಸಂಸ್ಥೆ",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5672951,
+          13.9328478
+        ]
+      },
+      "id": "way/168436001"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/168441715",
+        "amenity": "college",
+        "name": "JNN College of Engineering ( JNNCE)",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5788537,
+          13.9665434
+        ]
+      },
+      "id": "way/168441715"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/168442295",
+        "addr:city": "Shivamogga",
+        "addr:postcode": "577204",
+        "amenity": "college",
+        "name": "Agricultural University, Shivamogga",
+        "name:en": "University of Agricultural and Horticultural Sciences, Shivamogga",
+        "name:kn": "ಕೃಷಿ ಮತ್ತು ತೋಟಗಾರಿಕಾ ವಿಶ್ವ ವಿದ್ಯಾಲಯ ಶಿವಮೊಗ್ಗ",
+        "website": "https://uahs.edu.in/",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5785566,
+          13.9724983
+        ]
+      },
+      "id": "way/168442295"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/168442959",
+        "amenity": "college",
+        "name": "MCA Block",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5790415,
+          13.9629473
+        ]
+      },
+      "id": "way/168442959"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/168445585",
+        "amenity": "college",
+        "name": "Sacred Heart PU College",
+        "name:kn": "ಸೇಕ್ರಡ್ ಹಾರ್ಟ್ ಪಿಯು ಕಾಲೇಜು",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5803585,
+          13.9343193
+        ]
+      },
+      "id": "way/168445585"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/168446054",
+        "amenity": "school",
+        "name": "Adichunchanagiri School",
+        "name:kn": "ಆದಿಚುಂಚನಗಿರಿ ಶಾಲೆ",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5611024,
+          13.9378771
+        ]
+      },
+      "id": "way/168446054"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/180009718",
+        "addr:district": "Shivamogga",
+        "addr:full": "Shimoga Institute of Medical Sciences, N.H.206, Sagara Road, Shivamogga",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "building": "yes",
+        "healthcare": "hospital",
+        "name": "Shimoga Institute Of Medical Sciences District hospital",
+        "source": "OpenGovernmentData",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5673391,
+          13.9324519
+        ]
+      },
+      "id": "way/180009718"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/180218186",
+        "amenity": "school",
+        "name": "National Boys High School",
+        "name:kn": "ನ್ಯಾಷನಲ್ ಬಾಯ್ಸ್ ಹೈಸ್ಕೂಲ್",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5772654,
+          13.9362694
+        ]
+      },
+      "id": "way/180218186"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/180218187",
+        "amenity": "college",
+        "name": "Acharya Tulasi National College of Commerce",
+        "name:etymology:wikidata": "Q4673549",
+        "name:kn": "ಆಚಾರ್ಯ ತುಳಸಿ ನ್ಯಾಷನಲ್ ಕಾಲೇಜು",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5768604,
+          13.9358238
+        ]
+      },
+      "id": "way/180218187"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/180241204",
+        "amenity": "school",
+        "name": "Vasavi Vidyalaya",
+        "name:kn": "ವಾಸವಿ ವಿದ್ಯಾಲಯ",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5836645,
+          13.928259
+        ]
+      },
+      "id": "way/180241204"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/180353534",
+        "addr:district": "Shivamogga",
+        "addr:full": "Harakere, Thirthahalli Road, Shimoga , , Opp Shiv Temple",
+        "addr:postcode": "577202",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Sankara Eye Hospital, Shivamogga",
+        "name:kn": "ಶಂಕರ ಕಣ್ಣಿನ ಆಸ್ಪತ್ರೆ",
+        "source": "OpenGovernmentData",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5605001,
+          13.9036798
+        ]
+      },
+      "id": "way/180353534"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/180353535",
+        "amenity": "hospital",
+        "name": "Manipal Heart Foundation - Under Construction",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.557474,
+          13.9003731
+        ]
+      },
+      "id": "way/180353535"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/408497893",
+        "addr:district": "Shimoga",
+        "addr:full": "Durgigudi, Shivamogga",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "building": "yes",
+        "name": "Manasa Nursing home",
+        "source": "Local Knowledge",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5719443,
+          13.9332236
+        ]
+      },
+      "id": "way/408497893"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/408498058",
+        "addr:district": "Shimoga",
+        "addr:full": "LLR Road, Durgigudi, Shivamogga",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "building": "yes",
+        "name": "C.S. Hospital",
+        "source": "Local Knowledge",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5709039,
+          13.9335924
+        ]
+      },
+      "id": "way/408498058"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/408582981",
+        "addr:district": "Shimoga",
+        "addr:full": "Kuvempu Road, Jayanagar, Shivamogga",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "building": "yes",
+        "name": "Metro United Healthcare",
+        "source": "Local Knowledge",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5749205,
+          13.9405186
+        ]
+      },
+      "id": "way/408582981"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/408582989",
+        "addr:district": "Shivamogga",
+        "addr:full": "He Commercial Kuvempu Road, Near Nanjappa Hospital",
+        "addr:postcode": "577202",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "building": "yes",
+        "name": "Vasan Eye Care Hospital, Shivamogga",
+        "name:kn": "ವಾಸನ ಆಸ್ಪತ್ರೆ",
+        "source": "OpenGovernmentData",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5708514,
+          13.9386494
+        ]
+      },
+      "id": "way/408582989"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/408596289",
+        "addr:district": "Shimoga",
+        "addr:full": "G B Complex, KR Puram, Shivamogga",
+        "addr:postcode": "577202",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "building": "yes",
+        "name": "ESI New Hospital",
+        "source": "Local Knowledge",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5785777,
+          13.9304095
+        ]
+      },
+      "id": "way/408596289"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/409400955",
+        "addr:district": "Shivamogga",
+        "addr:full": "Jail Circle",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "building": "yes",
+        "name": "Nanjappa Hospital",
+        "name:kn": "ನಂಜಪ್ಪ ಆಸ್ಪತ್ರೆ",
+        "source": "OpenGovernmentData",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5715281,
+          13.9386691
+        ]
+      },
+      "id": "way/409400955"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/510383662",
+        "amenity": "school",
+        "building": "yes",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5425622,
+          13.9432051
+        ]
+      },
+      "id": "way/510383662"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/619222779",
+        "amenity": "college",
+        "name": "Subbaiah Institute of Medical Sciences, Shimoga",
+        "name:kn": "ಸುಬ್ಬಯ್ಯ ವೈದ್ಯಕೀಯ ವಿಜ್ಞಾನ ಸಂಸ್ಥೆ",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.6165679,
+          13.9323369
+        ]
+      },
+      "id": "way/619222779"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1632209355",
+        "amenity": "school",
+        "name": "Vikasa Vidya Samsthe",
+        "name:kn": "ವಿಕಾಸ ವಿದ್ಯ ಸಂಸ್ತೆ"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5432066,
+          13.9526786
+        ]
+      },
+      "id": "node/1632209355"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1797076891",
+        "amenity": "restaurant",
+        "diet:vegetarian": "only",
+        "name": "Minakshi Bhavan",
+        "name:kn": "ಮೀನಾಕ್ಷಿ ಭವನ"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5826766,
+          13.9325909
+        ]
+      },
+      "id": "node/1797076891"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1797187739",
+        "amenity": "restaurant",
+        "cuisine": "indian",
+        "name": "Ashoka Veg",
+        "name:kn": "ಅಶೋಕ ವೆಜ್"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5685981,
+          13.9294528
+        ]
+      },
+      "id": "node/1797187739"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1813603103",
+        "amenity": "school",
+        "name": "Government School",
+        "name:kn": "ಸರ್ಕಾರಿ ಶಾಲೆ"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5697303,
+          13.9280065
+        ]
+      },
+      "id": "node/1813603103"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1814872930",
+        "amenity": "school",
+        "name": "Oxford English Higher Primary School",
+        "name:kn": "ಆಕ್ಸ್ಫರ್ಡ್ ಆಂಗ್ಲ ಹಿರಿಯ ಪ್ರಾಥಮಿಕ ಶಾಲೆ"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.57093,
+          13.944617
+        ]
+      },
+      "id": "node/1814872930"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1814917328",
+        "amenity": "restaurant",
+        "name": "Nandhini Resturant",
+        "name:kn": "ನಂದಿನಿ ರೆಸ್ಟೋರೆಂಟ್"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5732131,
+          13.9335308
+        ]
+      },
+      "id": "node/1814917328"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1889420131",
+        "amenity": "restaurant",
+        "name": "Mathura Veg",
+        "name:kn": "ಮಥುರ ವೆಜ್"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.574225,
+          13.9349521
+        ]
+      },
+      "id": "node/1889420131"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1889420132",
+        "amenity": "restaurant",
+        "name": "Food Street",
+        "name:kn": "ಫುಡ್ ಸ್ಟ್ರೀಟ್",
+        "name:ur": "فوڈ اسٹریٹ"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5740668,
+          13.9334265
+        ]
+      },
+      "id": "node/1889420132"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1889431476",
+        "amenity": "school",
+        "name": "JNN College of Engineering",
+        "name:kn": "ಜನೆರಾ ಎಂಜಿನಿಯರಿಂಗ್ ಕಾಲೇಜು"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.579458,
+          13.9658222
+        ]
+      },
+      "id": "node/1889431476"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1906609665",
+        "amenity": "restaurant",
+        "name": "Jyothi Gardens"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5684431,
+          13.9375477
+        ]
+      },
+      "id": "node/1906609665"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1906609671",
+        "amenity": "restaurant",
+        "name": "Jewel Rock Veg",
+        "name:kn": "ಜಿವೆಲ್ ರಾಕ್ ವೆಜ್"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5686952,
+          13.9351865
+        ]
+      },
+      "id": "node/1906609671"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1906768808",
+        "amenity": "school",
+        "name": "Shri Vidyabharati School",
+        "name:kn": "ವಿದ್ಯಾಭಾರತಿ ಶಾಲೆ"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5825194,
+          13.9306776
+        ]
+      },
+      "id": "node/1906768808"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1906848492",
+        "amenity": "restaurant",
+        "name": "Heaven Inn",
+        "name:kn": "ಹೆವೆನ್ ಇನ್"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5559119,
+          13.9383054
+        ]
+      },
+      "id": "node/1906848492"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1908074118",
+        "amenity": "restaurant",
+        "name": "Navarathna Bar & Restaurant",
+        "name:kn": "ನವರತ್ನ ಬಾರ್"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5724943,
+          13.9328852
+        ]
+      },
+      "id": "node/1908074118"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2491867221",
+        "addr:city": "Shimoga",
+        "addr:postcode": "577204",
+        "addr:street": "Jail Road",
+        "amenity": "hospital",
+        "name": "Sridhar Nursing Home & Malnad De-Addiction Centre",
+        "name:kn": "ಶ್ರೀದರ್ ನರ್ಸಿಂಗ್ ಹೋಂ"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5690156,
+          13.9454548
+        ]
+      },
+      "id": "node/2491867221"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2632590567",
+        "amenity": "restaurant",
+        "name": "Hotel Surya Veg",
+        "name:kn": "ಹೋಟೆಲ್ ಸೂರ್ಯ"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5691464,
+          13.9356609
+        ]
+      },
+      "id": "node/2632590567"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2632591323",
+        "amenity": "restaurant"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5705621,
+          13.9345467
+        ]
+      },
+      "id": "node/2632591323"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3640981672",
+        "amenity": "school",
+        "name": "Durgigudi Government School",
+        "name:kn": "ದುರ್ಗಿಗುಡಿ ಸರ್ಕಾರಿ ಶಾಲೆ"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5730067,
+          13.936957
+        ]
+      },
+      "id": "node/3640981672"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3790229057",
+        "amenity": "college",
+        "name": "Subbaiah Institute of Medical Sciences",
+        "name:kn": "ಸುಬ್ಬಯ್ಯ ವೈದ್ಯಕೀಯ ಮಹಾವಿದ್ಯಾಲಯ"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5544379,
+          13.9287621
+        ]
+      },
+      "id": "node/3790229057"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3904248995",
+        "amenity": "school",
+        "name": "Sandeepini High School",
+        "name:kn": "ಜ್ಞಾನ ದೀಪ ವಿದ್ಯ ಸಂಸ್ತೆ"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5640216,
+          13.9529581
+        ]
+      },
+      "id": "node/3904248995"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6029053770",
+        "amenity": "restaurant",
+        "cuisine": "indian",
+        "name": "Hotel Ashoka",
+        "opening_hours": "PH,Mo-Su 06:00-13:00"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5569396,
+          13.9376237
+        ]
+      },
+      "id": "node/6029053770"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6938019892",
+        "addr:district": "Shivamogga",
+        "addr:full": "100 Feet Road, Opposite Oxford School, Near Ganpathi Temple, Ravindra Nagar",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "Sri Lakshmi Nursing Home, Shivamogga",
+        "source": "OpenGovernmentData"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5713731,
+          13.9449747
+        ]
+      },
+      "id": "node/6938019892"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6938031551",
+        "addr:district": "Shivamogga",
+        "addr:full": "1st Parallet Road, Durgigudi",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Onkar Hospital, Shivamogga",
+        "name:kn": "ಓಂಕಾರ ಆಸ್ಪತ್ರೆ",
+        "source": "OpenGovernmentData"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5697142,
+          13.9370622
+        ]
+      },
+      "id": "node/6938031551"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6938777936",
+        "addr:district": "Shivamogga",
+        "addr:full": "Shathaveri Gopalgowda Marg",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Nirmala Hospital",
+        "name:kn": "ಓಂಕಾರ ಆಸ್ಪತ್ರೆ",
+        "source": "OpenGovernmentData"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.569051,
+          13.9445152
+        ]
+      },
+      "id": "node/6938777936"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6938883402",
+        "addr:district": "Shivamogga",
+        "addr:full": "R.M.R Road , Durgigudi",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Sindhu Urology Hospital",
+        "source": "OpenGovernmentData"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5713101,
+          13.9376454
+        ]
+      },
+      "id": "node/6938883402"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6944071260",
+        "addr:district": "Shivamogga",
+        "addr:full": "Sowlanga Road, Near Railway Gate",
+        "addr:postcode": "577204",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Swathi ENT Hospital",
+        "name:kn": "ಸ್ವಾತಿ ಆಸ್ಪತ್ರೆ",
+        "source": "OpenGovernmentData"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5743168,
+          13.948252
+        ]
+      },
+      "id": "node/6944071260"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6944071261",
+        "addr:district": "Shivamogga",
+        "addr:full": "Nh-13, Purlae",
+        "addr:postcode": "577222",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Subbaiah Medical College Hospital And Research Centre",
+        "source": "OpenGovernmentData"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.6165013,
+          13.93269
+        ]
+      },
+      "id": "node/6944071261"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6944071262",
+        "addr:district": "Shivamogga",
+        "addr:full": "Ot Road",
+        "addr:postcode": "577202",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Sahyadri Hospital",
+        "name:kn": "ಸಹ್ಯದ್ರಿ ಆಸ್ಪತ್ರೆ",
+        "source": "OpenGovernmentData"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5730978,
+          13.9286588
+        ]
+      },
+      "id": "node/6944071262"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6944071263",
+        "addr:district": "Shivamogga",
+        "addr:full": "B.H. Road",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "Sharavathi Nursing Home",
+        "source": "OpenGovernmentData"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5798905,
+          13.9309601
+        ]
+      },
+      "id": "node/6944071263"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6944130144",
+        "addr:district": "Shivamogga",
+        "addr:full": "1st Main Tilak Nagar",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Basaveshwara Hospital",
+        "name:kn": "ಬಸವೇಶ್ವರ ಆಸ್ಪತ್ರೆ",
+        "source": "OpenGovernmentData"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5734438,
+          13.9369204
+        ]
+      },
+      "id": "node/6944130144"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6944130149",
+        "addr:district": "Shivamogga",
+        "addr:full": "Near Subbaiah Complex, Jail Road",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Tadikela Subbiah Trust Hospital",
+        "source": "OpenGovernmentData"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5681893,
+          13.9410426
+        ]
+      },
+      "id": "node/6944130149"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6944130150",
+        "addr:district": "Shivamogga",
+        "addr:full": "Gandhi Nagar",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Pushya Hospital",
+        "name:kn": "ಪುಷ್ಯ ಆಸ್ಪತ್ರೆ",
+        "source": "OpenGovernmentData"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5734304,
+          13.9428479
+        ]
+      },
+      "id": "node/6944130150"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6944130151",
+        "addr:district": "Shivamogga",
+        "addr:full": "Rathnamma Madhava Rao Road, Durgigudi",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "City Hospital, Shimoga",
+        "source": "OpenGovernmentData"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.570268,
+          13.9375152
+        ]
+      },
+      "id": "node/6944130151"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6944130156",
+        "addr:district": "Shivamogga",
+        "addr:full": "Hotel Jewel Rock Road Durgigudi",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "Mallikarjuna Nursing Home",
+        "source": "OpenGovernmentData"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5689162,
+          13.9363112
+        ]
+      },
+      "id": "node/6944130156"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6944130161",
+        "addr:district": "Shivamogga",
+        "addr:full": "Ratnamma Madhava Rao Road,Next To Syndicate Bank,Park Extention,Durgigudi",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Sadhana Eye Hospital, Shivamogga",
+        "source": "OpenGovernmentData"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5711317,
+          13.9375972
+        ]
+      },
+      "id": "node/6944130161"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6944130162",
+        "addr:district": "Shivamogga",
+        "addr:full": "L.L.R.Road, Durgigudi",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "Shanta Nursing Home",
+        "source": "OpenGovernmentData"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5701004,
+          13.9346516
+        ]
+      },
+      "id": "node/6944130162"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6944130163",
+        "addr:district": "Shivamogga",
+        "addr:full": "Savalanga Road",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "Usha Nursing Home, Shivamogga",
+        "source": "OpenGovernmentData"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5740727,
+          13.9455669
+        ]
+      },
+      "id": "node/6944130163"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6944256083",
+        "addr:district": "Shivamogga",
+        "addr:full": "Savalanga Road Ravindranagar",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "J.P. Hospital",
+        "source": "OpenGovernmentData"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5739118,
+          13.9435312
+        ]
+      },
+      "id": "node/6944256083"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6944275088",
+        "addr:district": "Shivamogga",
+        "addr:full": "100 Feet Road, Vinobanagar",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "KGP Hospital",
+        "source": "OpenGovernmentData"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5526057,
+          13.9492568
+        ]
+      },
+      "id": "node/6944275088"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6944734311",
+        "addr:district": "Shivamogga",
+        "addr:full": "Jewel Rock Hotel Road",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "Jagannath Nursing Home",
+        "source": "OpenGovernmentData"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5690369,
+          13.9346243
+        ]
+      },
+      "id": "node/6944734311"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6945012322",
+        "addr:district": "Shivamogga",
+        "addr:full": "Achatha Rao Lay Out,Ank Road",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Sumohan Medico Surgical and Maternity Home",
+        "source": "OpenGovernmentData"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5706234,
+          13.9404191
+        ]
+      },
+      "id": "node/6945012322"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6945066625",
+        "addr:district": "Shivamogga",
+        "addr:full": "Park Extension,Near Ragavendra Swamy Matha",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Hegde Health Complex",
+        "source": "OpenGovernmentData"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5728792,
+          13.9373759
+        ]
+      },
+      "id": "node/6945066625"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6945075711",
+        "addr:district": "Shivamogga",
+        "addr:full": "Extension Road, Opp Mahatma Gandhi Park",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Vaathsalya Hospital",
+        "name:kn": "ವಾತ್ಸಲ್ಯ ಆಸ್ಪತ್ರೆ",
+        "source": "OpenGovernmentData"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5739373,
+          13.9353688
+        ]
+      },
+      "id": "node/6945075711"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6947135392",
+        "addr:district": "Shivamogga",
+        "addr:full": "Near Jail Circle Acutha Rao Lay Out",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "healthcare": "hospital",
+        "name": "Sagar Nursing Home and Laser Centre",
+        "source": "OpenGovernmentData"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5700776,
+          13.9390511
+        ]
+      },
+      "id": "node/6947135392"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6947499709",
+        "addr:district": "Shivamogga",
+        "addr:full": "Udayaravi Complex Llr Road",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Priyanaka Hospital, Shimoga",
+        "source": "OpenGovernmentData"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5702305,
+          13.9349041
+        ]
+      },
+      "id": "node/6947499709"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6947504039",
+        "addr:district": "Shivamogga",
+        "addr:full": "Subbaiah Hospital Complex, S.R.Road, Jail Road",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Subbaiah Hospital",
+        "name:kn": "ಸುಬ್ಬಯ್ಯ ಆಸ್ಪತ್ರೆ",
+        "source": "OpenGovernmentData"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5685273,
+          13.9405219
+        ]
+      },
+      "id": "node/6947504039"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6947701115",
+        "addr:district": "Shivamogga",
+        "addr:full": "Tilak Nagar Main Road, Near Raghavendra Mutt",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Vivekananda Hospital And Maternity Home",
+        "source": "OpenGovernmentData"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5744496,
+          13.9373681
+        ]
+      },
+      "id": "node/6947701115"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6947716905",
+        "addr:district": "Shivamogga",
+        "addr:full": "Sowalanga Road (Main),Ravindra Nagar",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "Parvati Nursing Home",
+        "source": "OpenGovernmentData"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5743524,
+          13.9471407
+        ]
+      },
+      "id": "node/6947716905"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6950124292",
+        "addr:district": "Shivamogga",
+        "addr:full": "100 Feet Rd, Vinayaka Nagar, Basavanagudi, Shivamogga",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Kottureshwara Hospital And Reserch Centre",
+        "source": "OpenGovernmentData"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5765132,
+          13.9453868
+        ]
+      },
+      "id": "node/6950124292"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6950185714",
+        "addr:district": "Shivamogga",
+        "addr:full": "Hampi Veerupaya Niraya Nehru Road Durgi Gudi",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "Ravi Polyclinic Maternity And Nursing Home",
+        "source": "OpenGovernmentData"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5704786,
+          13.934895
+        ]
+      },
+      "id": "node/6950185714"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828345",
+        "addr:district": "Shimoga",
+        "addr:full": "AVSG Complex, Savlanga Road, Shivamogga",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "Sri Raghavendra Nursing Home",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5745934,
+          13.9464103
+        ]
+      },
+      "id": "node/7566828345"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828348",
+        "addr:district": "Shimoga",
+        "addr:full": "Marnami Bail, Milagatta, Shivamogga",
+        "addr:postcode": "577202",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "Diya Clinic",
+        "name:kn": "ಚಿಕಿತ್ಸಾಲಯ",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5685562,
+          13.9251216
+        ]
+      },
+      "id": "node/7566828348"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828350",
+        "addr:district": "Shimoga",
+        "addr:full": "Durgigudi, Shivamogga",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Modern Eye Hospital & Laser Centre",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5694098,
+          13.9351483
+        ]
+      },
+      "id": "node/7566828350"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828352",
+        "addr:district": "Shimoga",
+        "addr:full": "Kuvempu Road, Shivamogga",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "Tanvi Plastic Surgery Clinic",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.566516,
+          13.936856
+        ]
+      },
+      "id": "node/7566828352"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828354",
+        "addr:district": "Shimoga",
+        "addr:full": "Navule, Shivamogga",
+        "addr:postcode": "577216",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Suraksha Hospital",
+        "name:kn": "ಸುರಕ್ಷಾ ಆಸ್ಪತ್ರೆ",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.581103,
+          13.969915
+        ]
+      },
+      "id": "node/7566828354"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828356",
+        "addr:district": "Shimoga",
+        "addr:full": "Shivamogga",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "Shreyas Clinic",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5713296,
+          13.9341384
+        ]
+      },
+      "id": "node/7566828356"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828360",
+        "addr:district": "Shimoga",
+        "addr:full": "Savlanga Road, Navule, Shivamogga",
+        "addr:postcode": "577216",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Bapuji Multi Speciality Hospital",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.581975,
+          13.973388
+        ]
+      },
+      "id": "node/7566828360"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828363",
+        "addr:district": "Shimoga",
+        "addr:full": "B H Road, Shivamogga",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Ashoka Sanjeevini Hospital",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5824574,
+          13.9327288
+        ]
+      },
+      "id": "node/7566828363"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828364",
+        "addr:district": "Shimoga",
+        "addr:full": "BH Road, KR Puram, Shivamogga",
+        "addr:postcode": "577202",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Ganga Hospital",
+        "name:kn": "ಗಂಗಾ ಆಸ್ಪತ್ರೆ",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.576703,
+          13.9299775
+        ]
+      },
+      "id": "node/7566828364"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828365",
+        "addr:district": "Shimoga",
+        "addr:full": "Rajendra Nagar, Shivamogga",
+        "addr:postcode": "577204",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "Guru Eye Clinic",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.569096,
+          13.946661
+        ]
+      },
+      "id": "node/7566828365"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828366",
+        "addr:district": "Shimoga",
+        "addr:full": "Gandhi Bazar, KR Puram, Shivamogga",
+        "addr:postcode": "577202",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Malnad Life Line Hospital",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5725655,
+          13.9278325
+        ]
+      },
+      "id": "node/7566828366"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828370",
+        "addr:district": "Shimoga",
+        "addr:full": "Gandhi Nagar, Shivamogga",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Guru Eye Hospital",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.571379,
+          13.941111
+        ]
+      },
+      "id": "node/7566828370"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828371",
+        "addr:district": "Shimoga",
+        "addr:full": "Tilak Nagar, Durgigudi, Shivamogga",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Chirayush Children's Hospital",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.574899,
+          13.937519
+        ]
+      },
+      "id": "node/7566828371"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828374",
+        "addr:district": "Shimoga",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "Hoysala Healthcare",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.592741,
+          13.963875
+        ]
+      },
+      "id": "node/7566828374"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828375",
+        "addr:district": "Shimoga",
+        "addr:full": "HUDCO Colony, Shivamogga",
+        "addr:postcode": "577204",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Dhavala Pentacare Ayurveda",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.547353,
+          13.948701
+        ]
+      },
+      "id": "node/7566828375"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828384",
+        "addr:district": "Shimoga",
+        "addr:full": "Adarsh Layout, Vinoba Nagara, Shivamogga",
+        "addr:postcode": "577204",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "Aaradya Eye Clinic",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5576575,
+          13.9507219
+        ]
+      },
+      "id": "node/7566828384"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828385",
+        "addr:district": "Shimoga",
+        "addr:full": "Kuvempu Road, Sharavathi Nagar, Hosamane, Shivamogga",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Unity Children's Hospital",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5636599,
+          13.9367413
+        ]
+      },
+      "id": "node/7566828385"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828389",
+        "addr:district": "Shimoga",
+        "addr:full": "KR Puram, Shivamogga",
+        "addr:postcode": "577202",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "Vijaya Clinic",
+        "name:kn": "ವಿಜಯ ಚಿಕಿತ್ಸಾಲಯ",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.58516,
+          13.930775
+        ]
+      },
+      "id": "node/7566828389"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828391",
+        "addr:district": "Shimoga",
+        "addr:full": "Kuvempu Road, Gandhi Nagar, Shivamogga",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "Pradeep Clinic",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.56989,
+          13.938665
+        ]
+      },
+      "id": "node/7566828391"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828393",
+        "addr:district": "Shimoga",
+        "addr:full": "Gandhi Nagar, Shivamogga",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "Shrishti Clinic",
+        "name:kn": "ಸೃಷ್ಟಿ ಚಿಕಿತ್ಸಾಲಯ",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5681973,
+          13.9420025
+        ]
+      },
+      "id": "node/7566828393"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828394",
+        "addr:district": "Shimoga",
+        "addr:full": "Puttappa Complex, Urgadur, Shivamogga",
+        "addr:postcode": "577203",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "Amrutha Sanjeevini Clinic",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5777618,
+          13.9092545
+        ]
+      },
+      "id": "node/7566828394"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828396",
+        "addr:district": "Shimoga",
+        "addr:full": "100 Feet Road, Vinoba Nagara, Shivamogga",
+        "addr:postcode": "577204",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Bhagyaram Orthopaedic Centre",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5637622,
+          13.9466904
+        ]
+      },
+      "id": "node/7566828396"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828397",
+        "addr:district": "Shimoga",
+        "addr:full": "Yalburgi Colony, Basavanagudi, Shivamogga",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Sri Vinayaka Hospital",
+        "name:kn": "ವಿನಾಯಕ ಆಸ್ಪತ್ರೆ",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5764155,
+          13.9427255
+        ]
+      },
+      "id": "node/7566828397"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828398",
+        "addr:district": "Shimoga",
+        "addr:full": "Gandhi Nagar, Shivamogga",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "Sreesha Clinic",
+        "name:kn": "ಚಿಕಿತ್ಸಾಲಯ",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.571849,
+          13.943009
+        ]
+      },
+      "id": "node/7566828398"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828401",
+        "addr:district": "Shimoga",
+        "addr:full": "RMR Road Park Extension, Durgigudi, Shivamogga",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Max Super Speciality Hospital",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5716467,
+          13.9381157
+        ]
+      },
+      "id": "node/7566828401"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828407",
+        "addr:district": "Shimoga",
+        "addr:full": "Yalburgi Colony, Basavanagudi, Shivamogga",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "Jayanagara Nursing Home",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5763959,
+          13.9427028
+        ]
+      },
+      "id": "node/7566828407"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828411",
+        "addr:district": "Shimoga",
+        "addr:full": "Gandhi Nagar, Shivamogga",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "Padmamba Clinic",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5682441,
+          13.9417922
+        ]
+      },
+      "id": "node/7566828411"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828412",
+        "addr:district": "Shimoga",
+        "addr:full": "Sominakoppa, Shivamogga",
+        "addr:postcode": "577204",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Surabee IRCA Hospital",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5467008,
+          13.9688108
+        ]
+      },
+      "id": "node/7566828412"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828413",
+        "addr:district": "Shimoga",
+        "addr:full": "Channappa Layout, Shivamogga",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "Sri Laxmi Clinic",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5740255,
+          13.9409923
+        ]
+      },
+      "id": "node/7566828413"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828422",
+        "addr:district": "Shimoga",
+        "addr:full": "Lashkar Mohalla, KR Puram, Shivamogga",
+        "addr:postcode": "577202",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "Dr. Morlawar's Homeopathy Clinic",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5772001,
+          13.9296116
+        ]
+      },
+      "id": "node/7566828422"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828424",
+        "addr:district": "Shimoga",
+        "addr:full": "Kuvempu Road, Sharavathi Nagar, Shivamogga",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "Devakrupa children's clinic",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5679002,
+          13.937159
+        ]
+      },
+      "id": "node/7566828424"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828430",
+        "addr:district": "Shimoga",
+        "addr:full": "M.R.S. Complex, Shivamogga",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "HPC Healthcare",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.573387,
+          13.935605
+        ]
+      },
+      "id": "node/7566828430"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828431",
+        "addr:district": "Shimoga",
+        "addr:full": "Ratnakar Nagar, Navule, Shivamogga",
+        "addr:postcode": "577216",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "Nikhil Clinic",
+        "name:kn": "ಚಿಕಿತ್ಸಾಲಯ",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5859477,
+          13.9745921
+        ]
+      },
+      "id": "node/7566828431"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828432",
+        "addr:district": "Shimoga",
+        "addr:full": "Gandhi Nagar, Shivamogga",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Dheemahi Child Neurology & Development Centre",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.571211,
+          13.939324
+        ]
+      },
+      "id": "node/7566828432"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828435",
+        "addr:district": "Shimoga",
+        "addr:full": "Near Police Station",
+        "addr:postcode": "577202",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "Chaitanya Neuro Theraphy",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5827545,
+          13.9301489
+        ]
+      },
+      "id": "node/7566828435"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828437",
+        "addr:district": "Shimoga",
+        "addr:full": "Jail Road, Gandhi Nagar, Shivamogga",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Sri Eshwari Hospital",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.568192,
+          13.9419778
+        ]
+      },
+      "id": "node/7566828437"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828441",
+        "addr:district": "Shimoga",
+        "addr:full": "ANK Road, Shivamogga",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Nagraj Neuro Hospital",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.571408,
+          13.940889
+        ]
+      },
+      "id": "node/7566828441"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828443",
+        "addr:district": "Shimoga",
+        "addr:full": "Darga Complex, Tilak Nagar, Shivamogga",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "Vaani Clinic",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.57496,
+          13.937262
+        ]
+      },
+      "id": "node/7566828443"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828445",
+        "addr:district": "Shimoga",
+        "addr:full": "Yalburgi Colony, Basavanagudi, Shivamogga",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Malnad ENT Hospital",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5752034,
+          13.941679
+        ]
+      },
+      "id": "node/7566828445"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828446",
+        "addr:district": "Shimoga",
+        "addr:full": "Hosamane, Shivamogga",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "Jyothi Poly Clinic",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5664157,
+          13.9369029
+        ]
+      },
+      "id": "node/7566828446"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7566828448",
+        "addr:district": "Shimoga",
+        "addr:full": "Hosamane, Shivamogga",
+        "addr:postcode": "577201",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Gutti Malnad Hospital",
+        "source": "Local Knowledge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.568989,
+          13.938192
+        ]
+      },
+      "id": "node/7566828448"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8187986161",
+        "addr:full": "SAVALANGA ROAD, BESIDE LBS ARCH, NEAR VIJAYA BANK, Ashwath Nagar, Lal Bahadur Shastri Nagar, Shivamogga, Karnataka",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "Smaya Polyclinic"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.575377,
+          13.9521834
+        ]
+      },
+      "id": "node/8187986161"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8187986170",
+        "addr:full": "Bhaskar rao lay out, beside kartik medical, Urgadur, Sulebailu, Shivamogga, Karnataka",
+        "addr:state": "Karnataka",
+        "amenity": "clinic",
+        "name": "Jeevaraksha Clinic"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5783146,
+          13.9099771
+        ]
+      },
+      "id": "node/8187986170"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8188037847",
+        "addr:full": "Savalanga Road, Ravindranagara, Ravindra Nagara, Shivamogga, Karnataka",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Usha Nursing Home"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5741354,
+          13.9455304
+        ]
+      },
+      "id": "node/8188037847"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8188037862",
+        "addr:full": "SIMS, Mission Compound, Shivamogga, Karnataka",
+        "addr:state": "Karnataka",
+        "amenity": "hospital",
+        "name": "Old McGann Hospital",
+        "name:etymology:wikidata": "Q7668249"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5663634,
+          13.9338071
+        ]
+      },
+      "id": "node/8188037862"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8188054832",
+        "addr:full": "Basaveshwara Nagar, Shivamogga, Karnataka",
+        "addr:state": "Karnataka",
+        "amenity": "restaurant"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5748117,
+          13.9482598
+        ]
+      },
+      "id": "node/8188054832"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8196807346",
+        "addr:full": "Next to JNNCE, Navule, Shivamogga, Karnataka",
+        "addr:state": "Karnataka",
+        "amenity": "college",
+        "name": "Government Agriculture College",
+        "name:kn": "ಸರ್ಕಾರಿ ಕೃಷಿ ಕಾಲೇಜು"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.575702,
+          13.9735861
+        ]
+      },
+      "id": "node/8196807346"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8196807353",
+        "addr:full": "Shivamogga, Vinobanagar, Post box No. 53, Shivamogga, Karnataka",
+        "addr:state": "Karnataka",
+        "amenity": "college",
+        "name": "Veterinary College",
+        "name:kn": "ಪಶುವೈದ್ಯ ಕಾಲೇಜು"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5350422,
+          13.967064
+        ]
+      },
+      "id": "node/8196807353"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8196807362",
+        "addr:full": "DHANALAKSHMI COMPLEX, SOMINAKOPPA ROAD, NEAR RAILWAY GATE BUS STOP, OPP. TO VEERANJANEYA TEMPLE, Vinoba Nagara, Shivamogga, Karnataka",
+        "addr:state": "Karnataka",
+        "amenity": "college",
+        "name": "Aryabhata PU Science College"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5539807,
+          13.9578866
+        ]
+      },
+      "id": "node/8196807362"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8196807389",
+        "addr:full": "Balaraj Urs Rd, Tank Mohalla, Shivamogga, Karnataka",
+        "addr:state": "Karnataka",
+        "amenity": "college",
+        "name": "Hoysala College of Management"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5823643,
+          13.938469
+        ]
+      },
+      "id": "node/8196807389"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8196807393",
+        "addr:full": "17, 1st Cross Rd, Hosamane, Shivamogga, Karnataka",
+        "addr:state": "Karnataka",
+        "amenity": "college",
+        "name": "Sri Vidyalaya PU College Shimoga"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5646843,
+          13.9373655
+        ]
+      },
+      "id": "node/8196807393"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8196807403",
+        "addr:full": "Shivamogga, BH Road, Behind Meenakshi Bhavan, Bapuji Nagar, Tank Mohalla, Shivamogga, Karnataka",
+        "addr:state": "Karnataka",
+        "amenity": "college",
+        "name": "Government First Grade College",
+        "name:kn": "ಸರಕಾರಿ ಪ್ರಥಮ ದರ್ಜೆ ಕಾಲೇಜು"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5811598,
+          13.9345195
+        ]
+      },
+      "id": "node/8196807403"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8196807409",
+        "addr:full": "Tank Mohalla, Shivamogga, Karnataka",
+        "addr:state": "Karnataka",
+        "amenity": "college",
+        "name": "Government Junior College",
+        "name:kn": "ಸರ್ಕಾರಿ ಜೂನಿಯರ್ ಕಾಲೇಜು"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.581825,
+          13.9327925
+        ]
+      },
+      "id": "node/8196807409"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8196807413",
+        "addr:full": "KR Puram, Shivamogga, Karnataka",
+        "addr:state": "Karnataka",
+        "amenity": "college",
+        "name": "Government PU College B H Road Science Maidan"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5833063,
+          13.9319162
+        ]
+      },
+      "id": "node/8196807413"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8196807421",
+        "addr:full": "Anupinakatte Rd, Shivamogga, Karnataka",
+        "addr:state": "Karnataka",
+        "amenity": "college",
+        "name": "Mandara Jnanadayini PU College"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5332665,
+          13.9232006
+        ]
+      },
+      "id": "node/8196807421"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8196807423",
+        "addr:full": "Maha Kavi Kalidasa Rd, Gandhi Bazar, KR Puram, Shivamogga, Karnataka",
+        "addr:state": "Karnataka",
+        "amenity": "college",
+        "name": "Jayaprakash Narayan ( Jpn.) Pu College"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5754172,
+          13.9228848
+        ]
+      },
+      "id": "node/8196807423"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9794227025",
+        "addr:city": "Shivamogga",
+        "addr:housenumber": "WHMF+C7H, Devraj Urs Complex, Gopi Circle, Nehru Rd, Durgigudi, Shivamogga, Karnataka",
+        "addr:postcode": "577201",
+        "addr:street": "Balaraj Arasa Road",
+        "amenity": "restaurant",
+        "cuisine": "indian",
+        "diet:non-vegetarian": "yes",
+        "diet:vegetarian": "yes",
+        "name": "Anmol The Family Cuisine",
+        "opening_hours": "Mo-Su 11:30-04:30,06:00-23:00"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5732721,
+          13.9336417
+        ]
+      },
+      "id": "node/9794227025"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10277978873",
+        "addr:city": "shivamogga",
+        "addr:housenumber": "1",
+        "addr:postcode": "577201",
+        "addr:street": "Sagar Road",
+        "amenity": "restaurant",
+        "cuisine": "seafood;chicken",
+        "diet:non-vegetarian": "yes",
+        "name": "Shetty Lunch Home",
+        "phone": "7411610709"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.5523418,
+          13.9391443
+        ]
+      },
+      "id": "node/10277978873"
+    }
+  ]
+}
