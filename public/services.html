@@ -330,12 +330,8 @@
     <div style="clear:both;"></div>
   </div>
 
-  <!-- Leaflet JS -->
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/JbC6rj0v0v+0lCqk0Wwk="
-    crossorigin=""
-  ></script>
+  <!-- Leaflet JS: NO integrity so browser does not block it -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script>
     const API_BASE = window.location.origin + '/api';
