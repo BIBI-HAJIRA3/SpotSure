@@ -6,14 +6,14 @@
   <title>SpotSure – Services</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-  <!-- Leaflet CSS for maps -->
+  <!-- Leaflet CSS -->
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
     crossorigin=""
   />
-  <!-- Font Awesome for map-marker icon -->
+  <!-- Font Awesome -->
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -65,10 +65,6 @@
       font-size: 12px;
       cursor: pointer;
       white-space: nowrap;
-    }
-    .pill-btn.secondary {
-      background: #020617;
-      color: #93c5fd;
     }
     .pill-btn:hover {
       background: #1d4ed8;
@@ -130,7 +126,6 @@
       color: #e5e7eb;
     }
 
-    /* Map card */
     .map-card {
       background: #111827;
       border-radius: 14px;
@@ -221,7 +216,6 @@
       color: #9ca3af;
     }
 
-    /* small icon button inside card, top-right */
     .card-map-icon {
       position: absolute;
       top: 8px;
@@ -240,12 +234,7 @@
     .card-map-icon i {
       font-size: 12px;
     }
-    .card-map-icon:hover {
-      border-color: #0ea5e9;
-      color: #0ea5e9;
-    }
 
-    /* Toast dialog */
     #toast {
       position: fixed;
       left: 50%;
@@ -320,7 +309,6 @@
       <button class="chip category-btn" data-category="Grocery">Grocery</button>
     </div>
 
-    <!-- Map for all services -->
     <section class="map-card">
       <div class="map-header">
         <span>Services map</span>
@@ -355,22 +343,19 @@
     let allServices = [];
     let currentCategory = 'All';
 
-    // Map state
     let mapInstance = null;
     let markersLayer = null;
-    let markersById = {}; // serviceId -> marker
+    let markersById = {};
 
     function showToast(message) {
       const t = document.getElementById('toast');
       const msg = document.getElementById('toastMessage');
       const ok = document.getElementById('toastOkBtn');
       if (!t || !msg || !ok) return;
-
       msg.textContent = message;
       t.style.opacity = '1';
       t.style.pointerEvents = 'auto';
       t.style.transform = 'translateX(-50%) translateY(-4px)';
-
       ok.onclick = () => {
         t.style.opacity = '0';
         t.style.pointerEvents = 'none';
@@ -381,25 +366,16 @@
     function getUsername() {
       return localStorage.getItem('spotsureUsername') || null;
     }
-    function setUsername(name) {
-      localStorage.setItem('spotsureUsername', name);
-      updateUserLine();
-    }
     function updateUserLine() {
       const line = document.getElementById('welcomeUserLine');
       const name = getUsername();
       if (!line) return;
-      if (name) line.textContent = 'Welcome back, ' + name;
-      else line.textContent = '';
+      line.textContent = name ? 'Welcome back, ' + name : '';
     }
 
     function getServiceImage(service) {
-      if (service.imagePath) {
-        return '/image/' + encodeURIComponent(service.imagePath);
-      }
-      if (service.imageUrl) {
-        return service.imageUrl;
-      }
+      if (service.imagePath) return '/image/' + encodeURIComponent(service.imagePath);
+      if (service.imageUrl) return service.imageUrl;
       return 'https://placehold.co/80x80?text=Svc';
     }
 
@@ -407,45 +383,30 @@
       const avg = Number(s.averageRating || 0).toFixed(1);
       const ratingsCount = Number(s.ratingCount || 0);
       const reviewsCount = Number(s.reviewCount || 0);
-
-      const ratingsLabel = ratingsCount === 1
-        ? '1 rating'
-        : ratingsCount + ' ratings';
-
-      const reviewsLabel = reviewsCount === 0
-        ? 'No reviews'
-        : (reviewsCount === 1 ? '1 review' : reviewsCount + ' reviews');
-
+      const ratingsLabel = ratingsCount === 1 ? '1 rating' : ratingsCount + ' ratings';
+      const reviewsLabel =
+        reviewsCount === 0 ? 'No reviews' :
+        reviewsCount === 1 ? '1 review' : reviewsCount + ' reviews';
       return avg + ' ★ • ' + ratingsLabel + ' • ' + reviewsLabel;
     }
 
     function filterServices() {
       const searchInput = document.getElementById('searchInput');
-      const searchText = searchInput
-        ? searchInput.value.trim().toLowerCase()
-        : '';
-
-      let list = allServices.filter((s) => {
-        const matchesSidebarCategory =
+      const searchText = searchInput ? searchInput.value.trim().toLowerCase() : '';
+      return allServices.filter((s) => {
+        const matchesCategory =
           currentCategory === 'All' ||
-          (s.category &&
-            s.category.toLowerCase() === currentCategory.toLowerCase());
-
-        if (!searchText) return matchesSidebarCategory;
-
+          (s.category && s.category.toLowerCase() === currentCategory.toLowerCase());
+        if (!matchesCategory) return false;
+        if (!searchText) return true;
         const fields = [
           s.name || '',
           s.city || '',
           s.pincode || '',
           s.category || '',
         ].map((x) => String(x).toLowerCase());
-
-        const matchesSearch = fields.some((f) => f.includes(searchText));
-
-        return matchesSidebarCategory && matchesSearch;
+        return fields.some((f) => f.includes(searchText));
       });
-
-      return list;
     }
 
     function openServicePage(serviceId) {
@@ -454,10 +415,9 @@
 
     function initMap() {
       if (mapInstance) return;
-      const mapEl = document.getElementById('servicesMap');
-      if (!mapEl) return;
-
-      mapInstance = L.map('servicesMap').setView([13.93, 75.57], 13);
+      const el = document.getElementById('servicesMap');
+      if (!el) return;
+      mapInstance = L.map('servicesMap').setView([13.935, 75.57], 13);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; OpenStreetMap contributors'
@@ -471,7 +431,6 @@
       markersLayer.clearLayers();
       markersById = {};
       const bounds = [];
-
       services.forEach((s) => {
         if (!s.location || typeof s.location.lat !== 'number' || typeof s.location.lng !== 'number') {
           return;
@@ -482,7 +441,6 @@
         markersById[s._id] = marker;
         bounds.push([lat, lng]);
       });
-
       if (bounds.length) {
         mapInstance.fitBounds(bounds, { padding: [20, 20] });
       }
@@ -501,9 +459,7 @@
       if (!mapInstance || !markersLayer) return;
       const bounds = [];
       markersLayer.eachLayer((layer) => {
-        if (layer.getLatLng) {
-          bounds.push(layer.getLatLng());
-        }
+        if (layer.getLatLng) bounds.push(layer.getLatLng());
       });
       if (bounds.length) {
         mapInstance.fitBounds(bounds, { padding: [20, 20] });
@@ -519,7 +475,6 @@
         refreshMarkers([]);
         return;
       }
-
       services.forEach((s) => {
         const card = document.createElement('div');
         card.className = 'service-card';
@@ -531,9 +486,7 @@
 
         const info = document.createElement('div');
         info.className = 'service-info';
-
         const ratingText = buildRatingText(s);
-
         info.innerHTML = `
           <h3>${s.name}</h3>
           <p>${s.category || 'Service'} • ${s.city || ''}</p>
@@ -556,7 +509,6 @@
         card.appendChild(mapBtn);
         container.appendChild(card);
       });
-
       refreshMarkers(services);
     }
 
@@ -565,13 +517,15 @@
         initMap();
         const res = await fetch(API_BASE + '/services');
         if (!res.ok) throw new Error('Failed to load services');
-        const data = await res.json();
-        allServices = data.services || [];
+        const text = await res.text();
+        const data = JSON.parse(text);
+        allServices = Array.isArray(data.services) ? data.services : [];
         renderServices();
       } catch (err) {
         console.error(err);
         const container = document.getElementById('services');
-        container.innerHTML = '<p style="font-size:13px; color:#f97316;">Error loading services.</p>';
+        container.innerHTML =
+          '<p style="font-size:13px; color:#f97316;">Error loading services.</p>';
       }
     }
 
@@ -596,6 +550,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       updateUserLine();
+      initMap();
       loadServices();
       setupCategoryFilters();
       setupSearch();
