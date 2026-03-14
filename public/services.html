@@ -571,15 +571,38 @@
     async function loadServices() {
       try {
         initMap();
+
         const res = await fetch(API_BASE + '/services');
-        if (!res.ok) throw new Error('Failed to load services');
-        const data = await res.json();
-        allServices = data.services || data;
+
+        // Treat 2xx and 304 as success
+        if (!res.ok && res.status !== 304) {
+          throw new Error('Failed to load services (status ' + res.status + ')');
+        }
+
+        let data;
+        if (res.status === 304) {
+          // No new body; keep existing allServices
+          data = { services: allServices };
+        } else {
+          try {
+            data = await res.json();
+          } catch (parseErr) {
+            console.error('Error parsing /services JSON:', parseErr);
+            throw new Error('Invalid services JSON from server');
+          }
+        }
+
+        const services = Array.isArray(data)
+          ? data
+          : (Array.isArray(data.services) ? data.services : []);
+
+        allServices = services;
         renderServices();
       } catch (err) {
-        console.error(err);
+        console.error('loadServices error:', err);
         const container = document.getElementById('services');
-        container.innerHTML = '<p style="font-size:13px; color:#f97316;">Error loading services.</p>';
+        container.innerHTML =
+          '<p style="font-size:13px; color:#f97316;">Error loading services.</p>';
       }
     }
 
