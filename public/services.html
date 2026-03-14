@@ -1,10 +1,24 @@
-maybe I'll  share the earlier file?<!-- SpotSure/public/services.html -->
+<!-- SpotSure/public/services.html -->
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8" />
   <title>SpotSure – Services</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <!-- Leaflet CSS for maps -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+  <!-- Font Awesome for map-marker icon -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+  />
+
   <style>
     * { box-sizing: border-box; }
 
@@ -116,6 +130,52 @@ maybe I'll  share the earlier file?<!-- SpotSure/public/services.html -->
       color: #e5e7eb;
     }
 
+    /* Map card */
+    .map-card {
+      background: #111827;
+      border-radius: 14px;
+      padding: 10px 10px 12px;
+      border: 1px solid #1f2937;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.6);
+      margin-top: 2px;
+      margin-bottom: 12px;
+    }
+    .map-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #9ca3af;
+      margin-bottom: 6px;
+    }
+    .map-icon-btn {
+      border-radius: 999px;
+      padding: 5px 9px;
+      border: 1px solid #374151;
+      background: #020617;
+      color: #e5e7eb;
+      font-size: 11px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+    .map-icon-btn i {
+      font-size: 13px;
+    }
+    .map-icon-btn:hover {
+      border-color: #0ea5e9;
+      color: #0ea5e9;
+    }
+    #servicesMap {
+      width: 100%;
+      height: 220px;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
     .services-list {
       display: flex;
       flex-direction: column;
@@ -131,6 +191,7 @@ maybe I'll  share the earlier file?<!-- SpotSure/public/services.html -->
       box-shadow: 0 1px 4px rgba(0,0,0,0.6);
       cursor: pointer;
       border: 1px solid #1f2937;
+      position: relative;
     }
     .service-thumb {
       width: 60px;
@@ -158,6 +219,30 @@ maybe I'll  share the earlier file?<!-- SpotSure/public/services.html -->
       margin-top: 4px;
       font-size: 11px;
       color: #9ca3af;
+    }
+
+    /* small icon button inside card, top-right */
+    .card-map-icon {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      border-radius: 999px;
+      padding: 4px 7px;
+      border: 1px solid #374151;
+      background: #020617;
+      color: #e5e7eb;
+      font-size: 11px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .card-map-icon i {
+      font-size: 12px;
+    }
+    .card-map-icon:hover {
+      border-color: #0ea5e9;
+      color: #0ea5e9;
     }
 
     /* Toast dialog */
@@ -235,6 +320,18 @@ maybe I'll  share the earlier file?<!-- SpotSure/public/services.html -->
       <button class="chip category-btn" data-category="Grocery">Grocery</button>
     </div>
 
+    <!-- Map for all services -->
+    <section class="map-card">
+      <div class="map-header">
+        <span>Services map</span>
+        <button class="map-icon-btn" type="button" onclick="fitAllMarkers()">
+          <i class="fa fa-map-marker"></i>
+          Show all
+        </button>
+      </div>
+      <div id="servicesMap"></div>
+    </section>
+
     <div class="list-section-title"></div>
     <div id="services" class="services-list"></div>
   </div>
@@ -245,11 +342,23 @@ maybe I'll  share the earlier file?<!-- SpotSure/public/services.html -->
     <div style="clear:both;"></div>
   </div>
 
+  <!-- Leaflet JS -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/JbC6rj0v0v+0lCqk0Wwk="
+    crossorigin=""
+  ></script>
+
   <script>
     const API_BASE = window.location.origin + '/api';
 
     let allServices = [];
     let currentCategory = 'All';
+
+    // Map state
+    let mapInstance = null;
+    let markersLayer = null;
+    let markersById = {}; // serviceId -> marker
 
     function showToast(message) {
       const t = document.getElementById('toast');
@@ -343,14 +452,74 @@ maybe I'll  share the earlier file?<!-- SpotSure/public/services.html -->
       window.location.href = '/service.html?id=' + encodeURIComponent(serviceId);
     }
 
+    function initMap() {
+      if (mapInstance) return;
+      const mapEl = document.getElementById('servicesMap');
+      if (!mapEl) return;
+
+      mapInstance = L.map('servicesMap').setView([13.93, 75.57], 13);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(mapInstance);
+      markersLayer = L.layerGroup().addTo(mapInstance);
+      markersById = {};
+    }
+
+    function refreshMarkers(services) {
+      if (!mapInstance || !markersLayer) return;
+      markersLayer.clearLayers();
+      markersById = {};
+      const bounds = [];
+
+      services.forEach((s) => {
+        if (!s.location || typeof s.location.lat !== 'number' || typeof s.location.lng !== 'number') {
+          return;
+        }
+        const { lat, lng } = s.location;
+        const marker = L.marker([lat, lng]).addTo(markersLayer);
+        marker.bindPopup('<strong>' + (s.name || 'Service') + '</strong><br>' + (s.address || ''));
+        markersById[s._id] = marker;
+        bounds.push([lat, lng]);
+      });
+
+      if (bounds.length) {
+        mapInstance.fitBounds(bounds, { padding: [20, 20] });
+      }
+    }
+
+    function focusServiceOnMap(serviceId) {
+      if (!mapInstance) return;
+      const marker = markersById[serviceId];
+      if (!marker) return;
+      const latLng = marker.getLatLng();
+      mapInstance.setView(latLng, 16);
+      marker.openPopup();
+    }
+
+    function fitAllMarkers() {
+      if (!mapInstance || !markersLayer) return;
+      const bounds = [];
+      markersLayer.eachLayer((layer) => {
+        if (layer.getLatLng) {
+          bounds.push(layer.getLatLng());
+        }
+      });
+      if (bounds.length) {
+        mapInstance.fitBounds(bounds, { padding: [20, 20] });
+      }
+    }
+
     function renderServices() {
       const container = document.getElementById('services');
       container.innerHTML = '';
       const services = filterServices();
       if (!services.length) {
         container.innerHTML = '<p style="font-size:13px; color:#9ca3af;">No services found.</p>';
+        refreshMarkers([]);
         return;
       }
+
       services.forEach((s) => {
         const card = document.createElement('div');
         card.className = 'service-card';
@@ -373,18 +542,31 @@ maybe I'll  share the earlier file?<!-- SpotSure/public/services.html -->
           </div>
         `;
 
+        const mapBtn = document.createElement('button');
+        mapBtn.type = 'button';
+        mapBtn.className = 'card-map-icon';
+        mapBtn.innerHTML = '<i class="fa fa-map-marker"></i>';
+        mapBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          focusServiceOnMap(s._id);
+        });
+
         card.appendChild(img);
         card.appendChild(info);
+        card.appendChild(mapBtn);
         container.appendChild(card);
       });
+
+      refreshMarkers(services);
     }
 
     async function loadServices() {
       try {
+        initMap();
         const res = await fetch(API_BASE + '/services');
         if (!res.ok) throw new Error('Failed to load services');
         const data = await res.json();
-        allServices = data.services || data;
+        allServices = data.services || [];
         renderServices();
       } catch (err) {
         console.error(err);
