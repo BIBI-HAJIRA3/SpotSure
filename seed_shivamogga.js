@@ -1,4 +1,4 @@
-// seed_shivamogga.js
+// SpotSure/seed_shivamogga.js
 require('dotenv').config();
 const mongoose = require('mongoose');
 const path = require('path');
