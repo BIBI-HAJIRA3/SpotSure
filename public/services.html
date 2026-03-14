@@ -189,8 +189,8 @@
       border-radius: 14px;
       padding: 13px;
       box-shadow: 0 1px 4px rgba(0,0,0,0.6);
-      border: 1px solid #1f2937;
       cursor: pointer;
+      border: 1px solid #1f2937;
       position: relative;
     }
     .service-thumb {
@@ -200,10 +200,6 @@
       object-fit: cover;
       flex-shrink: 0;
       background: #1f2937;
-    }
-    .service-info {
-      flex: 1;
-      min-width: 0;
     }
     .service-info h3 {
       margin: 0 0 4px 0;
@@ -324,7 +320,7 @@
       <button class="chip category-btn" data-category="Grocery">Grocery</button>
     </div>
 
-    <!-- General map for all services -->
+    <!-- NEW: general map for all services -->
     <section class="map-card">
       <div class="map-header">
         <span>Services map</span>
@@ -527,8 +523,6 @@
       services.forEach((s) => {
         const card = document.createElement('div');
         card.className = 'service-card';
-
-        // clicking card (except icon) opens detail
         card.addEventListener('click', () => openServicePage(s._id));
 
         const img = document.createElement('img');
@@ -554,7 +548,7 @@
         mapBtn.className = 'card-map-icon';
         mapBtn.innerHTML = '<i class="fa fa-map-marker"></i>';
         mapBtn.addEventListener('click', (e) => {
-          e.stopPropagation(); // don't trigger openServicePage
+          e.stopPropagation();
           focusServiceOnMap(s._id);
         });
 
@@ -564,45 +558,21 @@
         container.appendChild(card);
       });
 
-      // refresh markers for currently visible list
       refreshMarkers(services);
     }
 
     async function loadServices() {
       try {
         initMap();
-
         const res = await fetch(API_BASE + '/services');
-
-        // Treat 2xx and 304 as success
-        if (!res.ok && res.status !== 304) {
-          throw new Error('Failed to load services (status ' + res.status + ')');
-        }
-
-        let data;
-        if (res.status === 304) {
-          // No new body; keep existing allServices
-          data = { services: allServices };
-        } else {
-          try {
-            data = await res.json();
-          } catch (parseErr) {
-            console.error('Error parsing /services JSON:', parseErr);
-            throw new Error('Invalid services JSON from server');
-          }
-        }
-
-        const services = Array.isArray(data)
-          ? data
-          : (Array.isArray(data.services) ? data.services : []);
-
-        allServices = services;
+        if (!res.ok) throw new Error('Failed to load services');
+        const data = await res.json();
+        allServices = data.services || data;
         renderServices();
       } catch (err) {
-        console.error('loadServices error:', err);
+        console.error(err);
         const container = document.getElementById('services');
-        container.innerHTML =
-          '<p style="font-size:13px; color:#f97316;">Error loading services.</p>';
+        container.innerHTML = '<p style="font-size:13px; color:#f97316;">Error loading services.</p>';
       }
     }
 
