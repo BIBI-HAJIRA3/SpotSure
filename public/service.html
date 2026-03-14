@@ -12,7 +12,7 @@
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
   />
 
-  <!-- Font Awesome for marker icon (optional but matches list page) -->
+  <!-- Font Awesome for icons -->
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -223,13 +223,16 @@
           <div class="rating-row" id="serviceRating"></div>
         </div>
 
-        <!-- Map + fullscreen icons -->
+        <!-- Map + fullscreen + navigate icons -->
         <div style="position:absolute; top:4px; right:4px; display:flex; gap:6px;">
-          <button id="serviceMapBtn" type="button" class="card-map-icon">
+          <button id="serviceMapBtn" type="button" class="card-map-icon" title="Show map">
             <i class="fa fa-map-marker"></i>
           </button>
-          <button id="serviceMapFullscreenBtn" type="button" class="card-map-icon">
+          <button id="serviceMapFullscreenBtn" type="button" class="card-map-icon" title="Full screen map">
             ⛶
+          </button>
+          <button id="serviceNavigateBtn" type="button" class="card-map-icon" title="Navigate in Google Maps">
+            <i class="fa fa-location-arrow"></i>
           </button>
         </div>
       </div>
@@ -430,6 +433,27 @@
       }, 300);
     }
 
+    // Open Google Maps directions for this service
+    function openNavigationForService(service) {
+      if (!service || !service.location ||
+          typeof service.location.lat !== 'number' ||
+          typeof service.location.lng !== 'number') {
+        showToast('Location not available for this service.');
+        return;
+      }
+
+      const lat = service.location.lat;
+      const lng = service.location.lng;
+      const label = service.name || 'Destination';
+
+      const url =
+        'https://www.google.com/maps/dir/?api=1' +
+        '&destination=' + encodeURIComponent(lat + ',' + lng) +
+        '&destination_place_id=' + encodeURIComponent(label);
+
+      window.open(url, '_blank');
+    }
+
     async function loadService() {
       const id = getServiceIdFromUrl();
       const loadingEl = document.getElementById('loadingText');
@@ -475,6 +499,13 @@
           mapFsBtn.onclick = function () {
             showServiceMap(loadedService);
             toggleMapFullscreen();
+          };
+        }
+
+        const navBtn = document.getElementById('serviceNavigateBtn');
+        if (navBtn) {
+          navBtn.onclick = function () {
+            openNavigationForService(loadedService);
           };
         }
 
