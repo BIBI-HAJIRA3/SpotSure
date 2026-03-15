@@ -164,6 +164,25 @@
         <label class="label-small">Address</label>
         <input id="serviceAddress" class="input-field" placeholder="Full address" />
 
+        <!-- New: Latitude / Longitude -->
+        <label class="label-small">Latitude (optional)</label>
+        <input
+          id="serviceLat"
+          class="input-field"
+          type="number"
+          step="0.000001"
+          placeholder="e.g. 12.295810"
+        />
+
+        <label class="label-small">Longitude (optional)</label>
+        <input
+          id="serviceLng"
+          class="input-field"
+          type="number"
+          step="0.000001"
+          placeholder="e.g. 76.639381"
+        />
+
         <label class="label-small">Image (optional)</label>
         <input id="serviceImage" type="file" class="input-file" accept="image/*" />
 
@@ -213,11 +232,24 @@
       const city = document.getElementById('serviceCity').value.trim();
       const pincode = document.getElementById('servicePincode').value.trim();
       const address = document.getElementById('serviceAddress').value.trim();
+      const latStr = document.getElementById('serviceLat').value.trim();
+      const lngStr = document.getElementById('serviceLng').value.trim();
       const imageFile = document.getElementById('serviceImage').files[0];
 
       if (!name || !city || !pincode || !address) {
         showToast('Please fill all required fields.');
         return;
+      }
+
+      let lat = null;
+      let lng = null;
+      if (latStr || lngStr) {
+        lat = Number(latStr);
+        lng = Number(lngStr);
+        if (Number.isNaN(lat) || Number.isNaN(lng)) {
+          showToast('Latitude and Longitude must be valid numbers.');
+          return;
+        }
       }
 
       const formData = new FormData();
@@ -226,6 +258,11 @@
       formData.append('city', city);
       formData.append('pincode', pincode);
       formData.append('address', address);
+      if (lat !== null && lng !== null) {
+        // Backend should read these and build location: { lat, lng }
+        formData.append('lat', lat);
+        formData.append('lng', lng);
+      }
       if (imageFile) formData.append('image', imageFile);
 
       try {
