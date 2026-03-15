@@ -137,25 +137,48 @@
       align-items: center;
     }
 
-    /* Big animated category sign instead of image */
+    /* Base sign style */
     .service-sign {
       width: 52px;
       height: 52px;
       border-radius: 999px;
-      background: radial-gradient(circle at 30% 30%, #4ade80, #16a34a 40%, #065f46);
-      color: #f9fafb;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 26px;
       flex-shrink: 0;
-      box-shadow: 0 0 10px rgba(34, 197, 94, 0.6);
+      color: #0f172a;
+      box-shadow: 0 0 10px rgba(15, 23, 42, 0.4);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
       animation: sign-pulse 1.8s ease-in-out infinite;
     }
+
+    /* Category colors (subtle/pastel) */
+    .service-sign--hospital {
+      background: linear-gradient(135deg, #bbf7d0, #6ee7b7);
+    }
+    .service-sign--clinic {
+      background: linear-gradient(135deg, #a5f3fc, #67e8f9);
+    }
+    .service-sign--college {
+      background: linear-gradient(135deg, #c7d2fe, #a5b4fc);
+    }
+    .service-sign--school {
+      background: linear-gradient(135deg, #fef9c3, #fde68a);
+    }
+    .service-sign--restaurant {
+      background: linear-gradient(135deg, #fed7aa, #fdba74);
+    }
+    .service-sign--grocery {
+      background: linear-gradient(135deg, #bbf7d0, #a7f3d0);
+    }
+    .service-sign--default {
+      background: linear-gradient(135deg, #e5e7eb, #d1d5db);
+    }
+
     .service-card:hover .service-sign {
       transform: scale(1.1);
-      box-shadow: 0 0 18px rgba(34, 197, 94, 0.9);
+      box-shadow: 0 0 18px rgba(15, 23, 42, 0.6);
     }
 
     @keyframes sign-pulse {
@@ -254,6 +277,7 @@
       <button class="chip category-btn" data-category="Hospital">Hospitals</button>
       <button class="chip category-btn" data-category="Clinic">Clinics</button>
       <button class="chip category-btn" data-category="School">Schools</button>
+      <button class="chip category-btn" data-category="College">Colleges</button>
       <button class="chip category-btn" data-category="Restaurant">Restaurants</button>
       <button class="chip category-btn" data-category="Grocery">Grocery</button>
     </div>
@@ -300,15 +324,29 @@
       line.textContent = name ? 'Welcome back, ' + name : '';
     }
 
-    // Updated: clinic no longer uses "+"
     function getCategorySign(category) {
       const c = (category || '').toLowerCase();
+
       if (c === 'hospital') return '+';
       if (c === 'clinic') return 'C';
-      if (c === 'school') return '🏫';
+
+      if (c === 'college' || c === 'university') return '🏛️';
+      if (c === 'school') return '📚';
+
       if (c === 'restaurant') return '🍽';
       if (c === 'grocery') return '🛒';
       return '•';
+    }
+
+    function getSignClass(category) {
+      const c = (category || '').toLowerCase();
+      if (c === 'hospital') return 'service-sign--hospital';
+      if (c === 'clinic') return 'service-sign--clinic';
+      if (c === 'college' || c === 'university') return 'service-sign--college';
+      if (c === 'school') return 'service-sign--school';
+      if (c === 'restaurant') return 'service-sign--restaurant';
+      if (c === 'grocery') return 'service-sign--grocery';
+      return 'service-sign--default';
     }
 
     function buildRatingText(s) {
@@ -359,7 +397,7 @@
         card.addEventListener('click', () => openServicePage(s._id));
 
         const signEl = document.createElement('div');
-        signEl.className = 'service-sign';
+        signEl.className = 'service-sign ' + getSignClass(s.category);
         signEl.textContent = getCategorySign(s.category);
 
         const info = document.createElement('div');
