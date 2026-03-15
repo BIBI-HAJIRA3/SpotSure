@@ -319,36 +319,42 @@
              '</span><span class="stars stars-empty">' + empty + '</span>';
     }
 
-    // Google Maps navigation using lat,lng first (mobile-friendly) [web:207][web:208]
+    // Google Maps navigation using place name/address in the search bar [web:207][web:225]
     function openNavigationForService(service) {
       if (!service) {
         showToast('Location not available for this service.');
         return;
       }
 
-      if (service.location &&
+      // Prefer a human-readable query: "Name, Address"
+      let query = '';
+      if (service.name && service.address) {
+        query = service.name + ', ' + service.address;
+      } else if (service.address) {
+        query = service.address;
+      } else if (service.name && service.city) {
+        query = service.name + ', ' + service.city;
+      } else if (service.name) {
+        query = service.name;
+      }
+
+      // If no textual query, fall back to lat,lng if available
+      if (!query && service.location &&
           typeof service.location.lat === 'number' &&
           typeof service.location.lng === 'number') {
-        const lat = service.location.lat;
-        const lng = service.location.lng;
+        query = service.location.lat + ',' + service.location.lng;
+      }
 
-        const url =
-          'https://www.google.com/maps/search/?api=1&query=' +
-          encodeURIComponent(lat + ',' + lng);
-
-        window.location.href = url;
+      if (!query) {
+        showToast('Location not available for this service.');
         return;
       }
 
-      if (service.address) {
-        const url =
-          'https://www.google.com/maps/search/?api=1&query=' +
-          encodeURIComponent(service.address);
-        window.location.href = url;
-        return;
-      }
+      const url =
+        'https://www.google.com/maps/search/?api=1&query=' +
+        encodeURIComponent(query); // shows name/address in the search bar [web:207][web:225]
 
-      showToast('Location not available for this service.');
+      window.location.href = url;
     }
 
     async function loadService() {
