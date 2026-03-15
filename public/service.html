@@ -111,22 +111,9 @@
       cursor: pointer;
       background: #2563eb;
       color: #ffffff;
-    }
-
-    .card-map-icon {
-      border-radius: 999px;
-      padding: 4px 7px;
-      border: 1px solid #374151;
-      background: #020617;
-      color: #e5e7eb;
-      font-size: 11px;
-      cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-    }
-    .card-map-icon i {
-      font-size: 12px;
+      gap: 6px;
     }
 
     .review-item {
@@ -206,21 +193,25 @@
           <p id="serviceMeta"></p>
           <div class="rating-row" id="serviceRating"></div>
         </div>
-
-        <!-- Navigate only -->
-        <div style="position:absolute; top:4px; right:4px;">
-          <button id="serviceNavigateBtn" type="button" class="card-map-icon" title="Navigate in Google Maps">
-            <i class="fa fa-location-arrow"></i>
-          </button>
-        </div>
       </div>
 
       <p id="serviceAddressText" style="font-size:13px; color:#e5e7eb; margin:4px 0 0;"></p>
 
+      <!-- Buttons row: Add review + Navigate + Delete -->
       <div class="btn-row">
-        <button class="btn-primary" type="button" onclick="openAddReview()">Add review</button>
+        <button class="btn-primary" type="button" onclick="openAddReview()">
+          <i class="fa fa-pencil"></i>
+          <span>Add review</span>
+        </button>
+
+        <button class="btn-primary" id="serviceNavigateBtn" type="button" style="background:#16a34a;">
+          <i class="fa fa-location-arrow"></i>
+          <span>Navigate</span>
+        </button>
+
         <button class="btn-primary" type="button" style="background:#b91c1c" onclick="toggleDeleteSlot()">
-          Delete service
+          <i class="fa fa-trash"></i>
+          <span>Delete service</span>
         </button>
       </div>
 
@@ -328,30 +319,36 @@
              '</span><span class="stars stars-empty">' + empty + '</span>';
     }
 
-    // Google Maps navigation (address first, mobile-friendly redirect) [web:207][web:219]
+    // Google Maps navigation using lat,lng first (mobile-friendly) [web:207][web:208]
     function openNavigationForService(service) {
       if (!service) {
         showToast('Location not available for this service.');
         return;
       }
 
-      let destination = '';
-      if (service.address) {
-        destination = service.address;
-      } else if (service.location &&
-                 typeof service.location.lat === 'number' &&
-                 typeof service.location.lng === 'number') {
-        destination = service.location.lat + ',' + service.location.lng;
-      } else {
-        showToast('Location not available for this service.');
+      if (service.location &&
+          typeof service.location.lat === 'number' &&
+          typeof service.location.lng === 'number') {
+        const lat = service.location.lat;
+        const lng = service.location.lng;
+
+        const url =
+          'https://www.google.com/maps/search/?api=1&query=' +
+          encodeURIComponent(lat + ',' + lng);
+
+        window.location.href = url;
         return;
       }
 
-      const url =
-        'https://www.google.com/maps/dir/?api=1&destination=' +
-        encodeURIComponent(destination); // recommended pattern [web:207][web:225]
+      if (service.address) {
+        const url =
+          'https://www.google.com/maps/search/?api=1&query=' +
+          encodeURIComponent(service.address);
+        window.location.href = url;
+        return;
+      }
 
-      window.location.href = url;
+      showToast('Location not available for this service.');
     }
 
     async function loadService() {
