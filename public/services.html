@@ -300,10 +300,11 @@
       line.textContent = name ? 'Welcome back, ' + name : '';
     }
 
-    // Category → sign mapping
+    // Updated: clinic no longer uses "+"
     function getCategorySign(category) {
       const c = (category || '').toLowerCase();
-      if (c === 'hospital' || c === 'clinic') return '+';
+      if (c === 'hospital') return '+';
+      if (c === 'clinic') return 'C';
       if (c === 'school') return '🏫';
       if (c === 'restaurant') return '🍽';
       if (c === 'grocery') return '🛒';
