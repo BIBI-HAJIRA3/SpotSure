@@ -1,4 +1,3 @@
-<!-- SpotSure/public/service.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -45,6 +44,7 @@
       font-size: 12px;
       color: #9ca3af;
     }
+
     .pill-btn {
       border-radius: 999px;
       border: 1px solid #374151;
@@ -209,7 +209,6 @@
         <div class="top-title" id="serviceTitle">Service</div>
         <div class="top-sub" id="serviceSub"></div>
       </div>
-      <button class="pill-btn" type="button" onclick="goBackToServices()">⬅ Services</button>
     </div>
 
     <div class="card" id="serviceCard" style="display:none;">
@@ -285,10 +284,6 @@
       return params.get('id');
     }
 
-    function goBackToServices() {
-      window.location.href = '/services.html';
-    }
-
     function openAddReview() {
       const id = getServiceIdFromUrl();
       if (!id) return;
@@ -360,17 +355,23 @@
              '</span><span class="stars stars-empty">' + empty + '</span>';
     }
 
-    // Use Directions URL for better mobile behavior [web:207][web:324]
+    // Open Google Maps navigation using a universal URL [web:207][web:332][web:337][web:342]
     function openNavigationForService(service) {
       if (!service) {
         showToast('Location not available for this service.');
         return;
       }
 
-      // Prefer a human-readable destination
       let destination = '';
-      if (service.name && service.address) {
-        destination = service.name + ', ' + service.address;
+      let hasLatLng = false;
+
+      if (
+        service.location &&
+        typeof service.location.lat === 'number' &&
+        typeof service.location.lng === 'number'
+      ) {
+        destination = service.location.lat + ',' + service.location.lng;
+        hasLatLng = true;
       } else if (service.address) {
         destination = service.address;
       } else if (service.name && service.city) {
@@ -379,22 +380,23 @@
         destination = service.name;
       }
 
-      // Fallback to lat,lng if no address text
-      if (!destination && service.location &&
-          typeof service.location.lat === 'number' &&
-          typeof service.location.lng === 'number') {
-        destination = service.location.lat + ',' + service.location.lng;
-      }
-
       if (!destination) {
         showToast('Location not available for this service.');
         return;
       }
 
-      // Directions mode; origin left blank so Maps uses current location [web:207][web:324][web:326]
-      const url =
-        'https://www.google.com/maps/dir/?api=1&destination=' +
-        encodeURIComponent(destination);
+      let url;
+
+      if (hasLatLng) {
+        url =
+          'https://www.google.com/maps/dir/?api=1&destination=' +
+          encodeURIComponent(destination) +
+          '&dir_action=navigate';
+      } else {
+        url =
+          'https://www.google.com/maps/search/?api=1&query=' +
+          encodeURIComponent(destination);
+      }
 
       window.location.href = url;
     }
