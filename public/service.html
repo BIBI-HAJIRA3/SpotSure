@@ -72,25 +72,32 @@
       align-items: center;
     }
 
-    /* Big animated sign in detail */
     .service-sign {
       width: 70px;
       height: 70px;
       border-radius: 999px;
-      background: radial-gradient(circle at 30% 30%, #38bdf8, #0ea5e9 40%, #0369a1);
-      color: #f9fafb;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 32px;
       flex-shrink: 0;
-      box-shadow: 0 0 14px rgba(56, 189, 248, 0.7);
+      color: #0f172a;
+      box-shadow: 0 0 14px rgba(15, 23, 42, 0.5);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
       animation: sign-pulse-detail 2s ease-in-out infinite;
     }
+
+    .service-sign--hospital { background: linear-gradient(135deg, #bbf7d0, #6ee7b7); }
+    .service-sign--clinic { background: linear-gradient(135deg, #a5f3fc, #67e8f9); }
+    .service-sign--college { background: linear-gradient(135deg, #c7d2fe, #a5b4fc); }
+    .service-sign--school { background: linear-gradient(135deg, #fef9c3, #fde68a); }
+    .service-sign--restaurant { background: linear-gradient(135deg, #fed7aa, #fdba74); }
+    .service-sign--grocery { background: linear-gradient(135deg, #bbf7d0, #a7f3d0); }
+    .service-sign--default { background: linear-gradient(135deg, #e5e7eb, #d1d5db); }
+
     .service-header:hover .service-sign {
       transform: scale(1.08);
-      box-shadow: 0 0 20px rgba(56, 189, 248, 0.9);
+      box-shadow: 0 0 20px rgba(15, 23, 42, 0.7);
     }
 
     @keyframes sign-pulse-detail {
@@ -304,15 +311,29 @@
       }, 2000);
     }
 
-    // Updated clinic sign mapping
     function getCategorySign(category) {
       const c = (category || '').toLowerCase();
+
       if (c === 'hospital') return '+';
       if (c === 'clinic') return 'C';
-      if (c === 'school') return '🏫';
+
+      if (c === 'college' || c === 'university') return '🏛️';
+      if (c === 'school') return '📚';
+
       if (c === 'restaurant') return '🍽';
       if (c === 'grocery') return '🛒';
       return '•';
+    }
+
+    function getSignClass(category) {
+      const c = (category || '').toLowerCase();
+      if (c === 'hospital') return 'service-sign--hospital';
+      if (c === 'clinic') return 'service-sign--clinic';
+      if (c === 'college' || c === 'university') return 'service-sign--college';
+      if (c === 'school') return 'service-sign--school';
+      if (c === 'restaurant') return 'service-sign--restaurant';
+      if (c === 'grocery') return 'service-sign--grocery';
+      return 'service-sign--default';
     }
 
     function buildRatingText(s) {
@@ -339,37 +360,41 @@
              '</span><span class="stars stars-empty">' + empty + '</span>';
     }
 
+    // Use Directions URL for better mobile behavior [web:207][web:324]
     function openNavigationForService(service) {
       if (!service) {
         showToast('Location not available for this service.');
         return;
       }
 
-      let query = '';
+      // Prefer a human-readable destination
+      let destination = '';
       if (service.name && service.address) {
-        query = service.name + ', ' + service.address;
+        destination = service.name + ', ' + service.address;
       } else if (service.address) {
-        query = service.address;
+        destination = service.address;
       } else if (service.name && service.city) {
-        query = service.name + ', ' + service.city;
+        destination = service.name + ', ' + service.city;
       } else if (service.name) {
-        query = service.name;
+        destination = service.name;
       }
 
-      if (!query && service.location &&
+      // Fallback to lat,lng if no address text
+      if (!destination && service.location &&
           typeof service.location.lat === 'number' &&
           typeof service.location.lng === 'number') {
-        query = service.location.lat + ',' + service.location.lng;
+        destination = service.location.lat + ',' + service.location.lng;
       }
 
-      if (!query) {
+      if (!destination) {
         showToast('Location not available for this service.');
         return;
       }
 
+      // Directions mode; origin left blank so Maps uses current location [web:207][web:324][web:326]
       const url =
-        'https://www.google.com/maps/search/?api=1&query=' +
-        encodeURIComponent(query); // uses name/address in search bar [web:207][web:225]
+        'https://www.google.com/maps/dir/?api=1&destination=' +
+        encodeURIComponent(destination);
 
       window.location.href = url;
     }
@@ -402,6 +427,7 @@
 
         const signEl = document.getElementById('serviceSign');
         signEl.textContent = getCategorySign(s.category);
+        signEl.className = 'service-sign ' + getSignClass(s.category);
 
         if (loadingEl) loadingEl.style.display = 'none';
         if (cardEl) cardEl.style.display = 'block';
