@@ -355,7 +355,7 @@
              '</span><span class="stars stars-empty">' + empty + '</span>';
     }
 
-    // Open Google Maps navigation using a universal URL [web:207][web:332][web:337][web:342]
+    // IMPORTANT: Only plain https:// URLs (no intent://) so WebView/browsers don't throw ERR_UNKNOWN_URL_SCHEME [web:347][web:351][web:350]
     function openNavigationForService(service) {
       if (!service) {
         showToast('Location not available for this service.');
@@ -388,11 +388,12 @@
       let url;
 
       if (hasLatLng) {
+        // Simple directions URL; browser may still convert internally, but HTML only sees https:// [web:207][web:332][web:337]
         url =
           'https://www.google.com/maps/dir/?api=1&destination=' +
-          encodeURIComponent(destination) +
-          '&dir_action=navigate';
+          encodeURIComponent(destination);
       } else {
+        // Fallback: text search
         url =
           'https://www.google.com/maps/search/?api=1&query=' +
           encodeURIComponent(destination);
