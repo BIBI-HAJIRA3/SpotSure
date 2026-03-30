@@ -2,13 +2,13 @@
 const express = require('express');
 const Service = require('../models/Service');
 const Review = require('../models/Review');
-const serviceRoutes = require('./serviceRoutes'); // router with helper attached
+const serviceRoutes = require('./serviceRoutes');
 
 const router = express.Router();
 
 const recomputeServiceRatings = serviceRoutes.recomputeServiceRatings;
 
-// adjust to your auth logic
+// adjust to your auth/session
 function requireAdmin(req, res, next) {
   if (!req.session || !req.session.userId || req.session.userRole !== 'admin') {
     return res.status(403).json({ message: 'Admin access required' });
@@ -16,7 +16,7 @@ function requireAdmin(req, res, next) {
   next();
 }
 
-// pending services
+// GET /api/admin/services/pending
 router.get('/services/pending', requireAdmin, async (req, res) => {
   try {
     const services = await Service.find({ isApproved: false }).sort({ createdAt: -1 });
@@ -27,7 +27,7 @@ router.get('/services/pending', requireAdmin, async (req, res) => {
   }
 });
 
-// approve service
+// POST /api/admin/services/:id/approve
 router.post('/services/:id/approve', requireAdmin, async (req, res) => {
   try {
     const service = await Service.findByIdAndUpdate(
@@ -45,7 +45,7 @@ router.post('/services/:id/approve', requireAdmin, async (req, res) => {
   }
 });
 
-// delete service + its reviews
+// DELETE /api/admin/services/:id
 router.delete('/services/:id', requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
@@ -62,7 +62,7 @@ router.delete('/services/:id', requireAdmin, async (req, res) => {
   }
 });
 
-// latest reviews
+// GET /api/admin/reviews
 router.get('/reviews', requireAdmin, async (req, res) => {
   try {
     const reviews = await Review.find({}).sort({ createdAt: -1 }).limit(100);
@@ -73,7 +73,7 @@ router.get('/reviews', requireAdmin, async (req, res) => {
   }
 });
 
-// delete review
+// DELETE /api/admin/reviews/:id
 router.delete('/reviews/:id', requireAdmin, async (req, res) => {
   try {
     const review = await Review.findByIdAndDelete(req.params.id);
