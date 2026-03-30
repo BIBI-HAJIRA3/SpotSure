@@ -3,30 +3,34 @@ const express = require('express');
 const Service = require('../models/Service');
 const Review = require('../models/Review');
 const multer = require('multer');
-const crypto = require('crypto');
 
 const router = express.Router();
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-// helper: recompute ratings when reviews change
+/**
+ * Helper to recalc rating stats for a service
+ */
 async function recomputeServiceRatings(serviceId) {
-  const stats = await Review.aggregate([
-    { $match: { service: serviceId } },
-    {
-      $group: {
-        _id: '$service',
-        avgRating: { $avg: '$rating' },
-        ratingCount: { $sum: 1 },
-      },
-    },
-  ]);
+  const allReviews = await Review.find({ service: serviceId });
 
-  const stat = stats[0];
-  const averageRating = stat ? stat.avgRating : 0;
-  const ratingCount = stat ? stat.ratingCount : 0;
-  const reviewCount = await Review.countDocuments({ service: serviceId });
+  if (!allReviews.length) {
+    await Service.findByIdAndUpdate(serviceId, {
+      averageRating: 0,
+      ratingCount: 0,
+      reviewCount: 0,
+    });
+    return;
+  }
+
+  const ratingSum = allReviews.reduce((sum, r) => sum + (r.rating || 0), 0);
+  const averageRating = ratingSum / allReviews.length;
+
+  const ratingCount = allReviews.length;
+  const reviewCount = allReviews.filter(
+    (r) => r.comment && r.comment.trim() !== ''
+  ).length;
 
   await Service.findByIdAndUpdate(serviceId, {
     averageRating,
@@ -35,10 +39,41 @@ async function recomputeServiceRatings(serviceId) {
   });
 }
 
-// POST /api/services  (create service request with multiple images)
+// ------------------------------------------------------------------
+// LIST services  GET /api/services  (only approved)
+// Optional query: category, city, pincode
+// ------------------------------------------------------------------
+router.get('/services', async (req, res) => {
+  try {
+    const { category, city, pincode } = req.query;
+
+    const filter = { isApproved: true };
+
+    if (category) {
+      filter.category = new RegExp('^' + category + '$', 'i');
+    }
+    if (city) {
+      filter.city = new RegExp(city, 'i');
+    }
+    if (pincode) {
+      filter.pincode = pincode;
+    }
+
+    const services = await Service.find(filter).sort({ createdAt: -1 });
+    res.json({ services });
+  } catch (err) {
+    console.error('GET /api/services error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// ------------------------------------------------------------------
+// CREATE service  POST /api/services
+// image field name: "images" (multiple)
+// ------------------------------------------------------------------
 router.post('/services', upload.array('images', 5), async (req, res) => {
   try {
-    const { name, category, city, pincode, address } = req.body;
+    const { name, category, city, pincode, address, lat, lng } = req.body;
 
     if (!name || !city || !pincode || !address) {
       return res
@@ -46,7 +81,15 @@ router.post('/services', upload.array('images', 5), async (req, res) => {
         .json({ message: 'Name, city, pincode, and address are required.' });
     }
 
-    const deleteCode = crypto.randomBytes(3).toString('hex');
+    // Build location if valid
+    let location = undefined;
+    if (lat && lng) {
+      const latNum = Number(lat);
+      const lngNum = Number(lng);
+      if (!Number.isNaN(latNum) && !Number.isNaN(lngNum)) {
+        location = { lat: latNum, lng: lngNum };
+      }
+    }
 
     let imagePath = '';
     let providerImages = [];
@@ -54,34 +97,35 @@ router.post('/services', upload.array('images', 5), async (req, res) => {
     if (req.files && req.files.length > 0) {
       const cloudinary = req.cloudinary;
 
-      const uploads = await Promise.all(
-        req.files.map((file) =>
-          cloudinary &&
-          cloudinary.uploader &&
-          cloudinary.uploader.upload_stream
-            ? new Promise((resolve, reject) => {
+      if (cloudinary && cloudinary.uploader && cloudinary.uploader.upload_stream) {
+        const uploads = await Promise.all(
+          req.files.map(
+            (file) =>
+              new Promise((resolve, reject) => {
                 const stream = cloudinary.uploader.upload_stream(
                   { folder: 'spotsure-services' },
                   (err, result) => {
                     if (err) return reject(err);
-                    resolve(result.public_id || '');
+                    resolve(result.secure_url || '');
                   }
                 );
                 stream.end(file.buffer);
               })
-            : Promise.resolve('')
-        )
-      ).catch((err) => {
-        console.error('Cloudinary upload error:', err);
-        return [];
-      });
+          )
+        ).catch((err) => {
+          console.error('Cloudinary upload error (service images):', err);
+          return [];
+        });
 
-      const ids = (uploads || []).filter((id) => id);
-      if (ids.length > 0) {
-        providerImages = ids;
-        imagePath = ids[0];
+        const urls = (uploads || []).filter((u) => u);
+        if (urls.length > 0) {
+          providerImages = urls;
+          imagePath = urls[0];
+        }
       }
     }
+
+    const createdBy = req.session && req.session.userId ? req.session.userId : undefined;
 
     const service = await Service.create({
       name,
@@ -91,14 +135,14 @@ router.post('/services', upload.array('images', 5), async (req, res) => {
       address,
       imagePath,
       providerImages,
-      deleteCode,
-      isApproved: false, // treat as request
+      location,
+      isApproved: false, // requires admin approval
+      createdBy,
     });
 
     res.status(201).json({
-      message: 'Service created',
+      message: 'Service created, pending admin approval',
       service,
-      deleteCode,
     });
   } catch (err) {
     console.error('POST /api/services error:', err);
@@ -106,22 +150,14 @@ router.post('/services', upload.array('images', 5), async (req, res) => {
   }
 });
 
-// GET /api/services  (TEMP: public list of ALL services for testing)
-router.get('/services', async (req, res) => {
-  try {
-    // Remove the isApproved filter so you can see everything
-    const services = await Service.find({}).sort({ createdAt: -1 });
-    res.json({ services });
-  } catch (err) {
-    console.error('GET /api/services error:', err);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-// GET /api/services/:id
+// ------------------------------------------------------------------
+// GET single service  GET /api/services/:id
+// Only show approved ones to public
+// ------------------------------------------------------------------
 router.get('/services/:id', async (req, res) => {
   try {
-    const service = await Service.findById(req.params.id);
+    const serviceId = req.params.id;
+    const service = await Service.findById(serviceId);
     if (!service || !service.isApproved) {
       return res.status(404).json({ message: 'Service not found' });
     }
@@ -132,41 +168,128 @@ router.get('/services/:id', async (req, res) => {
   }
 });
 
-// GET /api/services/:id/reviews
+// ------------------------------------------------------------------
+// Request removal of a service (only creator)
+// POST /api/services/:id/request-remove
+// ------------------------------------------------------------------
+router.post('/services/:id/request-remove', async (req, res) => {
+  try {
+    if (!req.session || !req.session.userId) {
+      return res.status(401).json({ message: 'Login required' });
+    }
+
+    const service = await Service.findById(req.params.id);
+    if (!service) {
+      return res.status(404).json({ message: 'Service not found' });
+    }
+
+    if (
+      !service.createdBy ||
+      service.createdBy.toString() !== req.session.userId.toString()
+    ) {
+      return res
+        .status(403)
+        .json({ message: 'Only the creator can request removal.' });
+    }
+
+    service.removalRequested = true;
+    service.removalRequestedBy = req.session.userId;
+    await service.save();
+
+    res.json({ message: 'Removal request submitted.' });
+  } catch (err) {
+    console.error('POST /api/services/:id/request-remove error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// ------------------------------------------------------------------
+// Add a review to a service
+// POST /api/services/:id/reviews
+// ------------------------------------------------------------------
+router.post(
+  '/services/:id/reviews',
+  upload.array('images', 5),
+  async (req, res) => {
+    try {
+      const serviceId = req.params.id;
+
+      const service = await Service.findById(serviceId);
+      if (!service || !service.isApproved) {
+        return res.status(404).json({ message: 'Service not found' });
+      }
+
+      const { rating, comment, username } = req.body;
+
+      const numericRating = Number(rating);
+      if (!numericRating || numericRating < 1 || numericRating > 5) {
+        return res
+          .status(400)
+          .json({ message: 'Rating must be between 1 and 5' });
+      }
+
+      let imageUrls = [];
+      if (req.files && req.files.length > 0) {
+        const cloudinary = req.cloudinary;
+        if (cloudinary && cloudinary.uploader && cloudinary.uploader.upload_stream) {
+          const uploads = await Promise.all(
+            req.files.map(
+              (file) =>
+                new Promise((resolve, reject) => {
+                  const stream = cloudinary.uploader.upload_stream(
+                    { folder: 'spotsure-reviews' },
+                    (err, result) => {
+                      if (err) return reject(err);
+                      resolve(result.secure_url || '');
+                    }
+                  );
+                  stream.end(file.buffer);
+                })
+            )
+          ).catch((err) => {
+            console.error('Cloudinary upload error (review images):', err);
+            return [];
+          });
+
+          imageUrls = (uploads || []).filter((u) => u);
+        }
+      }
+
+      const review = await Review.create({
+        service: serviceId,
+        username: username || 'Anonymous',
+        rating: numericRating,
+        comment: comment || '',
+        imageUrls,
+      });
+
+      await recomputeServiceRatings(serviceId);
+
+      return res.status(201).json({
+        message: 'Review created',
+        review,
+      });
+    } catch (err) {
+      console.error('POST /api/services/:id/reviews error:', err);
+      return res.status(500).json({ message: 'Server error' });
+    }
+  }
+);
+
+// ------------------------------------------------------------------
+// Get all reviews for a service  GET /api/services/:id/reviews
+// ------------------------------------------------------------------
 router.get('/services/:id/reviews', async (req, res) => {
   try {
-    const reviews = await Review.find({ service: req.params.id }).sort({ createdAt: -1 });
+    const serviceId = req.params.id;
+    const reviews = await Review.find({ service: serviceId }).sort({
+      createdAt: -1,
+    });
     res.json({ reviews });
   } catch (err) {
     console.error('GET /api/services/:id/reviews error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });
-
-// POST /api/services/:id/reviews
-router.post('/services/:id/reviews', async (req, res) => {
-  try {
-    const { rating, comment, username, imagePaths = [] } = req.body;
-    const serviceId = req.params.id;
-
-    const review = await Review.create({
-      service: serviceId,
-      rating,
-      comment,
-      username,
-      imagePaths,
-    });
-
-    await recomputeServiceRatings(serviceId);
-
-    res.status(201).json({ message: 'Review added', review });
-  } catch (err) {
-    console.error('POST /api/services/:id/reviews error:', err);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-// expose helper for adminRoutes
-router.recomputeServiceRatings = recomputeServiceRatings;
 
 module.exports = router;
