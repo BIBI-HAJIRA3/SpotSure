@@ -16,7 +16,11 @@
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      background: radial-gradient(circle at top, #0f172a 0, #020617 55%);
+      background-image: url("https://images.pexels.com/photos/35385537/pexels-photo-35385537.png");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
       color: #e5e7eb;
     }
 
@@ -27,6 +31,8 @@
       display: flex;
       flex-direction: column;
       padding: 20px 14px 28px;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(4px);
     }
 
     .top-bar {
@@ -49,7 +55,7 @@
 
     .pill-btn {
       border: 1px solid #2563eb;
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      background: #2563eb;
       color: #ffffff;
       border-radius: 999px;
       padding: 6px 10px;
@@ -58,7 +64,7 @@
       white-space: nowrap;
     }
     .pill-btn:hover {
-      background: linear-gradient(135deg, #1d4ed8, #1e40af);
+      background: #1d4ed8;
     }
 
     .search-section {
@@ -126,7 +132,7 @@
     .service-card {
       display: flex;
       gap: 12px;
-      background: radial-gradient(circle at top left, #111827 0, #020617 60%);
+      background: #111827;
       border-radius: 14px;
       padding: 13px;
       box-shadow: 0 1px 4px rgba(0,0,0,0.6);
@@ -254,7 +260,7 @@
       </div>
       <div style="display:flex; gap:6px;">
         <button class="pill-btn" type="button" onclick="window.location.href='/add-service.html'">
-          + Request
+          + Add
         </button>
       </div>
     </header>
@@ -418,8 +424,7 @@
       try {
         const res = await fetch(API_BASE + '/services');
         if (!res.ok) throw new Error('Failed to load services');
-        const text = await res.text();
-        const data = JSON.parse(text);
+        const data = await res.json();
         allServices = Array.isArray(data.services) ? data.services : [];
         renderServices();
       } catch (err) {
