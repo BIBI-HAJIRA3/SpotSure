@@ -233,7 +233,7 @@
 
       <p id="serviceAddressText" style="font-size:13px; color:#e5e7eb; margin:4px 0 0;"></p>
 
-      <div id="serviceProviderImages" style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;"></div>
+      <div id="serviceProviderImages" style="margin-top:8px; gap:6px; flex-wrap:wrap;"></div>
 
       <div class="btn-row">
         <button class="btn-primary" type="button" onclick="openAddReview()">
@@ -418,6 +418,7 @@
 
         const providerImagesEl = document.getElementById('serviceProviderImages');
         if (providerImagesEl) {
+          providerImagesEl.style.display = 'none';
           providerImagesEl.innerHTML = '';
 
           const images = Array.isArray(s.providerImages) ? s.providerImages.slice() : [];
@@ -438,6 +439,8 @@
               img.onclick = () => window.open(imgUrl, '_blank');
               providerImagesEl.appendChild(img);
             });
+
+            providerImagesEl.style.display = 'flex';
           }
         }
 
