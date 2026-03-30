@@ -2,19 +2,21 @@
 const express = require('express');
 const Service = require('../models/Service');
 const Review = require('../models/Review');
-const { recomputeServiceRatings } = require('./serviceRoutes');
+const serviceRoutes = require('./serviceRoutes'); // router with helper attached
 
 const router = express.Router();
 
+const recomputeServiceRatings = serviceRoutes.recomputeServiceRatings;
+
+// adjust to your auth logic
 function requireAdmin(req, res, next) {
-  // Adjust based on your auth/session; example:
   if (!req.session || !req.session.userId || req.session.userRole !== 'admin') {
     return res.status(403).json({ message: 'Admin access required' });
   }
   next();
 }
 
-// Pending service requests
+// pending services
 router.get('/services/pending', requireAdmin, async (req, res) => {
   try {
     const services = await Service.find({ isApproved: false }).sort({ createdAt: -1 });
@@ -25,7 +27,7 @@ router.get('/services/pending', requireAdmin, async (req, res) => {
   }
 });
 
-// Approve service
+// approve service
 router.post('/services/:id/approve', requireAdmin, async (req, res) => {
   try {
     const service = await Service.findByIdAndUpdate(
@@ -43,7 +45,7 @@ router.post('/services/:id/approve', requireAdmin, async (req, res) => {
   }
 });
 
-// Delete service and its reviews
+// delete service + its reviews
 router.delete('/services/:id', requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
@@ -60,7 +62,7 @@ router.delete('/services/:id', requireAdmin, async (req, res) => {
   }
 });
 
-// Latest reviews
+// latest reviews
 router.get('/reviews', requireAdmin, async (req, res) => {
   try {
     const reviews = await Review.find({}).sort({ createdAt: -1 }).limit(100);
@@ -71,14 +73,16 @@ router.get('/reviews', requireAdmin, async (req, res) => {
   }
 });
 
-// Delete review and recompute rating
+// delete review
 router.delete('/reviews/:id', requireAdmin, async (req, res) => {
   try {
     const review = await Review.findByIdAndDelete(req.params.id);
     if (!review) {
       return res.status(404).json({ message: 'Review not found' });
     }
-    await recomputeServiceRatings(review.service);
+    if (recomputeServiceRatings) {
+      await recomputeServiceRatings(review.service);
+    }
     res.json({ message: 'Review deleted' });
   } catch (err) {
     console.error('DELETE /api/admin/reviews/:id error:', err);
