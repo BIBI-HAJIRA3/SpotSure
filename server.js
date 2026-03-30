@@ -1,20 +1,15 @@
-// SpotSure/server.js (only showing the relevant route mounting part)
+// SpotSure/server.js
 const path = require('path');
 const express = require('express');
 const session = require('express-session');
-// ... your other requires (dotenv, mongoose, etc.)
+// const mongoose = require('mongoose');
+// require('dotenv').config();
 
 const app = express();
 
-// ... your middleware (express.json(), session, static, etc.)
+// connect to Mongo here (your existing code)
 
-// routes
-const serviceRoutes = require('./routes/serviceRoutes');   // router function
-const adminRoutes = require('./routes/adminRoutes');       // router function
-const reportRoutes = require('./routes/reportRoutes');     // router function
-// const authRoutes = require('./routes/authRoutes');      // if you have
-
-// Example typical setup:
+// core middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
@@ -24,14 +19,21 @@ app.use(
     saveUninitialized: false,
   })
 );
+
+// static
 app.use(express.static(path.join(__dirname, 'public')));
+
+// routes
+const serviceRoutes = require('./routes/serviceRoutes');  // router
+const adminRoutes = require('./routes/adminRoutes');      // router
+const reportRoutes = require('./routes/reportRoutes');    // router
+// const authRoutes = require('./routes/authRoutes');      // if you have
 
 app.use('/api', serviceRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api', reportRoutes);
-// app.use('/api/auth', authRoutes); // if present
+// app.use('/api/auth', authRoutes);
 
-// start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log('SpotSure server running on port', PORT);
