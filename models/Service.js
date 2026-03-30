@@ -8,18 +8,19 @@ const ServiceSchema = new mongoose.Schema(
     city: { type: String, required: true, trim: true },
     pincode: { type: String, required: true, trim: true },
     address: { type: String, required: true, trim: true },
+
+    // Legacy single main image (first provider image)
     imagePath: { type: String, default: '' },
 
+    // Multiple images added by provider (Cloudinary public_ids or full URLs)
+    providerImages: { type: [String], default: [] },
+
     averageRating: { type: Number, default: 0 },
-    // how many people have rated this service at least once
     ratingCount: { type: Number, default: 0 },
-    // how many written reviews (non‑empty comments)
     reviewCount: { type: Number, default: 0 },
 
-    // Always visible once created (no admin approval now)
     isApproved: { type: Boolean, default: true },
 
-    // Secret code required to delete
     deleteCode: { type: String, required: true },
   },
   { timestamps: true }
