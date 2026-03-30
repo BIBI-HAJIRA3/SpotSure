@@ -233,7 +233,518 @@
 
       <p id="serviceAddressText" style="font-size:13px; color:#e5e7eb; margin:4px 0 0;"></p>
 
-      <!-- NEW: provider images row -->
+      <!-- provider images row -->
+      <div id="serviceProviderImages" style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;"></div>
+
+      <div class="btn-row">
+        <button class="btn-primary" type="button" onclick="openAddReview()">
+          <i class="fa fa-pencil"></i>
+          <span>Add review</span>
+        </button>
+
+        <button
+          class="btn-primary"
+          id="serviceNavigateBtn"
+          type="button"
+          style="background:#16a34a; padding:6px 10px; font-size:12px;"
+        >
+          <i class="fa fa-location-arrow"></i>
+          <span>Navigate</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin:0 0 8px; font-size:15px; color:#f9fafb;">Reviews</h2>
+      <div id="reviewsContainer"></div>
+    </div>
+
+    <p id="loadingText" style="font-size:13px; color:#9ca3af;">Loading service...</p>
+  </div>
+
+  <div id="toast">
+    <span id="toastMessage"></span>
+  </div>
+
+  <script>
+    const API_BASE = window.location.origin + '/api';
+    let toastTimer = null;
+    let loadedService = null;
+
+    function getServiceIdFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('id');
+    }
+
+    function openAddReview() {
+      const id = getServiceIdFromUrl();
+      if (!id) return;
+      window.location.href = '/add-review.html?id=' + encodeURIComponent(id);
+    }
+
+    function showToast(message) {
+      const t = document.getElementById('toast');
+      const msg = document.getElementById('toastMessage');
+      if (!t || !msg) return;
+      msg.textContent = message;
+      t.style.opacity = '1';
+      t.style.pointerEvents = 'auto';
+      t.style.transform = 'translateX(-50%) translateY(-4px)';
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        t.style.opacity = '0';
+        t.style.pointerEvents = 'none';
+        t.style.transform = 'translateX(-50%) translateY(0)';
+      }, 2000);
+    }
+
+    function getCategorySign(category) {
+      const c = (category || '').toLowerCase();
+
+      if (c === 'hospital') return '+';
+      if (c === 'clinic') return 'C';
+
+      if (c === 'college' || c === 'university') return '🏛️';
+      if (c === 'school') return '📚';
+
+      if (c === 'restaurant') return '🍽';
+      if (c === 'grocery') return '🛒';
+      return '•';
+    }
+
+    function getSignClass(category) {
+      const c = (category || '').toLowerCase();
+      if (c === 'hospital') return 'service-sign--hospital';
+      if (c === 'clinic') return 'service-sign--clinic';
+      if (c === 'college' || c === 'university') return 'service-sign--college';
+      if (c === 'school') return 'service-sign--school';
+      if (c === 'restaurant') return 'service-sign--restaurant';
+      if (c === 'grocery') return 'service-sign--grocery';
+      return 'service-sign--default';
+    }
+
+    function buildRatingText(s) {
+      const avg = Number(s.averageRating || 0).toFixed(1);
+      const ratingsCount = Number(s.ratingCount || 0);
+      const reviewsCount = Number(s.reviewCount || 0);
+
+      const ratingsLabel = ratingsCount === 1
+        ? '1 rating'
+        : ratingsCount + ' ratings';
+
+      const reviewsLabel = reviewsCount === 0
+        ? 'No reviews'
+        : (reviewsCount === 1 ? '1 review' : reviewsCount + ' reviews');
+
+      return avg + ' ★ • ' + ratingsLabel + ' • ' + reviewsLabel;
+    }
+
+    function buildStars(rating) {
+      const fullCount = Math.round(rating || 0);
+      const full = '★'.repeat(fullCount);
+      const empty = '☆'.repeat(5 - fullCount);
+      return '<span class="stars">' + full +
+             '</span><span class="stars stars-empty">' + empty + '</span>';
+    }
+
+    function openNavigationForService(service) {
+      if (!service) {
+        showToast('Location not available for this service.');
+        return;
+      }
+
+      let destination = '';
+      let hasLatLng = false;
+
+      if (
+        service.location &&
+        typeof service.location.lat === 'number' &&
+        typeof service.location.lng === 'number'
+      ) {
+        destination = service.location.lat + ',' + service.location.lng;
+        hasLatLng = true;
+      } else if (service.address) {
+        destination = service.address;
+      } else if (service.name && service.city) {
+        destination = service.name + ', ' + service.city;
+      } else if (service.name) {
+        destination = service.name;
+      }
+
+      if (!destination) {
+        showToast('Location not available for this service.');
+        return;
+      }
+
+      let url;
+
+      if (hasLatLng) {
+        url =
+          'https://www.google.com/maps/dir/?api=1&destination=' +
+          encodeURIComponent(destination);
+      } else {
+        url =
+          'https://www.google.com/maps/search/?api=1&query=' +
+          encodeURIComponent(destination);
+      }
+
+      window.location.href = url;
+    }
+
+    async function loadService() {
+      const id = getServiceIdFromUrl();
+      const loadingEl = document.getElementById('loadingText');
+      const cardEl = document.getElementById('serviceCard');
+      if (!id) {
+        if (loadingEl) loadingEl.textContent = 'Missing service id.';
+        return;
+      }
+
+      try {
+        const res = await fetch(API_BASE + '/services/' + id);
+        if (!res.ok) throw new Error();
+        const s = await res.json();
+
+        loadedService = s;
+
+        document.getElementById('serviceTitle').textContent = s.name || 'Service';
+        document.getElementById('serviceSub').textContent =
+          (s.category || 'Service') + ' • ' + (s.city || '');
+        document.getElementById('serviceName').textContent = s.name || 'Service';
+        document.getElementById('serviceMeta').textContent =
+          (s.city || '') + (s.pincode ? ' • PIN ' + s.pincode : '');
+        document.getElementById('serviceRating').textContent = buildRatingText(s);
+        document.getElementById('serviceAddressText').textContent =
+          s.address || '';
+
+        // Provider image (if any)
+        const providerImagesEl = document.getElementById('serviceProviderImages');
+        if (providerImagesEl) {
+          providerImagesEl.innerHTML = '';
+          if (s.imagePath) {
+            const imgUrl = s.imagePath.startsWith('http')
+              ? s.imagePath
+              : '/image/' + encodeURIComponent(s.imagePath);
+
+            const img = document.createElement('img');
+            img.src = imgUrl;
+            img.className = 'service-image-thumb';
+            img.onclick = () => window.open(imgUrl, '_blank');
+            providerImagesEl.appendChild(img);
+          }
+        }
+
+        const signEl = document.getElementById('serviceSign');
+        signEl.textContent = getCategorySign(s.category);
+        signEl.className = 'service-sign ' + getSignClass(s.category);
+
+        if (loadingEl) loadingEl.style.display = 'none';
+        if (cardEl) cardEl.style.display = 'block';
+
+        const navBtn = document.getElementById('serviceNavigateBtn');
+        if (navBtn) {
+          navBtn.onclick = function () {
+            openNavigationForService(loadedService);
+          };
+        }
+
+        loadReviews();
+      } catch (err) {
+        console.error(err);
+        if (loadingEl) loadingEl.textContent = 'Error loading service.';
+        showToast('Error loading service');
+      }
+    }
+
+    async function loadReviews() {
+      const id = getServiceIdFromUrl();
+      if (!id) return;
+      try {
+        const res = await fetch(API_BASE + '/services/' + id + '/reviews');
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        const reviews = data.reviews || data;
+        const container = document.getElementById('reviewsContainer');
+        container.innerHTML = '';
+
+        if (!reviews.length) {
+          container.innerHTML =
+            '<p class="no-reviews">No reviews yet. Be the first to add one.</p>';
+          return;
+        }
+
+        reviews.forEach((r) => {
+          const item = document.createElement('div');
+          item.className = 'review-item';
+
+          const paths = r.imagePaths || r.imageUrls || [];
+          let imagesHtml = '';
+          if (paths.length > 0) {
+            imagesHtml =
+              '<div class="review-images">' +
+              paths
+                .map(
+                  (path) =>
+                    `<img src="${path}" class="review-thumb" onclick="window.open('${path}', '_blank')">`
+                )
+                .join('') +
+              '</div>';
+          }
+
+          item.innerHTML = `
+            <div>${buildStars(r.rating)} <span>${r.rating}</span> – ${r.comment || ''}</div>
+            <div class="review-meta">${r.username || 'Anonymous'}</div>
+            ${imagesHtml}
+          `;
+          container.appendChild(item);
+        });
+      } catch (e) {
+        const container = document.getElementById('reviewsContainer');
+        container.innerHTML = '<p class="no-reviews">Error loading reviews.</p>';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadService();
+    });
+  </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>SpotSure – Service</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+  />
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: radial-gradient(circle at top, #0f172a 0, #020617 55%);
+      color: #e5e7eb;
+    }
+
+    .page {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 20px 14px 28px;
+      min-height: 100vh;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .top-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #f9fafb;
+    }
+    .top-sub {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    .pill-btn {
+      border-radius: 999px;
+      border: 1px solid #374151;
+      background: #111827;
+      color: #e5e7eb;
+      padding: 6px 10px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, #111827 0, #020617 55%);
+      border-radius: 14px;
+      border: 1px solid #1f2937;
+      padding: 14px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.6);
+      margin-bottom: 14px;
+    }
+
+    .service-header {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 10px;
+      position: relative;
+      align-items: center;
+    }
+
+    .service-sign {
+      width: 70px;
+      height: 70px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      flex-shrink: 0;
+      color: #0f172a;
+      box-shadow: 0 0 14px rgba(15, 23, 42, 0.5);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      animation: sign-pulse-detail 2s ease-in-out infinite;
+    }
+
+    .service-sign--hospital { background: linear-gradient(135deg, #bbf7d0, #6ee7b7); }
+    .service-sign--clinic { background: linear-gradient(135deg, #a5f3fc, #67e8f9); }
+    .service-sign--college { background: linear-gradient(135deg, #c7d2fe, #a5b4fc); }
+    .service-sign--school { background: linear-gradient(135deg, #fef9c3, #fde68a); }
+    .service-sign--restaurant { background: linear-gradient(135deg, #fed7aa, #fdba74); }
+    .service-sign--grocery { background: linear-gradient(135deg, #bbf7d0, #a7f3d0); }
+    .service-sign--default { background: linear-gradient(135deg, #e5e7eb, #d1d5db); }
+
+    .service-header:hover .service-sign {
+      transform: scale(1.08);
+      box-shadow: 0 0 20px rgba(15, 23, 42, 0.7);
+    }
+
+    @keyframes sign-pulse-detail {
+      0%   { transform: scale(1); }
+      50%  { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .service-main h1 {
+      margin: 0 0 4px;
+      font-size: 18px;
+      color: #f9fafb;
+    }
+    .service-main p {
+      margin: 0;
+      font-size: 12px;
+      color: #9ca3af;
+      line-height: 1.4;
+    }
+
+    .rating-row {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-top: 6px;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: none;
+      font-size: 13px;
+      cursor: pointer;
+      background: #2563eb;
+      color: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .service-image-thumb {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      object-fit: cover;
+      cursor: pointer;
+      border: 1px solid #4b5563;
+    }
+
+    .review-item {
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+    .review-meta {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+    .review-images {
+      margin-top: 4px;
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+    .review-thumb {
+      width: 40px;
+      height: 40px;
+      border-radius: 4px;
+      object-fit: cover;
+      cursor: pointer;
+      border: 1px solid #4b5563;
+    }
+    .no-reviews {
+      font-size: 13px;
+      color: #6b7280;
+    }
+    .stars {
+      color: #fbbf24;
+      font-size: 14px;
+      letter-spacing: 1px;
+    }
+    .stars-empty {
+      color: #4b5563;
+    }
+
+    #toast {
+      position: fixed;
+      left: 50%;
+      bottom: 20px;
+      transform: translateX(-50%);
+      background: #111827;
+      color: #e5e7eb;
+      padding: 9px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 60;
+      max-width: 90%;
+      text-align: left;
+      white-space: pre-line;
+    }
+    #toastMessage {
+      margin-right: 40px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="top-bar">
+      <div>
+        <div class="top-title" id="serviceTitle">Service</div>
+        <div class="top-sub" id="serviceSub"></div>
+      </div>
+    </div>
+
+    <div class="card" id="serviceCard" style="display:none;">
+      <div class="service-header">
+        <div class="service-sign" id="serviceSign"></div>
+        <div class="service-main">
+          <h1 id="serviceName"></h1>
+          <p id="serviceMeta"></p>
+          <div class="rating-row" id="serviceRating"></div>
+        </div>
+      </div>
+
+      <p id="serviceAddressText" style="font-size:13px; color:#e5e7eb; margin:4px 0 0;"></p>
+
+      <!-- provider images row -->
       <div id="serviceProviderImages" style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;"></div>
 
       <div class="btn-row">
