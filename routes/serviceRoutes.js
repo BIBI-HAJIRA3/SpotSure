@@ -10,28 +10,23 @@ const router = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-/**
- * Helper to recalc rating stats for a service
- */
 async function recomputeServiceRatings(serviceId) {
-  const allReviews = await Review.find({ service: serviceId });
+  const stats = await Review.aggregate([
+    { $match: { service: serviceId } },
+    {
+      $group: {
+        _id: '$service',
+        avgRating: { $avg: '$rating' },
+        ratingCount: { $sum: 1 },
+      },
+    },
+  ]);
 
-  if (!allReviews.length) {
-    await Service.findByIdAndUpdate(serviceId, {
-      averageRating: 0,
-      ratingCount: 0,
-      reviewCount: 0,
-    });
-    return;
-  }
+  const stat = stats[0];
+  const averageRating = stat ? stat.avgRating : 0;
+  const ratingCount = stat ? stat.ratingCount : 0;
 
-  const ratingSum = allReviews.reduce((sum, r) => sum + (r.rating || 0), 0);
-  const averageRating = ratingSum / allReviews.length;
-
-  const ratingCount = allReviews.length; // people who rated
-  const reviewCount = allReviews.filter(
-    (r) => r.comment && r.comment.trim() !== ''
-  ).length; // people who commented
+  const reviewCount = await Review.countDocuments({ service: serviceId });
 
   await Service.findByIdAndUpdate(serviceId, {
     averageRating,
@@ -40,38 +35,8 @@ async function recomputeServiceRatings(serviceId) {
   });
 }
 
-// ------------------------------------------------------------------
-// LIST services  GET /api/services
-// ------------------------------------------------------------------
-router.get('/services', async (req, res) => {
-  try {
-    const { category, city, pincode } = req.query;
-
-    const filter = { isApproved: true };
-
-    if (category) {
-      filter.category = new RegExp('^' + category + '$', 'i');
-    }
-    if (city) {
-      filter.city = new RegExp(city, 'i');
-    }
-    if (pincode) {
-      filter.pincode = pincode;
-    }
-
-    const services = await Service.find(filter).sort({ createdAt: -1 });
-    res.json({ services });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-// ------------------------------------------------------------------
-// CREATE service  POST /api/services
-// image field name: "image"
-// ------------------------------------------------------------------
-router.post('/services', upload.single('image'), async (req, res) => {
+// CREATE service (request) with multiple images
+router.post('/services', upload.array('images', 5), async (req, res) => {
   try {
     const { name, category, city, pincode, address } = req.body;
 
@@ -81,36 +46,41 @@ router.post('/services', upload.single('image'), async (req, res) => {
         .json({ message: 'Name, city, pincode, and address are required.' });
     }
 
-    const deleteCode = crypto.randomBytes(3).toString('hex'); // short secret
+    const deleteCode = crypto.randomBytes(3).toString('hex');
 
     let imagePath = '';
+    let providerImages = [];
 
-    if (req.file) {
+    if (req.files && req.files.length > 0) {
       const cloudinary = req.cloudinary;
 
-      const publicId = await new Promise((resolve, reject) => {
-        if (
-          !cloudinary ||
-          !cloudinary.uploader ||
-          !cloudinary.uploader.upload_stream
-        ) {
-          return resolve('');
-        }
-        const stream = cloudinary.uploader.upload_stream(
-          { folder: 'spotsure-services' },
-          (err, result) => {
-            if (err) return reject(err);
-            // Store public_id for use with /image/:publicId
-            resolve(result.public_id || '');
-          }
-        );
-        stream.end(req.file.buffer);
-      }).catch((err) => {
+      const uploads = await Promise.all(
+        req.files.map((file) =>
+          cloudinary &&
+          cloudinary.uploader &&
+          cloudinary.uploader.upload_stream
+            ? new Promise((resolve, reject) => {
+                const stream = cloudinary.uploader.upload_stream(
+                  { folder: 'spotsure-services' },
+                  (err, result) => {
+                    if (err) return reject(err);
+                    resolve(result.public_id || '');
+                  }
+                );
+                stream.end(file.buffer);
+              })
+            : Promise.resolve('')
+        )
+      ).catch((err) => {
         console.error('Cloudinary upload error:', err);
-        return '';
+        return [];
       });
 
-      imagePath = publicId || '';
+      const ids = (uploads || []).filter((id) => id);
+      if (ids.length > 0) {
+        providerImages = ids;
+        imagePath = ids[0]; // first as legacy main image
+      }
     }
 
     const service = await Service.create({
@@ -119,9 +89,10 @@ router.post('/services', upload.single('image'), async (req, res) => {
       city,
       pincode,
       address,
-      imagePath,   // now holds Cloudinary public_id
+      imagePath,
+      providerImages,
       deleteCode,
-      isApproved: true,
+      isApproved: false, // request; admin approves
     });
 
     res.status(201).json({
@@ -130,137 +101,72 @@ router.post('/services', upload.single('image'), async (req, res) => {
       deleteCode,
     });
   } catch (err) {
-    console.error(err);
+    console.error('POST /api/services error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });
 
-// ------------------------------------------------------------------
-// GET single service  GET /api/services/:id
-// ------------------------------------------------------------------
+// List ONLY approved services for public UI
+router.get('/services', async (req, res) => {
+  try {
+    const services = await Service.find({ isApproved: true }).sort({ createdAt: -1 });
+    res.json({ services });
+  } catch (err) {
+    console.error('GET /api/services error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Get single service
 router.get('/services/:id', async (req, res) => {
   try {
-    const serviceId = req.params.id;
-    const service = await Service.findById(serviceId);
-    if (!service) {
+    const service = await Service.findById(req.params.id);
+    if (!service || !service.isApproved) {
       return res.status(404).json({ message: 'Service not found' });
     }
     res.json(service);
   } catch (err) {
-    console.error(err);
+    console.error('GET /api/services/:id error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });
 
-// ------------------------------------------------------------------
-// Delete service with code  POST /api/services/:id/delete-with-code
-// ------------------------------------------------------------------
-router.post('/services/:id/delete-with-code', async (req, res) => {
-  try {
-    const serviceId = req.params.id;
-    const { code } = req.body;
-
-    const service = await Service.findById(serviceId);
-    if (!service) {
-      return res.status(404).json({ message: 'Service not found' });
-    }
-
-    if (!code || code.trim() !== service.deleteCode) {
-      return res.status(403).json({ message: 'Incorrect delete code.' });
-    }
-
-    await Review.deleteMany({ service: serviceId });
-    await Service.findByIdAndDelete(serviceId);
-
-    res.json({ message: 'Service deleted.' });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-// ------------------------------------------------------------------
-// Add a review to a service
-// POST /api/services/:id/reviews
-// ------------------------------------------------------------------
-router.post(
-  '/services/:id/reviews',
-  upload.array('images', 5),
-  async (req, res) => {
-    try {
-      const serviceId = req.params.id;
-
-      const service = await Service.findById(serviceId);
-      if (!service) {
-        return res.status(404).json({ message: 'Service not found' });
-      }
-
-      const { rating, comment, username } = req.body;
-
-      const numericRating = Number(rating);
-      if (!numericRating || numericRating < 1 || numericRating > 5) {
-        return res
-          .status(400)
-          .json({ message: 'Rating must be between 1 and 5' });
-      }
-
-      let imageUrls = [];
-      if (req.files && req.files.length > 0) {
-        const cloudinary = req.cloudinary;
-        const uploads = await Promise.all(
-          req.files.map((file) =>
-            cloudinary.uploader.upload_stream
-              ? new Promise((resolve, reject) => {
-                  const stream = cloudinary.uploader.upload_stream(
-                    { folder: 'spotsure-reviews' },
-                    (err, result) => {
-                      if (err) return reject(err);
-                      resolve(result.secure_url);
-                    }
-                  );
-                  stream.end(file.buffer);
-                })
-              : Promise.resolve(null)
-          )
-        );
-        imageUrls = uploads.filter(Boolean);
-      }
-
-      const review = await Review.create({
-        service: serviceId,
-        username: username || 'Anonymous',
-        rating: numericRating,
-        comment: comment || '',
-        imageUrls,
-      });
-
-      await recomputeServiceRatings(serviceId);
-
-      return res.status(201).json({
-        message: 'Review created',
-        review,
-      });
-    } catch (err) {
-      console.error(err);
-      return res.status(500).json({ message: 'Server error' });
-    }
-  }
-);
-
-// ------------------------------------------------------------------
-// Get all reviews for a service  GET /api/services/:id/reviews
-// ------------------------------------------------------------------
+// Reviews list for a service
 router.get('/services/:id/reviews', async (req, res) => {
   try {
-    const serviceId = req.params.id;
-    const reviews = await Review.find({ service: serviceId }).sort({
-      createdAt: -1,
-    });
+    const reviews = await Review.find({ service: req.params.id }).sort({ createdAt: -1 });
     res.json({ reviews });
   } catch (err) {
-    console.error(err);
+    console.error('GET /api/services/:id/reviews error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });
 
-module.exports = router;
+// Add review (you already have similar; keep your logic)
+// Example:
+router.post('/services/:id/reviews', async (req, res) => {
+  try {
+    const { rating, comment, username, imagePaths = [] } = req.body;
+    const serviceId = req.params.id;
+
+    const review = await Review.create({
+      service: serviceId,
+      rating,
+      comment,
+      username,
+      imagePaths,
+    });
+
+    await recomputeServiceRatings(serviceId);
+
+    res.status(201).json({ message: 'Review added', review });
+  } catch (err) {
+    console.error('POST /api/services/:id/reviews error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+module.exports = {
+  router,
+  recomputeServiceRatings,
+};
