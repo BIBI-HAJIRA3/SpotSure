@@ -17,7 +17,7 @@
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      background: #020617;
+      background: radial-gradient(circle at top, #0f172a 0, #020617 55%);
       color: #e5e7eb;
     }
 
@@ -57,7 +57,7 @@
     }
 
     .card {
-      background: #111827;
+      background: radial-gradient(circle at top left, #111827 0, #020617 55%);
       border-radius: 14px;
       border: 1px solid #1f2937;
       padding: 14px;
@@ -128,7 +128,7 @@
     .btn-row {
       display: flex;
       gap: 8px;
-      margin-top: 10px;
+      margin-top: 12px;
       flex-wrap: wrap;
     }
     .btn-primary {
@@ -142,6 +142,15 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
+    }
+
+    .service-image-thumb {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      object-fit: cover;
+      cursor: pointer;
+      border: 1px solid #4b5563;
     }
 
     .review-item {
@@ -224,42 +233,24 @@
 
       <p id="serviceAddressText" style="font-size:13px; color:#e5e7eb; margin:4px 0 0;"></p>
 
+      <!-- NEW: provider images row -->
+      <div id="serviceProviderImages" style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;"></div>
+
       <div class="btn-row">
         <button class="btn-primary" type="button" onclick="openAddReview()">
           <i class="fa fa-pencil"></i>
           <span>Add review</span>
         </button>
 
-        <button class="btn-primary" id="serviceNavigateBtn" type="button" style="background:#16a34a;">
+        <button
+          class="btn-primary"
+          id="serviceNavigateBtn"
+          type="button"
+          style="background:#16a34a; padding:6px 10px; font-size:12px;"
+        >
           <i class="fa fa-location-arrow"></i>
           <span>Navigate</span>
         </button>
-
-        <button class="btn-primary" type="button" style="background:#b91c1c" onclick="toggleDeleteSlot()">
-          <i class="fa fa-trash"></i>
-          <span>Delete service</span>
-        </button>
-      </div>
-
-      <div id="deleteSlot" style="display:none; margin-top:10px; font-size:12px; color:#9ca3af;">
-        <label for="deleteCodeInput" style="display:block; margin-bottom:4px;">
-          Enter delete code to remove this service:
-        </label>
-        <div style="display:flex; gap:6px; flex-wrap:wrap;">
-          <input
-            id="deleteCodeInput"
-            type="text"
-            placeholder="Delete code"
-            style="flex:1; min-width:120px; padding:6px 8px; border-radius:8px; border:1px solid #374151; background:#020617; color:#e5e7eb; font-size:12px;"
-          />
-          <button
-            type="button"
-            onclick="submitDeleteService()"
-            style="padding:7px 10px; border-radius:999px; border:none; background:#b91c1c; color:#fff; font-size:12px; cursor:pointer;"
-          >
-            Delete
-          </button>
-        </div>
       </div>
     </div>
 
@@ -356,7 +347,6 @@
              '</span><span class="stars stars-empty">' + empty + '</span>';
     }
 
-    // IMPORTANT: Only plain https:// URLs (no intent://) so WebView/browsers don't throw ERR_UNKNOWN_URL_SCHEME [web:347][web:351][web:350]
     function openNavigationForService(service) {
       if (!service) {
         showToast('Location not available for this service.');
@@ -389,12 +379,10 @@
       let url;
 
       if (hasLatLng) {
-        // Simple directions URL; browser may still convert internally, but HTML only sees https:// [web:207][web:332][web:337]
         url =
           'https://www.google.com/maps/dir/?api=1&destination=' +
           encodeURIComponent(destination);
       } else {
-        // Fallback: text search
         url =
           'https://www.google.com/maps/search/?api=1&query=' +
           encodeURIComponent(destination);
@@ -428,6 +416,23 @@
         document.getElementById('serviceRating').textContent = buildRatingText(s);
         document.getElementById('serviceAddressText').textContent =
           s.address || '';
+
+        // Provider image (if any)
+        const providerImagesEl = document.getElementById('serviceProviderImages');
+        if (providerImagesEl) {
+          providerImagesEl.innerHTML = '';
+          if (s.imagePath) {
+            const imgUrl = s.imagePath.startsWith('http')
+              ? s.imagePath
+              : '/image/' + encodeURIComponent(s.imagePath);
+
+            const img = document.createElement('img');
+            img.src = imgUrl;
+            img.className = 'service-image-thumb';
+            img.onclick = () => window.open(imgUrl, '_blank');
+            providerImagesEl.appendChild(img);
+          }
+        }
 
         const signEl = document.getElementById('serviceSign');
         signEl.textContent = getCategorySign(s.category);
@@ -496,47 +501,6 @@
       } catch (e) {
         const container = document.getElementById('reviewsContainer');
         container.innerHTML = '<p class="no-reviews">Error loading reviews.</p>';
-      }
-    }
-
-    function toggleDeleteSlot() {
-      const slot = document.getElementById('deleteSlot');
-      if (!slot) return;
-      slot.style.display =
-        slot.style.display === 'none' || !slot.style.display ? 'block' : 'none';
-    }
-
-    async function submitDeleteService() {
-      const id = getServiceIdFromUrl();
-      if (!id) return;
-
-      const input = document.getElementById('deleteCodeInput');
-      const code = input ? input.value.trim() : '';
-      if (!code) {
-        showToast('Please enter the delete code.');
-        return;
-      }
-
-      try {
-        const res = await fetch(API_BASE + '/services/' + id + '/delete-with-code', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ code }),
-        });
-        const data = await res.json().catch(() => ({}));
-
-        if (!res.ok) {
-          showToast(data.message || 'Failed to delete service');
-          return;
-        }
-
-        showToast('Service deleted');
-        setTimeout(() => {
-          window.location.href = '/services.html';
-        }, 1000);
-      } catch (err) {
-        console.error(err);
-        showToast('Error deleting service');
       }
     }
 
