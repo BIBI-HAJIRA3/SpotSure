@@ -11,7 +11,7 @@
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      background: #020617;
+      background: radial-gradient(circle at top, #020617 0, #020617 40%, #0b1120 100%);
       color: #e5e7eb;
     }
 
@@ -50,7 +50,7 @@
     }
 
     .card {
-      background: #111827;
+      background: radial-gradient(circle at top left, #111827 0, #020617 60%);
       border-radius: 14px;
       border: 1px solid #1f2937;
       padding: 14px;
@@ -91,12 +91,12 @@
       border: none;
       font-size: 14px;
       cursor: pointer;
-      background: #2563eb;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
       color: #ffffff;
       width: 100%;
     }
     .btn-primary:hover {
-      background: #1d4ed8;
+      background: linear-gradient(135deg, #1d4ed8, #1e40af);
     }
 
     #toast {
@@ -138,8 +138,8 @@
   <div class="page">
     <div class="top-bar">
       <div>
-        <div class="top-title">Add a service</div>
-        <div class="top-sub">Fill details so others can find it.</div>
+        <div class="top-title">Request a service</div>
+        <div class="top-sub">Fill details to request adding a new service.</div>
       </div>
       <button class="pill-btn" type="button" onclick="goBackToServices()">
         ⬅ Services
@@ -164,7 +164,6 @@
         <label class="label-small">Address</label>
         <input id="serviceAddress" class="input-field" placeholder="Full address" />
 
-        <!-- New: Latitude / Longitude -->
         <label class="label-small">Latitude (optional)</label>
         <input
           id="serviceLat"
@@ -186,7 +185,7 @@
         <label class="label-small">Image (optional)</label>
         <input id="serviceImage" type="file" class="input-file" accept="image/*" />
 
-        <button type="submit" class="btn-primary">Save service</button>
+        <button type="submit" class="btn-primary">Request service</button>
       </form>
     </div>
   </div>
@@ -259,7 +258,6 @@
       formData.append('pincode', pincode);
       formData.append('address', address);
       if (lat !== null && lng !== null) {
-        // Backend should read these and build location: { lat, lng }
         formData.append('lat', lat);
         formData.append('lng', lng);
       }
@@ -279,7 +277,7 @@
         const code = data.deleteCode;
         if (code) {
           showToast(
-            'Service added.\nDelete code for "' +
+            'Service request submitted.\nDelete code for "' +
             (data.service?.name || name) +
             '": ' + code +
             '\nKeep this code safe and press OK to continue.',
@@ -289,7 +287,7 @@
           );
         } else {
           showToast(
-            'Service added. Press OK to continue.',
+            'Service request submitted. Press OK to continue.',
             () => {
               window.location.href = '/services.html';
             }
