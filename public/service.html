@@ -1,4 +1,4 @@
-<!--SpotSure/public/service.html-->
+<!-- SpotSure/public/service.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,7 +17,8 @@
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      background: radial-gradient(circle at top, #0f172a 0, #020617 55%);
+      background: #020617 url('/images/bg-pattern.png') repeat;
+      background-attachment: fixed;
       color: #e5e7eb;
     }
 
@@ -57,7 +58,7 @@
     }
 
     .card {
-      background: radial-gradient(circle at top left, #111827 0, #020617 55%);
+      background: #111827;
       border-radius: 14px;
       border: 1px solid #1f2937;
       padding: 14px;
@@ -128,7 +129,7 @@
     .btn-row {
       display: flex;
       gap: 8px;
-      margin-top: 12px;
+      margin-top: 10px;
       flex-wrap: wrap;
     }
     .btn-primary {
@@ -142,15 +143,6 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-    }
-
-    .service-image-thumb {
-      width: 60px;
-      height: 60px;
-      border-radius: 8px;
-      object-fit: cover;
-      cursor: pointer;
-      border: 1px solid #4b5563;
     }
 
     .review-item {
@@ -233,7 +225,7 @@
 
       <p id="serviceAddressText" style="font-size:13px; color:#e5e7eb; margin:4px 0 0;"></p>
 
-      <div id="serviceProviderImages" style="margin-top:8px; gap:6px; flex-wrap:wrap;"></div>
+      <div id="serviceImagesContainer" style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;"></div>
 
       <div class="btn-row">
         <button class="btn-primary" type="button" onclick="openAddReview()">
@@ -247,8 +239,19 @@
           type="button"
           style="background:#16a34a; padding:6px 10px; font-size:12px;"
         >
-          <i class="fa fa-location-arrow"></i>
+          <i class="fa fa-location-arrow" style="font-size:12px;"></i>
           <span>Navigate</span>
+        </button>
+
+        <button
+          class="btn-primary"
+          id="requestRemoveBtn"
+          type="button"
+          style="background:#b91c1c; padding:6px 10px; font-size:12px; display:none;"
+          onclick="requestServiceRemoval()"
+        >
+          <i class="fa fa-flag"></i>
+          <span>Request remove</span>
         </button>
       </div>
     </div>
@@ -269,6 +272,7 @@
     const API_BASE = window.location.origin + '/api';
     let toastTimer = null;
     let loadedService = null;
+    let currentUser = null;
 
     function getServiceIdFromUrl() {
       const params = new URLSearchParams(window.location.search);
@@ -390,6 +394,18 @@
       window.location.href = url;
     }
 
+    async function loadCurrentUser() {
+      try {
+        const res = await fetch(window.location.origin + '/api/auth/me', {
+          credentials: 'include',
+        });
+        const data = await res.json();
+        currentUser = data.user || null;
+      } catch (e) {
+        currentUser = null;
+      }
+    }
+
     async function loadService() {
       const id = getServiceIdFromUrl();
       const loadingEl = document.getElementById('loadingText');
@@ -416,37 +432,29 @@
         document.getElementById('serviceAddressText').textContent =
           s.address || '';
 
-        const providerImagesEl = document.getElementById('serviceProviderImages');
-        if (providerImagesEl) {
-          providerImagesEl.style.display = 'none';
-          providerImagesEl.innerHTML = '';
-
-          const images = Array.isArray(s.providerImages) ? s.providerImages.slice() : [];
-
-          if ((!images || images.length === 0) && s.imagePath) {
-            images.push(s.imagePath);
-          }
-
-          if (images && images.length > 0) {
-            images.forEach((idOrUrl) => {
-              const imgUrl = idOrUrl.startsWith('http')
-                ? idOrUrl
-                : '/image/' + encodeURIComponent(idOrUrl);
-
-              const img = document.createElement('img');
-              img.src = imgUrl;
-              img.className = 'service-image-thumb';
-              img.onclick = () => window.open(imgUrl, '_blank');
-              providerImagesEl.appendChild(img);
-            });
-
-            providerImagesEl.style.display = 'flex';
-          }
-        }
-
         const signEl = document.getElementById('serviceSign');
         signEl.textContent = getCategorySign(s.category);
         signEl.className = 'service-sign ' + getSignClass(s.category);
+
+        const imagesContainer = document.getElementById('serviceImagesContainer');
+        if (imagesContainer) {
+          imagesContainer.innerHTML = '';
+          const imgs = s.providerImages || [];
+          if (Array.isArray(imgs) && imgs.length > 0) {
+            imgs.forEach((url) => {
+              const img = document.createElement('img');
+              img.src = url;
+              img.style.width = '70px';
+              img.style.height = '70px';
+              img.style.borderRadius = '8px';
+              img.style.objectFit = 'cover';
+              img.style.border = '1px solid #4b5563';
+              img.style.cursor = 'pointer';
+              img.onclick = () => window.open(url, '_blank');
+              imagesContainer.appendChild(img);
+            });
+          }
+        }
 
         if (loadingEl) loadingEl.style.display = 'none';
         if (cardEl) cardEl.style.display = 'block';
@@ -456,6 +464,11 @@
           navBtn.onclick = function () {
             openNavigationForService(loadedService);
           };
+        }
+
+        const removeBtn = document.getElementById('requestRemoveBtn');
+        if (removeBtn && currentUser && s.createdBy && currentUser.id === String(s.createdBy)) {
+          removeBtn.style.display = 'inline-flex';
         }
 
         loadReviews();
@@ -487,7 +500,7 @@
           const item = document.createElement('div');
           item.className = 'review-item';
 
-          const paths = r.imagePaths || r.imageUrls || [];
+          const paths = r.imageUrls || r.imagePaths || [];
           let imagesHtml = '';
           if (paths.length > 0) {
             imagesHtml =
@@ -514,7 +527,30 @@
       }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
+    async function requestServiceRemoval() {
+      const id = getServiceIdFromUrl();
+      if (!id) return;
+      try {
+        const res = await fetch(API_BASE + '/services/' + id + '/request-remove', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({}),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          showToast(data.message || 'Failed to request removal');
+          return;
+        }
+        showToast('Removal request sent to admin.');
+      } catch (err) {
+        console.error(err);
+        showToast('Error requesting removal');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadCurrentUser();
       loadService();
     });
   </script>
