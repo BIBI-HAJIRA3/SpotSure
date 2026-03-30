@@ -1,92 +1,38 @@
-// SpotSure/server.js
-require('dotenv').config();
-
-const express = require('express');
-const mongoose = require('mongoose');
+// SpotSure/server.js (only showing the relevant route mounting part)
 const path = require('path');
-const cloudinaryLib = require('cloudinary').v2;
-const cors = require('cors');
+const express = require('express');
 const session = require('express-session');
-
-const serviceRoutes = require('./routes/serviceRoutes');
-const authRoutes = require('./routes/authRoutes');
-const userRoutes = require('./routes/userRoutes');
-const imageRoutes = require('./routes/imageRoutes');
+// ... your other requires (dotenv, mongoose, etc.)
 
 const app = express();
 
-app.use(
-  cors({
-    origin: 'http://localhost:5000',
-    credentials: true,
-  })
-);
+// ... your middleware (express.json(), session, static, etc.)
 
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET || 'dev-secret',
-    resave: false,
-    saveUninitialized: false,
-    cookie: { secure: false },
-  })
-);
+// routes
+const serviceRoutes = require('./routes/serviceRoutes');   // router function
+const adminRoutes = require('./routes/adminRoutes');       // router function
+const reportRoutes = require('./routes/reportRoutes');     // router function
+// const authRoutes = require('./routes/authRoutes');      // if you have
 
-const mongoUri =
-  process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/SpotSure';
-mongoose
-  .connect(mongoUri)
-  .then(() => console.log('MongoDB connected'))
-  .catch((err) => console.error('MongoDB connection error:', err));
-
-cloudinaryLib.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || '',
-  api_key: process.env.CLOUDINARY_API_KEY || '',
-  api_secret: process.env.CLOUDINARY_API_SECRET || '',
-});
-
-app.use((req, res, next) => {
-  req.cloudinary = cloudinaryLib;
-  next();
-});
-
+// Example typical setup:
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'spotsure-secret',
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api', serviceRoutes);
-app.use('/api/auth', authRoutes);
-app.use('/api/user', userRoutes);
-app.use('/image', imageRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api', reportRoutes);
+// app.use('/api/auth', authRoutes); // if present
 
-const publicDir = path.join(__dirname, 'public');
-app.use(express.static(publicDir));
-
-// Intro at root
-app.get('/', (req, res) => {
-  res.sendFile(path.join(publicDir, 'index.html'));
-});
-
-// Services list
-app.get('/services.html', (req, res) => {
-  res.sendFile(path.join(publicDir, 'services.html'));
-});
-
-app.get('/service.html', (req, res) => {
-  res.sendFile(path.join(publicDir, 'service.html'));
-});
-
-app.get('/reviews.html', (req, res) => {
-  res.sendFile(path.join(publicDir, 'reviews.html'));
-});
-
-app.get('/add-review.html', (req, res) => {
-  res.sendFile(path.join(publicDir, 'add-review.html'));
-});
-
-app.get('/add-service.html', (req, res) => {
-  res.sendFile(path.join(publicDir, 'add-service.html'));
-});
-
-const PORT = process.env.PORT || 5000;
+// start server
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`SpotSure server running on http://localhost:${PORT}`);
+  console.log('SpotSure server running on port', PORT);
 });
