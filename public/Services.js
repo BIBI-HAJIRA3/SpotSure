@@ -12,7 +12,7 @@ const ServiceSchema = new mongoose.Schema(
     // Legacy single main image (first provider image)
     imagePath: { type: String, default: '' },
 
-    // Multiple images added by provider (Cloudinary public_ids or URLs)
+    // Multiple images added by provider (Cloudinary public_ids or full URLs)
     providerImages: { type: [String], default: [] },
 
     averageRating: { type: Number, default: 0 },
