@@ -10,7 +10,7 @@ const router = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-// helper to recompute ratings
+// helper: recompute ratings when reviews change
 async function recomputeServiceRatings(serviceId) {
   const stats = await Review.aggregate([
     { $match: { service: serviceId } },
@@ -35,7 +35,7 @@ async function recomputeServiceRatings(serviceId) {
   });
 }
 
-// CREATE service (request) with multiple images
+// POST /api/services  (create service request with multiple images)
 router.post('/services', upload.array('images', 5), async (req, res) => {
   try {
     const { name, category, city, pincode, address } = req.body;
@@ -79,7 +79,7 @@ router.post('/services', upload.array('images', 5), async (req, res) => {
       const ids = (uploads || []).filter((id) => id);
       if (ids.length > 0) {
         providerImages = ids;
-        imagePath = ids[0]; // first as main
+        imagePath = ids[0];
       }
     }
 
@@ -92,7 +92,7 @@ router.post('/services', upload.array('images', 5), async (req, res) => {
       imagePath,
       providerImages,
       deleteCode,
-      isApproved: false, // request; admin approves
+      isApproved: false, // treat as request
     });
 
     res.status(201).json({
@@ -106,7 +106,7 @@ router.post('/services', upload.array('images', 5), async (req, res) => {
   }
 });
 
-// list approved services (public)
+// GET /api/services  (public list of approved services)
 router.get('/services', async (req, res) => {
   try {
     const services = await Service.find({ isApproved: true }).sort({ createdAt: -1 });
@@ -117,7 +117,7 @@ router.get('/services', async (req, res) => {
   }
 });
 
-// single service
+// GET /api/services/:id
 router.get('/services/:id', async (req, res) => {
   try {
     const service = await Service.findById(req.params.id);
@@ -131,7 +131,7 @@ router.get('/services/:id', async (req, res) => {
   }
 });
 
-// list reviews for a service
+// GET /api/services/:id/reviews
 router.get('/services/:id/reviews', async (req, res) => {
   try {
     const reviews = await Review.find({ service: req.params.id }).sort({ createdAt: -1 });
@@ -142,7 +142,7 @@ router.get('/services/:id/reviews', async (req, res) => {
   }
 });
 
-// add review example (keep or merge with your existing)
+// POST /api/services/:id/reviews  (simplified; merge with your images logic if needed)
 router.post('/services/:id/reviews', async (req, res) => {
   try {
     const { rating, comment, username, imagePaths = [] } = req.body;
@@ -165,6 +165,7 @@ router.post('/services/:id/reviews', async (req, res) => {
   }
 });
 
-// IMPORTANT: export only the router; helper is attached for adminRoutes to import
+// expose helper for adminRoutes
 router.recomputeServiceRatings = recomputeServiceRatings;
+
 module.exports = router;
