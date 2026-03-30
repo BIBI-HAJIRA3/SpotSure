@@ -182,8 +182,8 @@
           placeholder="e.g. 76.639381"
         />
 
-        <label class="label-small">Image (optional)</label>
-        <input id="serviceImage" type="file" class="input-file" accept="image/*" />
+        <label class="label-small">Images (optional)</label>
+        <input id="serviceImages" type="file" class="input-file" accept="image/*" multiple />
 
         <button type="submit" class="btn-primary">Request service</button>
       </form>
@@ -233,7 +233,8 @@
       const address = document.getElementById('serviceAddress').value.trim();
       const latStr = document.getElementById('serviceLat').value.trim();
       const lngStr = document.getElementById('serviceLng').value.trim();
-      const imageFile = document.getElementById('serviceImage').files[0];
+      const imageInput = document.getElementById('serviceImages');
+      const files = imageInput ? Array.from(imageInput.files) : [];
 
       if (!name || !city || !pincode || !address) {
         showToast('Please fill all required fields.');
@@ -261,7 +262,7 @@
         formData.append('lat', lat);
         formData.append('lng', lng);
       }
-      if (imageFile) formData.append('image', imageFile);
+      files.forEach((file) => formData.append('images', file));
 
       try {
         const res = await fetch(API_BASE + '/services', {
