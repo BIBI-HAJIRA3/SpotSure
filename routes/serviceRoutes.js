@@ -106,10 +106,11 @@ router.post('/services', upload.array('images', 5), async (req, res) => {
   }
 });
 
-// GET /api/services  (public list of approved services)
+// GET /api/services  (TEMP: public list of ALL services for testing)
 router.get('/services', async (req, res) => {
   try {
-    const services = await Service.find({ isApproved: true }).sort({ createdAt: -1 });
+    // Remove the isApproved filter so you can see everything
+    const services = await Service.find({}).sort({ createdAt: -1 });
     res.json({ services });
   } catch (err) {
     console.error('GET /api/services error:', err);
@@ -142,7 +143,7 @@ router.get('/services/:id/reviews', async (req, res) => {
   }
 });
 
-// POST /api/services/:id/reviews  (simplified; merge with your images logic if needed)
+// POST /api/services/:id/reviews
 router.post('/services/:id/reviews', async (req, res) => {
   try {
     const { rating, comment, username, imagePaths = [] } = req.body;
