@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>SpotSure – Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: radial-gradient(circle at top, #020617 0, #020617 40%, #020617 60%, #0b1120 100%);
+      color: #e5e7eb;
+    }
+
+    .layout {
+      max-width: 900px;
+      margin: 0 auto;
+      min-height: 100vh;
+      display: flex;
+      padding: 20px 14px 28px;
+      gap: 14px;
+    }
+
+    .sidebar {
+      width: 180px;
+      min-width: 150px;
+      background: radial-gradient(circle at top left, rgba(15,23,42,0.96) 0, rgba(15,23,42,0.9) 55%);
+      border-radius: 16px;
+      border: 1px solid #1f2937;
+      padding: 14px 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .sidebar-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: #f9fafb;
+    }
+    .sidebar-sub {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-bottom: 8px;
+    }
+    .tab-btn {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid #374151;
+      background: #020617;
+      color: #e5e7eb;
+      padding: 7px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      text-align: left;
+    }
+    .tab-btn.active {
+      border-color: #2563eb;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    }
+
+    .content {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .top-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #f9fafb;
+    }
+    .top-sub {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    .pill-btn {
+      border-radius: 999px;
+      border: 1px solid #374151;
+      background: #111827;
+      color: #e5e7eb;
+      padding: 6px 10px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, rgba(15,23,42,0.96) 0, #020617 60%);
+      border-radius: 16px;
+      border: 1px solid #1f2937;
+      padding: 14px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      gap: 10px;
+    }
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #f9fafb;
+    }
+    .card-sub {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    .table th,
+    .table td {
+      padding: 6px 4px;
+      border-bottom: 1px solid #1f2937;
+      text-align: left;
+      vertical-align: top;
+    }
+    .table th {
+      color: #9ca3af;
+      font-weight: 500;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 999px;
+      font-size: 10px;
+      border: 1px solid #4b5563;
+      color: #e5e7eb;
+    }
+    .badge-green {
+      border-color: #22c55e;
+      color: #bbf7d0;
+    }
+
+    .btn-small {
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: none;
+      font-size: 11px;
+      cursor: pointer;
+      background: #2563eb;
+      color: #fff;
+      margin: 2px 0;
+    }
+    .btn-small.danger {
+      background: #b91c1c;
+    }
+
+    #toast {
+      position: fixed;
+      left: 50%;
+      bottom: 20px;
+      transform: translateX(-50%);
+      background: #111827;
+      color: #e5e7eb;
+      padding: 9px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 60;
+      max-width: 90%;
+      text-align: left;
+      white-space: pre-line;
+    }
+    #toastMessage {
+      margin-right: 40px;
+    }
+
+    @media (max-width: 720px) {
+      .layout {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .sidebar-sub {
+        display: none;
+      }
+      .sidebar-title {
+        margin-bottom: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div>
+        <div class="sidebar-title">SpotSure Admin</div>
+        <div class="sidebar-sub">Moderate and approve content.</div>
+      </div>
+      <button class="tab-btn active" data-tab="pending">Pending services</button>
+      <button class="tab-btn" data-tab="services">All services</button>
+      <button class="tab-btn" data-tab="reviews">Reviews</button>
+    </aside>
+
+    <main class="content">
+      <header class="top-bar">
+        <div>
+          <div class="top-title">Moderation panel</div>
+          <div class="top-sub" id="adminStatusText"></div>
+        </div>
+        <button class="pill-btn" type="button" onclick="window.location.href='/services.html'">
+          ⬅ Back to app
+        </button>
+      </header>
+
+      <section id="tab-pending" class="card">
+        <div class="card-header">
+          <div class="card-title">Pending service requests</div>
+          <div class="card-sub">Approve or delete requested services.</div>
+        </div>
+        <div id="pendingServicesBody">Loading...</div>
+      </section>
+
+      <section id="tab-services" class="card" style="display:none;">
+        <div class="card-header">
+          <div class="card-title">All services</div>
+          <div class="card-sub">Remove unethical or invalid services.</div>
+        </div>
+        <div id="allServicesBody">Loading...</div>
+      </section>
+
+      <section id="tab-reviews" class="card" style="display:none;">
+        <div class="card-header">
+          <div class="card-title">Latest reviews</div>
+          <div class="card-sub">Delete immoral or abusive comments.</div>
+        </div>
+        <div id="reviewsBody">Loading...</div>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast">
+    <span id="toastMessage"></span>
+  </div>
+
+  <script>
+    const API_BASE = window.location.origin + '/api';
+    let toastTimer = null;
+
+    function showToast(message) {
+      const t = document.getElementById('toast');
+      const msg = document.getElementById('toastMessage');
+      if (!t || !msg) return;
+      msg.textContent = message;
+      t.style.opacity = '1';
+      t.style.pointerEvents = 'auto';
+      t.style.transform = 'translateX(-50%) translateY(-4px)';
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        t.style.opacity = '0';
+        t.style.pointerEvents = 'none';
+        t.style.transform = 'translateX(-50%) translateY(0)';
+      }, 2000);
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.tab === tab);
+      });
+      ['pending', 'services', 'reviews'].forEach((key) => {
+        const el = document.getElementById('tab-' + key);
+        if (el) el.style.display = key === tab ? 'block' : 'none';
+      });
+    }
+
+    async function fetchJson(url, opts = {}) {
+      const res = await fetch(url, opts);
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data.message || 'Request failed');
+      }
+      return data;
+    }
+
+    async function loadPendingServices() {
+      const container = document.getElementById('pendingServicesBody');
+      container.textContent = 'Loading...';
+      try {
+        const data = await fetchJson(API_BASE + '/admin/services/pending');
+        const services = data.services || [];
+        if (!services.length) {
+          container.textContent = 'No pending requests.';
+          return;
+        }
+        const rows = services.map((s) => `
+          <tr>
+            <td>${s.name}</td>
+            <td>${s.category || ''}</td>
+            <td>${s.city || ''}</td>
+            <td>${s.pincode || ''}</td>
+            <td>${new Date(s.createdAt).toLocaleString()}</td>
+            <td>
+              <button class="btn-small" onclick="approveService('${s._id}')">Approve</button>
+              <button class="btn-small danger" onclick="deleteService('${s._id}')">Delete</button>
+            </td>
+          </tr>
+        `).join('');
+        container.innerHTML = `
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Name</th><th>Category</th><th>City</th><th>PIN</th><th>Requested</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        `;
+      } catch (err) {
+        console.error(err);
+        container.textContent = 'Error loading pending services.';
+      }
+    }
+
+    async function loadAllServices() {
+      const container = document.getElementById('allServicesBody');
+      container.textContent = 'Loading...';
+      try {
+        const data = await fetchJson(API_BASE + '/services');
+        const services = data.services || [];
+        if (!services.length) {
+          container.textContent = 'No services found.';
+          return;
+        }
+        const rows = services.map((s) => `
+          <tr>
+            <td>${s.name}</td>
+            <td>${s.category || ''}</td>
+            <td>${s.city || ''}</td>
+            <td>${s.pincode || ''}</td>
+            <td>${new Date(s.createdAt).toLocaleString()}</td>
+            <td><span class="badge badge-green">Approved</span></td>
+            <td>
+              <button class="btn-small danger" onclick="deleteService('${s._id}')">Delete</button>
+            </td>
+          </tr>
+        `).join('');
+        container.innerHTML = `
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Name</th><th>Category</th><th>City</th><th>PIN</th><th>Created</th><th>Status</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        `;
+      } catch (err) {
+        console.error(err);
+        container.textContent = 'Error loading services.';
+      }
+    }
+
+    async function loadReviews() {
+      const container = document.getElementById('reviewsBody');
+      container.textContent = 'Loading...';
+      try {
+        const data = await fetchJson(API_BASE + '/admin/reviews');
+        const reviews = data.reviews || [];
+        if (!reviews.length) {
+          container.textContent = 'No reviews found.';
+          return;
+        }
+        const rows = reviews.map((r) => `
+          <tr>
+            <td>${r.username || 'Anonymous'}</td>
+            <td>${r.rating}</td>
+            <td>${(r.comment || '').slice(0, 80)}</td>
+            <td>${new Date(r.createdAt).toLocaleString()}</td>
+            <td>
+              <button class="btn-small danger" onclick="deleteReview('${r._id}')">Delete</button>
+            </td>
+          </tr>
+        `).join('');
+        container.innerHTML = `
+          <table class="table">
+            <thead>
+              <tr>
+                <th>User</th><th>Rating</th><th>Comment</th><th>Time</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        `;
+      } catch (err) {
+        console.error(err);
+        container.textContent = 'Error loading reviews.';
+      }
+    }
+
+    async function approveService(id) {
+      try {
+        await fetchJson(API_BASE + '/admin/services/' + id + '/approve', { method: 'POST' });
+        showToast('Service approved');
+        loadPendingServices();
+        loadAllServices();
+      } catch (err) {
+        console.error(err);
+        showToast('Failed to approve service');
+      }
+    }
+
+    async function deleteService(id) {
+      if (!confirm('Delete this service and its reviews?')) return;
+      try {
+        await fetchJson(API_BASE + '/admin/services/' + id, { method: 'DELETE' });
+        showToast('Service deleted');
+        loadPendingServices();
+        loadAllServices();
+      } catch (err) {
+        console.error(err);
+        showToast('Failed to delete service');
+      }
+    }
+
+    async function deleteReview(id) {
+      if (!confirm('Delete this review?')) return;
+      try {
+        await fetchJson(API_BASE + '/admin/reviews/' + id, { method: 'DELETE' });
+        showToast('Review deleted');
+        loadReviews();
+      } catch (err) {
+        console.error(err);
+        showToast('Failed to delete review');
+      }
+    }
+
+    function initTabs() {
+      document.querySelectorAll('.tab-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const tab = btn.dataset.tab;
+          switchTab(tab);
+          if (tab === 'pending') loadPendingServices();
+          if (tab === 'services') loadAllServices();
+          if (tab === 'reviews') loadReviews();
+        });
+      });
+    }
+
+    async function checkAdminStatus() {
+      const statusEl = document.getElementById('adminStatusText');
+      try {
+        const res = await fetch(API_BASE + '/auth/me', { credentials: 'include' });
+        const data = await res.json().catch(() => ({}));
+        const user = data.user || null;
+        if (!user || user.role !== 'admin') {
+          statusEl.textContent = 'Not an admin. Please login with an admin account.';
+        } else {
+          statusEl.textContent = 'Logged in as admin: ' + (user.username || '');
+        }
+      } catch {
+        statusEl.textContent = 'Could not verify admin session.';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initTabs();
+      switchTab('pending');
+      loadPendingServices();
+      checkAdminStatus();
+    });
+  </script>
+</body>
+</html>
