@@ -1,4 +1,3 @@
-<!-- SpotSure/public/services.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -132,6 +131,32 @@ transform: translateY(-1px);
 box-shadow: 0 6px 14px rgba(15,23,42,0.7);
 }
 
+.sort-row {
+margin: 4px 0 10px;
+display: flex;
+gap: 6px;
+flex-wrap: wrap;
+}
+.sort-btn {
+padding: 4px 10px;
+border-radius: 999px;
+border: 1px solid #374151;
+background: #020617;
+color: #d1d5db;
+font-size: 11px;
+cursor: pointer;
+transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.sort-btn.active {
+border-color: #fbbf24;
+background: #facc15;
+color: #111827;
+}
+.sort-btn:hover {
+transform: translateY(-1px);
+box-shadow: 0 6px 14px rgba(15,23,42,0.7);
+}
+
 .list-section-title {
 margin: 8px 0;
 font-size: 14px;
@@ -161,15 +186,35 @@ backdrop-filter: blur(4px);
 transform: translateY(-2px);
 box-shadow: 0 10px 24px rgba(15,23,42,0.9);
 }
-.service-thumb {
-width: 60px;
-height: 60px;
-border-radius: 10px;
-object-fit: cover;
+.service-icon {
+width: 54px;
+height: 54px;
+border-radius: 14px;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+font-size: 24px;
+color: #f9fafb;
 flex-shrink: 0;
-background: linear-gradient(135deg, #1d4ed8, #0f172a);
-box-shadow: 0 4px 10px rgba(15,23,42,0.9);
+background: radial-gradient(circle at 0 0, #6366f1 0, #4f46e5 35%, #312e81 65%, #0f172a 100%);
+box-shadow: 0 4px 12px rgba(30,64,175,0.9);
 }
+.service-icon.hospital {
+background: radial-gradient(circle at 0 0, #38bdf8 0, #0ea5e9 35%, #0369a1 65%, #0f172a 100%);
+}
+.service-icon.clinic {
+background: radial-gradient(circle at 0 0, #22c55e 0, #16a34a 35%, #166534 65%, #0f172a 100%);
+}
+.service-icon.school {
+background: radial-gradient(circle at 0 0, #a855f7 0, #7c3aed 35%, #5b21b6 65%, #0f172a 100%);
+}
+.service-icon.restaurant {
+background: radial-gradient(circle at 0 0, #fb923c 0, #f97316 35%, #c2410c 65%, #0f172a 100%);
+}
+.service-icon.grocery {
+background: radial-gradient(circle at 0 0, #22c55e 0, #16a34a 35%, #166534 65%, #0f172a 100%);
+}
+
 .service-info h3 {
 margin: 0 0 4px 0;
 font-size: 15px;
@@ -203,43 +248,8 @@ font-size: 11px;
 color: #fbbf24;
 }
 
-/* Category icon in line */
 .category-icon {
 font-size: 13px;
-}
-
-#toast {
-position: fixed;
-left: 50%;
-bottom: 20px;
-transform: translateX(-50%);
-background: #111827;
-color: #e5e7eb;
-padding: 10px 12px 8px;
-border-radius: 12px;
-font-size: 13px;
-box-shadow: 0 4px 10px rgba(0,0,0,0.6);
-opacity: 0;
-pointer-events: none;
-transition: opacity 0.2s ease, transform 0.2s ease;
-z-index: 60;
-max-width: 90%;
-text-align: left;
-white-space: pre-line;
-}
-#toastMessage {
-margin-right: 60px;
-}
-#toastOkBtn {
-margin-top: 6px;
-padding: 4px 10px;
-border-radius: 999px;
-border: 1px solid #2563eb;
-background: #2563eb;
-color: #fff;
-font-size: 12px;
-cursor: pointer;
-float: right;
 }
 
 @media (min-width: 600px) {
@@ -294,14 +304,13 @@ placeholder="Search by name, city, pincode, or category..."
 </button>
 </div>
 
-<div class="list-section-title"></div>
-<div id="services" class="services-list"></div>
+<div class="sort-row">
+<button class="sort-btn" id="sortHigh">Highest rated</button>
+<button class="sort-btn" id="sortLow">Lowest rated</button>
 </div>
 
-<div id="toast">
-<div id="toastMessage"></div>
-<button id="toastOkBtn">OK</button>
-<div style="clear:both;"></div>
+<div class="list-section-title"></div>
+<div id="services" class="services-list"></div>
 </div>
 
 <script>
@@ -309,31 +318,10 @@ const API_BASE = window.location.origin + '/api';
 
 let allServices = [];
 let currentCategory = 'All';
-
-function showToast(message) {
-const t = document.getElementById('toast');
-const msg = document.getElementById('toastMessage');
-const ok = document.getElementById('toastOkBtn');
-if (!t || !msg || !ok) return;
-
-msg.textContent = message;
-t.style.opacity = '1';
-t.style.pointerEvents = 'auto';
-t.style.transform = 'translateX(-50%) translateY(-4px)';
-
-ok.onclick = () => {
-t.style.opacity = '0';
-t.style.pointerEvents = 'none';
-t.style.transform = 'translateX(-50%) translateY(0)';
-};
-}
+let sortMode = 'none'; // 'none' | 'high' | 'low'
 
 function getUsername() {
 return localStorage.getItem('spotsureUsername') || null;
-}
-function setUsername(name) {
-localStorage.setItem('spotsureUsername', name);
-updateUserLine();
 }
 function updateUserLine() {
 const line = document.getElementById('welcomeUserLine');
@@ -353,24 +341,14 @@ if (c === 'grocery') return '🛒';
 return '⭐';
 }
 
-function getServiceImage(service) {
-if (service.imagePath) {
-return service.imagePath;
-}
-const c = (service.category || '').toLowerCase();
-if (c === 'hospital' || c === 'clinic') {
-return 'https://placehold.co/80x80/0b1120/38bdf8?text=%2B';
-}
-if (c === 'school') {
-return 'https://placehold.co/80x80/0b1120/a855f7?text=S';
-}
-if (c === 'restaurant') {
-return 'https://placehold.co/80x80/0b1120/f97316?text=R';
-}
-if (c === 'grocery') {
-return 'https://placehold.co/80x80/0b1120/22c55e?text=G';
-}
-return 'https://placehold.co/80x80/020617/64748b?text=Svc';
+function getCategoryClass(category) {
+const c = (category || '').toLowerCase();
+if (c === 'hospital') return 'hospital';
+if (c === 'clinic') return 'clinic';
+if (c === 'school') return 'school';
+if (c === 'restaurant') return 'restaurant';
+if (c === 'grocery') return 'grocery';
+return '';
 }
 
 function buildRatingPieces(s) {
@@ -382,7 +360,7 @@ const ratingsLabel = ratingsCount === 1 ? '1 rating' : ratingsCount + ' ratings'
 const reviewsLabel = reviewsCount === 0
 ? 'No reviews'
 : (reviewsCount === 1 ? '1 review' : reviewsCount + ' reviews');
-return { avgLabel, ratingsLabel, reviewsLabel };
+return { avg, avgLabel, ratingsLabel, reviewsLabel };
 }
 
 function filterServices() {
@@ -411,6 +389,13 @@ const matchesSearch = fields.some((f) => f.includes(searchText));
 return matchesSidebarCategory && matchesSearch;
 });
 
+if (sortMode === 'high') {
+list = list.slice().sort((a, b) => (b.averageRating || 0) - (a.averageRating || 0));
+}
+if (sortMode === 'low') {
+list = list.slice().sort((a, b) => (a.averageRating || 0) - (b.averageRating || 0));
+}
+
 return list;
 }
 
@@ -431,9 +416,9 @@ const card = document.createElement('div');
 card.className = 'service-card';
 card.addEventListener('click', () => openServicePage(s._id));
 
-const img = document.createElement('img');
-img.className = 'service-thumb';
-img.src = getServiceImage(s);
+const iconDiv = document.createElement('div');
+iconDiv.className = 'service-icon ' + getCategoryClass(s.category);
+iconDiv.textContent = getCategoryIcon(s.category);
 
 const info = document.createElement('div');
 info.className = 'service-info';
@@ -455,7 +440,7 @@ info.innerHTML = `
 </div>
 `;
 
-card.appendChild(img);
+card.appendChild(iconDiv);
 card.appendChild(info);
 container.appendChild(card);
 });
@@ -494,11 +479,32 @@ input.addEventListener('input', () => renderServices());
 }
 }
 
+function setupSortButtons() {
+const high = document.getElementById('sortHigh');
+const low = document.getElementById('sortLow');
+if (!high || !low) return;
+
+high.addEventListener('click', () => {
+sortMode = sortMode === 'high' ? 'none' : 'high';
+high.classList.toggle('active', sortMode === 'high');
+low.classList.toggle('active', sortMode === 'low');
+renderServices();
+});
+
+low.addEventListener('click', () => {
+sortMode = sortMode === 'low' ? 'none' : 'low';
+low.classList.toggle('active', sortMode === 'low');
+high.classList.toggle('active', sortMode === 'high');
+renderServices();
+});
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 updateUserLine();
 loadServices();
 setupCategoryFilters();
 setupSearch();
+setupSortButtons();
 });
 </script>
 </body>
