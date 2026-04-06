@@ -2,300 +2,272 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8" />
-  <title>SpotSure – Add Service</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <style>
-    * { box-sizing: border-box; }
+<meta charset="UTF-8" />
+<title>SpotSure – Add Service</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style>
+* { box-sizing: border-box; }
 
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background: #020617 url('/images/bg-pattern.png') repeat;
-      background-attachment: fixed;
-      color: #e5e7eb;
-    }
+body {
+font-family: Arial, sans-serif;
+margin: 0;
+background: #020617;
+color: #e5e7eb;
+}
 
-    .page {
-      max-width: 520px;
-      margin: 0 auto;
-      padding: 20px 14px 28px;
-      min-height: 100vh;
-    }
+.page {
+max-width: 520px;
+margin: 0 auto;
+padding: 20px 14px 28px;
+min-height: 100vh;
+}
 
-    .top-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .top-title {
-      font-size: 18px;
-      font-weight: 600;
-      color: #f9fafb;
-    }
-    .top-sub {
-      font-size: 12px;
-      color: #9ca3af;
-    }
-    .pill-btn {
-      border-radius: 999px;
-      border: 1px solid #374151;
-      background: #111827;
-      color: #e5e7eb;
-      padding: 6px 10px;
-      font-size: 12px;
-      cursor: pointer;
-    }
+.top-bar {
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-bottom: 16px;
+gap: 10px;
+flex-wrap: wrap;
+}
+.top-title {
+font-size: 18px;
+font-weight: 600;
+color: #f9fafb;
+}
+.top-sub {
+font-size: 12px;
+color: #9ca3af;
+}
+.pill-btn {
+border-radius: 999px;
+border: 1px solid #374151;
+background: #111827;
+color: #e5e7eb;
+padding: 6px 10px;
+font-size: 12px;
+cursor: pointer;
+}
 
-    .card {
-      background: #111827;
-      border-radius: 14px;
-      border: 1px solid #1f2937;
-      padding: 14px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.6);
-    }
-    .card h2 {
-      margin: 0 0 8px;
-      font-size: 16px;
-      color: #f9fafb;
-    }
+.card {
+background: #111827;
+border-radius: 14px;
+border: 1px solid #1f2937;
+padding: 14px;
+box-shadow: 0 1px 4px rgba(0,0,0,0.6);
+}
+.card h2 {
+margin: 0 0 8px;
+font-size: 16px;
+color: #f9fafb;
+}
 
-    .label-small {
-      display: block;
-      font-size: 12px;
-      margin-top: 8px;
-      margin-bottom: 2px;
-      color: #e5e7eb;
-    }
-    .input-field {
-      width: 100%;
-      padding: 7px 8px;
-      border-radius: 8px;
-      border: 1px solid #374151;
-      background: #020617;
-      color: #e5e7eb;
-      margin-bottom: 4px;
-      font-size: 13px;
-    }
-    .input-file {
-      margin-top: 4px;
-      font-size: 12px;
-      color: #e5e7eb;
-    }
-    .btn-primary {
-      margin-top: 12px;
-      padding: 9px 12px;
-      border-radius: 999px;
-      border: none;
-      font-size: 14px;
-      cursor: pointer;
-      background: #2563eb;
-      color: #ffffff;
-      width: 100%;
-    }
-    .btn-primary:hover {
-      background: #1d4ed8;
-    }
+.label-small {
+display: block;
+font-size: 12px;
+margin-top: 8px;
+margin-bottom: 2px;
+color: #e5e7eb;
+}
+.input-field {
+width: 100%;
+padding: 7px 8px;
+border-radius: 8px;
+border: 1px solid #374151;
+background: #020617;
+color: #e5e7eb;
+margin-bottom: 4px;
+font-size: 13px;
+}
+.input-file {
+margin-top: 4px;
+font-size: 12px;
+color: #e5e7eb;
+}
+.btn-primary {
+margin-top: 12px;
+padding: 9px 12px;
+border-radius: 999px;
+border: none;
+font-size: 14px;
+cursor: pointer;
+background: #2563eb;
+color: #ffffff;
+width: 100%;
+}
+.btn-primary:hover {
+background: #1d4ed8;
+}
 
-    #toast {
-      position: fixed;
-      left: 50%;
-      bottom: 20px;
-      transform: translateX(-50%);
-      background: #111827;
-      color: #e5e7eb;
-      padding: 9px 14px;
-      border-radius: 12px;
-      font-size: 13px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.6);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s ease, transform 0.2s ease;
-      z-index: 60;
-      max-width: 90%;
-      text-align: left;
-      white-space: pre-line;
-    }
-    #toastMessage {
-      margin-right: 40px;
-    }
-    #toastOkBtn {
-      margin-top: 6px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid #2563eb;
-      background: #2563eb;
-      color: #fff;
-      font-size: 12px;
-      cursor: pointer;
-      float: right;
-    }
-  </style>
+#toast {
+position: fixed;
+left: 50%;
+bottom: 20px;
+transform: translateX(-50%);
+background: #111827;
+color: #e5e7eb;
+padding: 9px 14px;
+border-radius: 12px;
+font-size: 13px;
+box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.2s ease, transform 0.2s ease;
+z-index: 60;
+max-width: 90%;
+text-align: left;
+white-space: pre-line;
+}
+#toastMessage {
+margin-right: 40px;
+}
+#toastOkBtn {
+margin-top: 6px;
+padding: 4px 10px;
+border-radius: 999px;
+border: 1px solid #2563eb;
+background: #2563eb;
+color: #fff;
+font-size: 12px;
+cursor: pointer;
+float: right;
+}
+</style>
 </head>
 <body>
-  <div class="page">
-    <div class="top-bar">
-      <div>
-        <div class="top-title">Add a service</div>
-        <div class="top-sub">Fill details so others can find it.</div>
-      </div>
-      <button class="pill-btn" type="button" onclick="goBackToServices()">
-        ⬅ Services
-      </button>
-    </div>
+<div class="page">
+<div class="top-bar">
+<div>
+<div class="top-title">Add a service</div>
+<div class="top-sub">Fill details so others can find it.</div>
+</div>
+<button class="pill-btn" type="button" onclick="goBackToServices()">
+⬅ Services
+</button>
+</div>
 
-    <div class="card">
-      <h2>Service details</h2>
-      <form id="addServiceForm" enctype="multipart/form-data">
-        <label class="label-small">Name</label>
-        <input id="serviceName" class="input-field" placeholder="Service name" />
+<div class="card">
+<h2>Service details</h2>
+<form id="addServiceForm" enctype="multipart/form-data">
+<label class="label-small">Name</label>
+<input id="serviceName" class="input-field" placeholder="Service name" />
 
-        <label class="label-small">Category</label>
-        <input id="serviceCategory" class="input-field" placeholder="e.g. Hospital, Grocery" />
+<label class="label-small">Category</label>
+<input id="serviceCategory" class="input-field" placeholder="e.g. Hospital, Grocery" />
 
-        <label class="label-small">City</label>
-        <input id="serviceCity" class="input-field" placeholder="City" />
+<label class="label-small">City</label>
+<input id="serviceCity" class="input-field" placeholder="City" />
 
-        <label class="label-small">Pincode</label>
-        <input id="servicePincode" class="input-field" placeholder="Pincode" />
+<label class="label-small">Pincode</label>
+<input id="servicePincode" class="input-field" placeholder="Pincode" />
 
-        <label class="label-small">Address</label>
-        <input id="serviceAddress" class="input-field" placeholder="Full address" />
+<label class="label-small">Address</label>
+<input id="serviceAddress" class="input-field" placeholder="Full address" />
 
-        <label class="label-small">Latitude (optional)</label>
-        <input
-          id="serviceLat"
-          class="input-field"
-          type="number"
-          step="0.000001"
-          placeholder="e.g. 12.295810"
-        />
+<label class="label-small">Image (optional)</label>
+<input id="serviceImage" type="file" class="input-file" accept="image/*" />
 
-        <label class="label-small">Longitude (optional)</label>
-        <input
-          id="serviceLng"
-          class="input-field"
-          type="number"
-          step="0.000001"
-          placeholder="e.g. 76.639381"
-        />
+<button type="submit" class="btn-primary">Save service</button>
+</form>
+</div>
+</div>
 
-        <label class="label-small">Images (optional)</label>
-        <input id="serviceImages" type="file" class="input-file" accept="image/*" multiple />
+<div id="toast">
+<span id="toastMessage"></span>
+<button id="toastOkBtn" type="button">OK</button>
+</div>
 
-        <button type="submit" class="btn-primary">Save service</button>
-      </form>
-    </div>
-  </div>
+<script>
+const API_BASE = window.location.origin + '/api';
+let toastTimer = null;
 
-  <div id="toast">
-    <span id="toastMessage"></span>
-    <button id="toastOkBtn" type="button">OK</button>
-  </div>
+function goBackToServices() {
+window.location.href = '/services.html';
+}
 
-  <script>
-    const API_BASE = window.location.origin + '/api';
-    let toastTimer = null;
+function showToast(message, onOk) {
+const t = document.getElementById('toast');
+const msg = document.getElementById('toastMessage');
+const ok = document.getElementById('toastOkBtn');
+if (!t || !msg || !ok) return;
+msg.textContent = message;
+t.style.opacity = '1';
+t.style.pointerEvents = 'auto';
+t.style.transform = 'translateX(-50%) translateY(-4px)';
+if (toastTimer) clearTimeout(toastTimer);
+toastTimer = null;
 
-    function goBackToServices() {
-      window.location.href = '/services.html';
-    }
+ok.onclick = () => {
+t.style.opacity = '0';
+t.style.pointerEvents = 'none';
+t.style.transform = 'translateX(-50%) translateY(0)';
+if (typeof onOk === 'function') onOk();
+};
+}
 
-    function showToast(message, onOk) {
-      const t = document.getElementById('toast');
-      const msg = document.getElementById('toastMessage');
-      const ok = document.getElementById('toastOkBtn');
-      if (!t || !msg || !ok) return;
-      msg.textContent = message;
-      t.style.opacity = '1';
-      t.style.pointerEvents = 'auto';
-      t.style.transform = 'translateX(-50%) translateY(-4px)';
-      if (toastTimer) clearTimeout(toastTimer);
-      toastTimer = null;
+async function handleAddService(e) {
+e.preventDefault();
 
-      ok.onclick = () => {
-        t.style.opacity = '0';
-        t.style.pointerEvents = 'none';
-        t.style.transform = 'translateX(-50%) translateY(0)';
-        if (typeof onOk === 'function') onOk();
-      };
-    }
+const name = document.getElementById('serviceName').value.trim();
+const category = document.getElementById('serviceCategory').value.trim() || 'Service';
+const city = document.getElementById('serviceCity').value.trim();
+const pincode = document.getElementById('servicePincode').value.trim();
+const address = document.getElementById('serviceAddress').value.trim();
+const imageFile = document.getElementById('serviceImage').files[0];
 
-    async function handleAddService(e) {
-      e.preventDefault();
+if (!name || !city || !pincode || !address) {
+showToast('Please fill all required fields.');
+return;
+}
 
-      const name = document.getElementById('serviceName').value.trim();
-      const category = document.getElementById('serviceCategory').value.trim() || 'Service';
-      const city = document.getElementById('serviceCity').value.trim();
-      const pincode = document.getElementById('servicePincode').value.trim();
-      const address = document.getElementById('serviceAddress').value.trim();
-      const latStr = document.getElementById('serviceLat').value.trim();
-      const lngStr = document.getElementById('serviceLng').value.trim();
-      const imageFiles = document.getElementById('serviceImages').files;
+const formData = new FormData();
+formData.append('name', name);
+formData.append('category', category);
+formData.append('city', city);
+formData.append('pincode', pincode);
+formData.append('address', address);
+if (imageFile) formData.append('image', imageFile);
 
-      if (!name || !city || !pincode || !address) {
-        showToast('Please fill all required fields.');
-        return;
-      }
+try {
+const res = await fetch(API_BASE + '/services', {
+method: 'POST',
+body: formData,
+});
+const data = await res.json().catch(() => ({}));
+if (!res.ok) {
+showToast(data.message || 'Failed to add service');
+return;
+}
 
-      let lat = null;
-      let lng = null;
-      if (latStr || lngStr) {
-        lat = Number(latStr);
-        lng = Number(lngStr);
-        if (Number.isNaN(lat) || Number.isNaN(lng)) {
-          showToast('Latitude and Longitude must be valid numbers.');
-          return;
-        }
-      }
+const code = data.deleteCode;
+if (code) {
+showToast(
+'Service added.\\nDelete code for "' +
+(data.service?.name || name) +
+'": ' + code +
+'\\nKeep this code safe and press OK to continue.',
+() => {
+window.location.href = '/services.html';
+}
+);
+} else {
+showToast(
+'Service added. Press OK to continue.',
+() => {
+window.location.href = '/services.html';
+}
+);
+}
+} catch (err) {
+console.error(err);
+showToast('Error adding service');
+}
+}
 
-      const formData = new FormData();
-      formData.append('name', name);
-      formData.append('category', category);
-      formData.append('city', city);
-      formData.append('pincode', pincode);
-      formData.append('address', address);
-      if (lat !== null && lng !== null) {
-        formData.append('lat', lat);
-        formData.append('lng', lng);
-      }
-      if (imageFiles && imageFiles.length > 0) {
-        for (let i = 0; i < imageFiles.length; i++) {
-          formData.append('images', imageFiles[i]);
-        }
-      }
-
-      try {
-        const res = await fetch(API_BASE + '/services', {
-          method: 'POST',
-          credentials: 'include',
-          body: formData,
-        });
-        const data = await res.json().catch(() => ({}));
-        if (!res.ok) {
-          showToast(data.message || 'Failed to add service');
-          return;
-        }
-
-        showToast(
-          'Service added. It will appear after admin approval. Press OK to continue.',
-          () => {
-            window.location.href = '/services.html';
-          }
-        );
-      } catch (err) {
-        console.error(err);
-        showToast('Error adding service');
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const form = document.getElementById('addServiceForm');
-      if (form) form.addEventListener('submit', handleAddService);
-    });
-  </script>
+document.addEventListener('DOMContentLoaded', () => {
+const form = document.getElementById('addServiceForm');
+if (form) form.addEventListener('submit', handleAddService);
+});
+</script>
 </body>
 </html>
