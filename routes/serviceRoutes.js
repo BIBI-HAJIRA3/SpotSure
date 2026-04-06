@@ -9,9 +9,6 @@ const router = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-/**
- * Helper to recalc rating stats for a service
- */
 async function recomputeServiceRatings(serviceId) {
   const allReviews = await Review.find({ service: serviceId });
 
@@ -39,10 +36,7 @@ async function recomputeServiceRatings(serviceId) {
   });
 }
 
-// ------------------------------------------------------------------
-// LIST services  GET /api/services  (only approved)
-// Optional query: category, city, pincode
-// ------------------------------------------------------------------
+// LIST services – GET /api/services (only approved)
 router.get('/services', async (req, res) => {
   try {
     const { category, city, pincode } = req.query;
@@ -67,10 +61,7 @@ router.get('/services', async (req, res) => {
   }
 });
 
-// ------------------------------------------------------------------
-// CREATE service  POST /api/services
-// image field name: "images" (multiple)
-// ------------------------------------------------------------------
+// CREATE service – POST /api/services
 router.post('/services', upload.array('images', 5), async (req, res) => {
   try {
     const { name, category, city, pincode, address, lat, lng } = req.body;
@@ -81,7 +72,6 @@ router.post('/services', upload.array('images', 5), async (req, res) => {
         .json({ message: 'Name, city, pincode, and address are required.' });
     }
 
-    // Build location if valid
     let location = undefined;
     if (lat && lng) {
       const latNum = Number(lat);
@@ -125,7 +115,8 @@ router.post('/services', upload.array('images', 5), async (req, res) => {
       }
     }
 
-    const createdBy = req.session && req.session.userId ? req.session.userId : undefined;
+    const createdBy =
+      req.session && req.session.userId ? req.session.userId : undefined;
 
     const service = await Service.create({
       name,
@@ -150,10 +141,7 @@ router.post('/services', upload.array('images', 5), async (req, res) => {
   }
 });
 
-// ------------------------------------------------------------------
-// GET single service  GET /api/services/:id
-// Only show approved ones to public
-// ------------------------------------------------------------------
+// GET single service – GET /api/services/:id (only approved)
 router.get('/services/:id', async (req, res) => {
   try {
     const serviceId = req.params.id;
@@ -168,10 +156,7 @@ router.get('/services/:id', async (req, res) => {
   }
 });
 
-// ------------------------------------------------------------------
-// Request removal of a service (only creator)
-// POST /api/services/:id/request-remove
-// ------------------------------------------------------------------
+// Request removal – POST /api/services/:id/request-remove
 router.post('/services/:id/request-remove', async (req, res) => {
   try {
     if (!req.session || !req.session.userId) {
@@ -203,10 +188,7 @@ router.post('/services/:id/request-remove', async (req, res) => {
   }
 });
 
-// ------------------------------------------------------------------
-// Add a review to a service
-// POST /api/services/:id/reviews
-// ------------------------------------------------------------------
+// Add review – POST /api/services/:id/reviews
 router.post(
   '/services/:id/reviews',
   upload.array('images', 5),
@@ -231,7 +213,11 @@ router.post(
       let imageUrls = [];
       if (req.files && req.files.length > 0) {
         const cloudinary = req.cloudinary;
-        if (cloudinary && cloudinary.uploader && cloudinary.uploader.upload_stream) {
+        if (
+          cloudinary &&
+          cloudinary.uploader &&
+          cloudinary.uploader.upload_stream
+        ) {
           const uploads = await Promise.all(
             req.files.map(
               (file) =>
@@ -276,9 +262,7 @@ router.post(
   }
 );
 
-// ------------------------------------------------------------------
-// Get all reviews for a service  GET /api/services/:id/reviews
-// ------------------------------------------------------------------
+// Get reviews – GET /api/services/:id/reviews
 router.get('/services/:id/reviews', async (req, res) => {
   try {
     const serviceId = req.params.id;
