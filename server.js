@@ -7,11 +7,13 @@ const path = require('path');
 const cloudinaryLib = require('cloudinary').v2;
 const cors = require('cors');
 const session = require('express-session');
+const bcrypt = require('bcryptjs');
 
 const serviceRoutes = require('./routes/serviceRoutes');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const imageRoutes = require('./routes/imageRoutes');
+const User = require('./models/User'); // <-- add this
 
 const app = express();
 
@@ -85,6 +87,36 @@ app.get('/add-review.html', (req, res) => {
 app.get('/add-service.html', (req, res) => {
   res.sendFile(path.join(publicDir, 'add-service.html'));
 });
+
+// Ensure fixed admin user exists
+async function ensureAdminUser() {
+  try {
+    const username = 'adminatspotsure';
+    const password = 'AdminAtSpotsure';
+
+    let user = await User.findOne({ username });
+
+    if (!user) {
+      user = new User({
+        username,
+        role: 'admin',
+      });
+    } else {
+      user.role = 'admin';
+    }
+
+    // set password hash using same bcrypt you already use
+    const salt = await bcrypt.genSalt(10);
+    user.passwordHash = await bcrypt.hash(password, salt);
+
+    await user.save();
+    console.log('Admin user ensured: adminatspotsure / AdminAtSpotsure');
+  } catch (err) {
+    console.error('Error ensuring admin user:', err);
+  }
+}
+
+ensureAdminUser();
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
