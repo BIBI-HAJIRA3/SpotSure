@@ -87,7 +87,11 @@ router.post('/services', upload.array('images', 5), async (req, res) => {
     if (req.files && req.files.length > 0) {
       const cloudinary = req.cloudinary;
 
-      if (cloudinary && cloudinary.uploader && cloudinary.uploader.upload_stream) {
+      if (
+        cloudinary &&
+        cloudinary.uploader &&
+        cloudinary.uploader.upload_stream
+      ) {
         const uploads = await Promise.all(
           req.files.map(
             (file) =>
