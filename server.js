@@ -7,13 +7,13 @@ const path = require('path');
 const cloudinaryLib = require('cloudinary').v2;
 const cors = require('cors');
 const session = require('express-session');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs'); // NEW: for admin password hashing [web:262]
 
 const serviceRoutes = require('./routes/serviceRoutes');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const imageRoutes = require('./routes/imageRoutes');
-const User = require('./models/User'); // <-- add this
+const User = require('./models/User'); // NEW: use your existing User model [web:257]
 
 const app = express();
 
@@ -59,6 +59,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/image', imageRoutes);
 
+// Serve static files from /public (so /images/bg-pattern.png works) [web:261][web:222]
 const publicDir = path.join(__dirname, 'public');
 app.use(express.static(publicDir));
 
@@ -88,7 +89,7 @@ app.get('/add-service.html', (req, res) => {
   res.sendFile(path.join(publicDir, 'add-service.html'));
 });
 
-// Ensure fixed admin user exists
+// Ensure fixed admin user exists with specified credentials
 async function ensureAdminUser() {
   try {
     const username = 'adminatspotsure';
@@ -105,7 +106,6 @@ async function ensureAdminUser() {
       user.role = 'admin';
     }
 
-    // set password hash using same bcrypt you already use
     const salt = await bcrypt.genSalt(10);
     user.passwordHash = await bcrypt.hash(password, salt);
 
