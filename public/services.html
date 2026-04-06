@@ -373,7 +373,7 @@ return 'https://placehold.co/80x80/0b1120/22c55e?text=G';
 return 'https://placehold.co/80x80/020617/64748b?text=Svc';
 }
 
-function buildRatingText(s) {
+function buildRatingPieces(s) {
 const avg = Number(s.averageRating || 0);
 const avgLabel = avg > 0 ? avg.toFixed(1) : 'New';
 const ratingsCount = Number(s.ratingCount || 0);
@@ -438,7 +438,7 @@ img.src = getServiceImage(s);
 const info = document.createElement('div');
 info.className = 'service-info';
 
-const { avgLabel, ratingsLabel, reviewsLabel } = buildRatingText(s);
+const { avgLabel, ratingsLabel, reviewsLabel } = buildRatingPieces(s);
 
 info.innerHTML = `
 <h3>${s.name}</h3>
