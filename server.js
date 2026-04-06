@@ -15,10 +15,7 @@ const MONGO_URI =
   process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/spotsure';
 
 mongoose
-  .connect(MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(MONGO_URI)
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.error('MongoDB connection error:', err));
 
@@ -63,12 +60,14 @@ const adminRoutes = require('./routes/adminRoutes');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const imageRoutes = require('./routes/imageRoutes');
+const reportRoutes = require('./routes/reportRoutes');
 
 app.use('/api', serviceRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/images', imageRoutes);
+app.use('/api', reportRoutes);
 
 // --------------------------
 // Error handler
