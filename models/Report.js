@@ -19,7 +19,6 @@ const ReportSchema = new mongoose.Schema(
     reporter: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: false,
     },
     reason: {
       type: String,
