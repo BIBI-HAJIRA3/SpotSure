@@ -1,4 +1,3 @@
-<!-- SpotSure/public/service.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,7 +21,6 @@ padding: 20px 14px 28px;
 min-height: 100vh;
 }
 
-/* Subtle star-like noise */
 body::before {
 content: "";
 position: fixed;
@@ -85,14 +83,37 @@ gap: 12px;
 margin-bottom: 10px;
 }
 .service-thumb {
-width: 72px;
-height: 72px;
-border-radius: 10px;
-object-fit: cover;
+width: 54px;
+height: 54px;
+border-radius: 14px;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+font-size: 26px;
+color: #f9fafb;
+background: radial-gradient(circle at 0 0, #22c55e 0, #16a34a 35%, #15803d 65%, #0f172a 100%);
+box-shadow: 0 4px 12px rgba(21,128,61,0.9);
 flex-shrink: 0;
-background: linear-gradient(135deg, #1d4ed8, #0f172a);
-box-shadow: 0 4px 10px rgba(15,23,42,0.9);
 }
+.service-thumb.hospital {
+background: radial-gradient(circle at 0 0, #38bdf8 0, #0ea5e9 35%, #0369a1 65%, #0f172a 100%);
+}
+.service-thumb.clinic {
+background: radial-gradient(circle at 0 0, #22c55e 0, #16a34a 35%, #166534 65%, #0f172a 100%);
+}
+.service-thumb.school {
+background: radial-gradient(circle at 0 0, #a855f7 0, #7c3aed 35%, #5b21b6 65%, #0f172a 100%);
+}
+.service-thumb.restaurant {
+background: radial-gradient(circle at 0 0, #fb923c 0, #f97316 35%, #c2410c 65%, #0f172a 100%);
+}
+.service-thumb.grocery {
+background: radial-gradient(circle at 0 0, #22c55e 0, #16a34a 35%, #166534 65%, #0f172a 100%);
+}
+.service-thumb.default {
+background: radial-gradient(circle at 0 0, #6366f1 0, #4f46e5 35%, #312e81 65%, #0f172a 100%);
+}
+
 .service-main h1 {
 margin: 0 0 4px;
 font-size: 18px;
@@ -271,7 +292,7 @@ margin-right: 40px;
 
 <div class="card" id="serviceCard" style="display:none;">
 <div class="service-header">
-<img id="serviceImage" class="service-thumb" src="" alt="">
+<div id="serviceIcon" class="service-thumb default">⭐</div>
 <div class="service-main">
 <h1 id="serviceName"></h1>
 <p id="serviceMeta"></p>
@@ -291,10 +312,8 @@ margin-right: 40px;
 
 <button class="btn-primary btn-secondary" type="button" onclick="navigateToService()">
 <span class="icon">📍</span>
-<span>Navigate</span>
 </button>
 
-<!-- Creator-only delete request button -->
 <button
   id="requestDeleteBtn"
   class="btn-primary btn-danger-ghost"
@@ -307,7 +326,6 @@ margin-right: 40px;
 </button>
 </div>
 
-<!-- Report service block -->
 <div class="report-block">
   <button
     class="btn-primary btn-danger-ghost"
@@ -384,11 +402,14 @@ t.style.transform = 'translateX(-50%) translateY(0)';
 }, 2000);
 }
 
-function getServiceImageUrl(svc) {
-if (svc.imagePath) {
-return svc.imagePath;
-}
-return 'https://placehold.co/120x120/020617/64748b?text=Svc';
+function getCategoryIconInfo(category) {
+const c = (category || '').toLowerCase();
+if (c === 'hospital') return { icon: '➕', cls: 'hospital' };
+if (c === 'clinic') return { icon: '🩺', cls: 'clinic' };
+if (c === 'school') return { icon: '🏫', cls: 'school' };
+if (c === 'restaurant') return { icon: '🍽️', cls: 'restaurant' };
+if (c === 'grocery') return { icon: '🛒', cls: 'grocery' };
+return { icon: '⭐', cls: 'default' };
 }
 
 function buildRatingText(s) {
@@ -405,14 +426,6 @@ const reviewsLabel = reviewsCount === 0
 : (reviewsCount === 1 ? '1 review' : reviewsCount + ' reviews');
 
 return avg + ' ★ • ' + ratingsLabel + ' • ' + reviewsLabel;
-}
-
-function buildStars(rating) {
-const fullCount = Math.round(rating || 0);
-const full = '★'.repeat(fullCount);
-const empty = '☆'.repeat(5 - fullCount);
-return '<span class="stars">' + full +
-'</span><span class="stars stars-empty">' + empty + '</span>';
 }
 
 function buildNavigationUrl(svc) {
@@ -485,11 +498,13 @@ document.getElementById('serviceRating').textContent = buildRatingText(s);
 document.getElementById('serviceAddressText').textContent =
 s.address || '';
 
-const imgEl = document.getElementById('serviceImage');
-imgEl.src = getServiceImageUrl(s);
-imgEl.alt = s.name || 'Service';
+// icon
+const iconInfo = getCategoryIconInfo(s.category);
+const iconEl = document.getElementById('serviceIcon');
+iconEl.textContent = iconInfo.icon;
+iconEl.className = 'service-thumb ' + iconInfo.cls;
 
-/* provider images row */
+// provider images row
 const row = document.getElementById('providerImagesRow');
 const imgs = s.providerImages || [];
 row.innerHTML = '';
@@ -576,6 +591,14 @@ container.innerHTML = '<p class="no-reviews">Error loading reviews.</p>';
 }
 }
 
+function buildStars(rating) {
+const fullCount = Math.round(rating || 0);
+const full = '★'.repeat(fullCount);
+const empty = '☆'.repeat(5 - fullCount);
+return '<span class="stars">' + full +
+'</span><span class="stars stars-empty">' + empty + '</span>';
+}
+
 /* Request delete (creator-only) */
 async function requestDeleteService() {
 if (!currentService) return;
@@ -637,10 +660,7 @@ showToast('Error submitting report');
 }
 
 /* Review report */
-let activeReviewReportId = null;
-
 function openReviewReport(reviewId) {
-activeReviewReportId = reviewId || null;
 const reason = prompt('Why are you reporting this review?');
 if (!reason || !reviewId) return;
 submitReviewReport(reviewId, reason);
