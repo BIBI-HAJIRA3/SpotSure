@@ -10,7 +10,6 @@ const reviewSchema = new mongoose.Schema(
     },
     username: {
       type: String,
-      required: false,
       trim: true,
     },
     rating: {
@@ -21,7 +20,6 @@ const reviewSchema = new mongoose.Schema(
     },
     comment: {
       type: String,
-      required: false,
       trim: true,
       default: '',
     },
