@@ -7,13 +7,11 @@ const path = require('path');
 const cloudinaryLib = require('cloudinary').v2;
 const cors = require('cors');
 const session = require('express-session');
-const bcrypt = require('bcryptjs'); // NEW: for admin password hashing [web:262]
 
 const serviceRoutes = require('./routes/serviceRoutes');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const imageRoutes = require('./routes/imageRoutes');
-const User = require('./models/User'); // NEW: use your existing User model [web:257]
 
 const app = express();
 
@@ -59,7 +57,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/image', imageRoutes);
 
-// Serve static files from /public (so /images/bg-pattern.png works) [web:261][web:222]
 const publicDir = path.join(__dirname, 'public');
 app.use(express.static(publicDir));
 
@@ -88,35 +85,6 @@ app.get('/add-review.html', (req, res) => {
 app.get('/add-service.html', (req, res) => {
   res.sendFile(path.join(publicDir, 'add-service.html'));
 });
-
-// Ensure fixed admin user exists with specified credentials
-async function ensureAdminUser() {
-  try {
-    const username = 'adminatspotsure';
-    const password = 'AdminAtSpotsure';
-
-    let user = await User.findOne({ username });
-
-    if (!user) {
-      user = new User({
-        username,
-        role: 'admin',
-      });
-    } else {
-      user.role = 'admin';
-    }
-
-    const salt = await bcrypt.genSalt(10);
-    user.passwordHash = await bcrypt.hash(password, salt);
-
-    await user.save();
-    console.log('Admin user ensured: adminatspotsure / AdminAtSpotsure');
-  } catch (err) {
-    console.error('Error ensuring admin user:', err);
-  }
-}
-
-ensureAdminUser();
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
