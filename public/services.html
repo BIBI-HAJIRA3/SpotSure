@@ -1,223 +1,512 @@
+//SpotSure/public/services.html
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Spotsure | Services</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-      body {
-        margin: 0;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-          sans-serif;
-        background: #020617;
-        color: #e5e7eb;
-      }
-      .page {
-        max-width: 960px;
-        margin: 0 auto;
-        padding: 16px;
-      }
-      .toolbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 16px;
-        gap: 12px;
-      }
-      .title {
-        font-size: 20px;
-        font-weight: 600;
-      }
-      .toolbar-right {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>SpotSure – Services</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style>
+* { box-sizing: border-box; }
 
-      /* Small dropdown button */
-      .sort-dropdown {
-        position: relative;
-      }
-      .sort-button {
-        padding: 4px 8px;
-        border-radius: 999px;
-        border: 1px solid #4b5563;
-        background: #020617;
-        color: #e5e7eb;
-        font-size: 12px;
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        cursor: pointer;
-      }
-      .sort-button svg {
-        width: 14px;
-        height: 14px;
-      }
-      .sort-menu {
-        position: absolute;
-        right: 0;
-        margin-top: 4px;
-        background: #020617;
-        border-radius: 8px;
-        border: 1px solid #4b5563;
-        min-width: 140px;
-        padding: 4px 0;
-        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.8);
-        display: none;
-        z-index: 20;
-      }
-      .sort-menu.open {
-        display: block;
-      }
-      .sort-menu button {
-        width: 100%;
-        border: none;
-        background: transparent;
-        color: #e5e7eb;
-        font-size: 13px;
-        padding: 6px 10px;
-        text-align: left;
-        cursor: pointer;
-      }
-      .sort-menu button:hover {
-        background: #111827;
-      }
+body {
+font-family: Arial, sans-serif;
+margin: 0;
+background: radial-gradient(circle at top, #0f172a 0, #020617 55%, #000 100%);
+color: #e5e7eb;
+}
+body::before {
+content: "";
+position: fixed;
+inset: 0;
+pointer-events: none;
+background-image:
+  radial-gradient(2px 2px at 20% 30%, rgba(148,163,184,0.18) 0, transparent 55%),
+  radial-gradient(1px 1px at 80% 70%, rgba(148,163,184,0.14) 0, transparent 55%),
+  radial-gradient(1.5px 1.5px at 40% 80%, rgba(148,163,184,0.1) 0, transparent 60%);
+opacity: 0.6;
+z-index: -1;
+}
 
-      .list {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
-      .service-card {
-        padding: 10px 12px;
-        border-radius: 10px;
-        border: 1px solid #1f2937;
-        background: #020617;
-      }
-      .service-name {
-        font-size: 15px;
-        font-weight: 500;
-      }
-      .service-meta {
-        font-size: 12px;
-        color: #9ca3af;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="page">
-      <div class="toolbar">
-        <div class="title">Services</div>
+.app-shell {
+max-width: 520px;
+margin: 0 auto;
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+padding: 20px 14px 28px;
+}
 
-        <div class="toolbar-right">
-          <!-- small dropdown button for highest/lowest ranking -->
-          <div class="sort-dropdown">
-            <button id="sort-btn" class="sort-button" type="button">
-              <!-- small sort icon -->
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path
-                  d="M7 6h10M7 12h6M7 18h2"
-                  stroke-width="1.7"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-              <span>Ranking</span>
-            </button>
-            <div id="sort-menu" class="sort-menu">
-              <button type="button" id="sort-highest">Highest ranking</button>
-              <button type="button" id="sort-lowest">Lowest ranking</button>
-            </div>
-          </div>
-        </div>
-      </div>
+.top-bar {
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 10px;
+margin-bottom: 16px;
+flex-wrap: wrap;
+}
+.top-title {
+font-size: 20px;
+font-weight: 700;
+color: #f9fafb;
+}
+.top-sub {
+font-size: 12px;
+color: #9ca3af;
+}
 
-      <div id="services-list" class="list"></div>
-    </div>
+.pill-btn {
+border: 1px solid #2563eb;
+background: #2563eb;
+color: #ffffff;
+border-radius: 999px;
+padding: 6px 10px;
+font-size: 12px;
+cursor: pointer;
+white-space: nowrap;
+transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.pill-btn.secondary {
+background: #020617;
+color: #93c5fd;
+}
+.pill-btn:hover {
+background: #1d4ed8;
+transform: translateY(-1px);
+box-shadow: 0 6px 14px rgba(15,23,42,0.7);
+}
 
-    <script>
-      const API_BASE = window.location.origin + "/api";
-      const servicesList = document.getElementById("services-list");
+.search-section {
+margin-bottom: 10px;
+}
+.search-input {
+width: 100%;
+padding: 8px 11px;
+border-radius: 999px;
+border: 1px solid #374151;
+font-size: 13px;
+outline: none;
+background: #020617;
+color: #e5e7eb;
+}
+.search-input::placeholder {
+color: #6b7280;
+}
 
-      async function loadServices() {
-        const res = await fetch(`${API_BASE}/services`);
-        const data = await res.json();
-        if (!res.ok) {
-          console.error(data);
-          return;
-        }
-        window.__services = data || [];
-        renderServices(window.__services);
-      }
+.helper-text {
+font-size: 12px;
+color: #9ca3af;
+margin-bottom: 4px;
+margin-top: 4px;
+}
 
-      function renderServices(services) {
-        servicesList.innerHTML = "";
-        services.forEach((s) => {
-          const card = document.createElement("div");
-          card.className = "service-card";
-          card.innerHTML = `
-            <div class="service-name">${s.name || ""}</div>
-            <div class="service-meta">
-              ${s.city || ""} • ${s.pincode || ""} • Rating: ${
-            s.avgRating ?? "N/A"
-          }
-            </div>
-          `;
-          card.addEventListener("click", () => {
-            window.location.href = `/service.html?id=${s._id}`;
-          });
-          servicesList.appendChild(card);
-        });
-      }
+.chip-row {
+display: flex;
+overflow-x: auto;
+gap: 6px;
+padding: 4px 0 10px;
+}
+.chip-row::-webkit-scrollbar {
+display: none;
+}
+.chip {
+flex-shrink: 0;
+padding: 5px 10px;
+border-radius: 999px;
+border: 1px solid #374151;
+font-size: 12px;
+background: #020617;
+color: #d1d5db;
+cursor: pointer;
+display: inline-flex;
+align-items: center;
+gap: 5px;
+transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.chip.active {
+border-color: #2563eb;
+background: #2563eb;
+color: #ffffff;
+}
+.chip:hover {
+transform: translateY(-1px);
+box-shadow: 0 6px 14px rgba(15,23,42,0.7);
+}
 
-      function sortByHighestRating() {
-        if (!Array.isArray(window.__services)) return;
-        const sorted = [...window.__services].sort((a, b) => {
-          const ra = a.avgRating ?? 0;
-          const rb = b.avgRating ?? 0;
-          return rb - ra;
-        });
-        renderServices(sorted);
-      }
+.sort-row {
+margin: 4px 0 10px;
+display: flex;
+gap: 6px;
+flex-wrap: wrap;
+}
+.sort-btn {
+padding: 4px 10px;
+border-radius: 999px;
+border: 1px solid #374151;
+background: #020617;
+color: #d1d5db;
+font-size: 11px;
+cursor: pointer;
+transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.sort-btn.active {
+border-color: #fbbf24;
+background: #facc15;
+color: #111827;
+}
+.sort-btn:hover {
+transform: translateY(-1px);
+box-shadow: 0 6px 14px rgba(15,23,42,0.7);
+}
 
-      function sortByLowestRating() {
-        if (!Array.isArray(window.__services)) return;
-        const sorted = [...window.__services].sort((a, b) => {
-          const ra = a.avgRating ?? 0;
-          const rb = b.avgRating ?? 0;
-          return ra - rb;
-        });
-        renderServices(sorted);
-      }
+.list-section-title {
+margin: 8px 0;
+font-size: 14px;
+font-weight: 600;
+color: #e5e7eb;
+}
 
-      // Dropdown behaviour
-      const sortBtn = document.getElementById("sort-btn");
-      const sortMenu = document.getElementById("sort-menu");
-      const sortHighest = document.getElementById("sort-highest");
-      const sortLowest = document.getElementById("sort-lowest");
+.services-list {
+display: flex;
+flex-direction: column;
+gap: 12px;
+margin-bottom: 20px;
+}
+.service-card {
+display: flex;
+gap: 12px;
+background: #0b1120;
+border-radius: 14px;
+padding: 13px;
+box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+cursor: pointer;
+border: 1px solid #1f2937;
+transition: transform 0.15s ease, box-shadow 0.15s ease;
+backdrop-filter: blur(4px);
+}
+.service-card:hover {
+transform: translateY(-2px);
+box-shadow: 0 10px 24px rgba(15,23,42,0.9);
+}
+.service-icon {
+width: 54px;
+height: 54px;
+border-radius: 14px;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+font-size: 24px;
+color: #f9fafb;
+flex-shrink: 0;
+background: radial-gradient(circle at 0 0, #6366f1 0, #4f46e5 35%, #312e81 65%, #0f172a 100%);
+box-shadow: 0 4px 12px rgba(30,64,175,0.9);
+}
+.service-icon.hospital {
+background: radial-gradient(circle at 0 0, #38bdf8 0, #0ea5e9 35%, #0369a1 65%, #0f172a 100%);
+}
+.service-icon.clinic {
+background: radial-gradient(circle at 0 0, #22c55e 0, #16a34a 35%, #166534 65%, #0f172a 100%);
+}
+.service-icon.school {
+background: radial-gradient(circle at 0 0, #a855f7 0, #7c3aed 35%, #5b21b6 65%, #0f172a 100%);
+}
+.service-icon.restaurant {
+background: radial-gradient(circle at 0 0, #fb923c 0, #f97316 35%, #c2410c 65%, #0f172a 100%);
+}
+.service-icon.grocery {
+background: radial-gradient(circle at 0 0, #22c55e 0, #16a34a 35%, #166534 65%, #0f172a 100%);
+}
 
-      sortBtn.addEventListener("click", () => {
-        sortMenu.classList.toggle("open");
-      });
+.service-info h3 {
+margin: 0 0 4px 0;
+font-size: 15px;
+color: #f9fafb;
+}
+.service-info p {
+margin: 0;
+font-size: 12px;
+color: #9ca3af;
+line-height: 1.3;
+}
+.rating-row-mini {
+display: flex;
+align-items: center;
+gap: 6px;
+margin-top: 6px;
+font-size: 11px;
+color: #9ca3af;
+}
+.rating-badge {
+display: inline-flex;
+align-items: center;
+gap: 4px;
+border-radius: 999px;
+padding: 3px 8px;
+background: rgba(34,197,94,0.14);
+color: #bbf7d0;
+font-size: 11px;
+}
+.rating-badge span.star {
+color: #fbbf24;
+}
 
-      sortHighest.addEventListener("click", () => {
-        sortByHighestRating();
-        sortMenu.classList.remove("open");
-      });
+.category-icon {
+font-size: 13px;
+}
 
-      sortLowest.addEventListener("click", () => {
-        sortByLowestRating();
-        sortMenu.classList.remove("open");
-      });
+@media (min-width: 600px) {
+.app-shell {
+padding: 22px 18px 30px;
+}
+}
+</style>
+</head>
+<body>
+<div class="app-shell">
+<header class="top-bar">
+<div>
+<div class="top-title">SpotSure</div>
+<div class="top-sub" id="welcomeUserLine"></div>
+</div>
+<div style="display:flex; gap:6px;">
+<button class="pill-btn" type="button" onclick="window.location.href='/add-service.html'">
++ Request service
+</button>
+</div>
+</header>
 
-      document.addEventListener("click", (e) => {
-        if (!sortBtn.contains(e.target) && !sortMenu.contains(e.target)) {
-          sortMenu.classList.remove("open");
-        }
-      });
+<section class="search-section">
+<input
+id="searchInput"
+class="search-input"
+type="text"
+placeholder="Search by name, city, pincode, or category..."
+/>
+</section>
 
-      loadServices();
-    </script>
-  </body>
+<div class="helper-text">Filter by category</div>
+<div class="chip-row">
+<button class="chip active category-btn" data-category="All">
+<span class="category-icon">⭐</span><span>All</span>
+</button>
+<button class="chip category-btn" data-category="Hospital">
+<span class="category-icon">➕</span><span>Hospitals</span>
+</button>
+<button class="chip category-btn" data-category="Clinic">
+<span class="category-icon">🩺</span><span>Clinics</span>
+</button>
+<button class="chip category-btn" data-category="School">
+<span class="category-icon">🏫</span><span>Schools</span>
+</button>
+<button class="chip category-btn" data-category="Restaurant">
+<span class="category-icon">🍽️</span><span>Restaurants</span>
+</button>
+<button class="chip category-btn" data-category="Grocery">
+<span class="category-icon">🛒</span><span>Grocery</span>
+</button>
+</div>
+
+<div class="sort-row">
+<button class="sort-btn" id="sortHigh">Highest rated</button>
+<button class="sort-btn" id="sortLow">Lowest rated</button>
+</div>
+
+<div class="list-section-title"></div>
+<div id="services" class="services-list"></div>
+</div>
+
+<script>
+const API_BASE = window.location.origin + '/api';
+
+let allServices = [];
+let currentCategory = 'All';
+let sortMode = 'none'; // 'none' | 'high' | 'low'
+
+function getUsername() {
+return localStorage.getItem('spotsureUsername') || null;
+}
+function updateUserLine() {
+const line = document.getElementById('welcomeUserLine');
+const name = getUsername();
+if (!line) return;
+if (name) line.textContent = 'Welcome back, ' + name;
+else line.textContent = '';
+}
+
+function getCategoryIcon(category) {
+const c = (category || '').toLowerCase();
+if (c === 'hospital') return '➕';
+if (c === 'clinic') return '🩺';
+if (c === 'school') return '🏫';
+if (c === 'restaurant') return '🍽️';
+if (c === 'grocery') return '🛒';
+return '⭐';
+}
+
+function getCategoryClass(category) {
+const c = (category || '').toLowerCase();
+if (c === 'hospital') return 'hospital';
+if (c === 'clinic') return 'clinic';
+if (c === 'school') return 'school';
+if (c === 'restaurant') return 'restaurant';
+if (c === 'grocery') return 'grocery';
+return '';
+}
+
+function buildRatingPieces(s) {
+const avg = Number(s.averageRating || 0);
+const avgLabel = avg > 0 ? avg.toFixed(1) : 'New';
+const ratingsCount = Number(s.ratingCount || 0);
+const reviewsCount = Number(s.reviewCount || 0);
+const ratingsLabel = ratingsCount === 1 ? '1 rating' : ratingsCount + ' ratings';
+const reviewsLabel = reviewsCount === 0
+? 'No reviews'
+: (reviewsCount === 1 ? '1 review' : reviewsCount + ' reviews');
+return { avg, avgLabel, ratingsLabel, reviewsLabel };
+}
+
+function filterServices() {
+const searchInput = document.getElementById('searchInput');
+const searchText = searchInput
+? searchInput.value.trim().toLowerCase()
+: '';
+
+let list = allServices.filter((s) => {
+const matchesSidebarCategory =
+currentCategory === 'All' ||
+(s.category &&
+s.category.toLowerCase() === currentCategory.toLowerCase());
+
+if (!searchText) return matchesSidebarCategory;
+
+const fields = [
+s.name || '',
+s.city || '',
+s.pincode || '',
+s.category || '',
+].map((x) => String(x).toLowerCase());
+
+const matchesSearch = fields.some((f) => f.includes(searchText));
+
+return matchesSidebarCategory && matchesSearch;
+});
+
+if (sortMode === 'high') {
+list = list.slice().sort((a, b) => (b.averageRating || 0) - (a.averageRating || 0));
+}
+if (sortMode === 'low') {
+list = list.slice().sort((a, b) => (a.averageRating || 0) - (b.averageRating || 0));
+}
+
+return list;
+}
+
+function openServicePage(serviceId) {
+window.location.href = '/service.html?id=' + encodeURIComponent(serviceId);
+}
+
+function renderServices() {
+const container = document.getElementById('services');
+container.innerHTML = '';
+const services = filterServices();
+if (!services.length) {
+container.innerHTML = '<p style="font-size:13px; color:#9ca3af;">No services found.</p>';
+return;
+}
+services.forEach((s) => {
+const card = document.createElement('div');
+card.className = 'service-card';
+card.addEventListener('click', () => openServicePage(s._id));
+
+const iconDiv = document.createElement('div');
+iconDiv.className = 'service-icon ' + getCategoryClass(s.category);
+iconDiv.textContent = getCategoryIcon(s.category);
+
+const info = document.createElement('div');
+info.className = 'service-info';
+
+const { avgLabel, ratingsLabel, reviewsLabel } = buildRatingPieces(s);
+
+info.innerHTML = `
+<h3>${s.name}</h3>
+<p>
+  <span class="category-icon">${getCategoryIcon(s.category)}</span>
+  <span>${s.category || 'Service'} • ${s.city || ''}</span>
+</p>
+<div class="rating-row-mini">
+  <span class="rating-badge">
+    <span class="star">★</span>
+    <span>${avgLabel}</span>
+  </span>
+  <span>${ratingsLabel} • ${reviewsLabel}</span>
+</div>
+`;
+
+card.appendChild(iconDiv);
+card.appendChild(info);
+container.appendChild(card);
+});
+}
+
+async function loadServices() {
+try {
+const res = await fetch(API_BASE + '/services');
+if (!res.ok) throw new Error('Failed to load services');
+const data = await res.json();
+allServices = data.services || data;
+renderServices();
+} catch (err) {
+console.error(err);
+const container = document.getElementById('services');
+container.innerHTML = '<p style="font-size:13px; color:#f97316;">Error loading services.</p>';
+}
+}
+
+function setupCategoryFilters() {
+const buttons = document.querySelectorAll('.category-btn');
+buttons.forEach((btn) => {
+btn.addEventListener('click', () => {
+buttons.forEach((b) => b.classList.remove('active'));
+btn.classList.add('active');
+currentCategory = btn.getAttribute('data-category');
+renderServices();
+});
+});
+}
+
+function setupSearch() {
+const input = document.getElementById('searchInput');
+if (input) {
+input.addEventListener('input', () => renderServices());
+}
+}
+
+function setupSortButtons() {
+const high = document.getElementById('sortHigh');
+const low = document.getElementById('sortLow');
+if (!high || !low) return;
+
+high.addEventListener('click', () => {
+sortMode = sortMode === 'high' ? 'none' : 'high';
+high.classList.toggle('active', sortMode === 'high');
+low.classList.toggle('active', sortMode === 'low');
+renderServices();
+});
+
+low.addEventListener('click', () => {
+sortMode = sortMode === 'low' ? 'none' : 'low';
+low.classList.toggle('active', sortMode === 'low');
+high.classList.toggle('active', sortMode === 'high');
+renderServices();
+});
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+updateUserLine();
+loadServices();
+setupCategoryFilters();
+setupSearch();
+setupSortButtons();
+});
+</script>
+</body>
 </html>
