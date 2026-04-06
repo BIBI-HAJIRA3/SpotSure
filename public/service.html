@@ -11,7 +11,7 @@
 body {
 font-family: Arial, sans-serif;
 margin: 0;
-background: #020617;
+background: radial-gradient(circle at top, #0f172a 0, #020617 55%, #000 100%);
 color: #e5e7eb;
 }
 
@@ -20,6 +20,20 @@ max-width: 520px;
 margin: 0 auto;
 padding: 20px 14px 28px;
 min-height: 100vh;
+}
+
+/* Subtle star-like noise */
+body::before {
+content: "";
+position: fixed;
+inset: 0;
+pointer-events: none;
+background-image:
+  radial-gradient(2px 2px at 20% 30%, rgba(148,163,184,0.18) 0, transparent 55%),
+  radial-gradient(1px 1px at 80% 70%, rgba(148,163,184,0.14) 0, transparent 55%),
+  radial-gradient(1.5px 1.5px at 40% 80%, rgba(148,163,184,0.1) 0, transparent 60%);
+opacity: 0.6;
+z-index: -1;
 }
 
 .top-bar {
@@ -47,15 +61,22 @@ color: #e5e7eb;
 padding: 6px 10px;
 font-size: 12px;
 cursor: pointer;
+transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.pill-btn:hover {
+transform: translateY(-1px);
+box-shadow: 0 6px 14px rgba(15,23,42,0.7);
+background: #020617;
 }
 
 .card {
-background: #111827;
+background: #0b1120;
 border-radius: 14px;
 border: 1px solid #1f2937;
 padding: 14px;
-box-shadow: 0 1px 4px rgba(0,0,0,0.6);
+box-shadow: 0 8px 20px rgba(0,0,0,0.6);
 margin-bottom: 14px;
+backdrop-filter: blur(4px);
 }
 
 .service-header {
@@ -69,7 +90,8 @@ height: 72px;
 border-radius: 10px;
 object-fit: cover;
 flex-shrink: 0;
-background: #1f2937;
+background: linear-gradient(135deg, #1d4ed8, #0f172a);
+box-shadow: 0 4px 10px rgba(15,23,42,0.9);
 }
 .service-main h1 {
 margin: 0 0 4px;
@@ -89,6 +111,26 @@ color: #9ca3af;
 margin-top: 6px;
 }
 
+/* Provider image row */
+.provider-images-row {
+margin-top: 10px;
+display: flex;
+gap: 6px;
+flex-wrap: nowrap;
+overflow-x: auto;
+padding-bottom: 2px;
+}
+.provider-thumb {
+width: 54px;
+height: 54px;
+border-radius: 8px;
+object-fit: cover;
+flex-shrink: 0;
+border: 1px solid #1f2937;
+cursor: pointer;
+}
+
+/* Buttons */
 .btn-row {
 display: flex;
 gap: 8px;
@@ -103,8 +145,56 @@ font-size: 13px;
 cursor: pointer;
 background: #2563eb;
 color: #ffffff;
+display: inline-flex;
+align-items: center;
+gap: 6px;
+transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.btn-primary:hover {
+transform: translateY(-1px);
+box-shadow: 0 6px 14px rgba(15,23,42,0.7);
+background: #1d4ed8;
 }
 
+.btn-secondary {
+background: #059669;
+}
+.btn-secondary:hover {
+background: #047857;
+}
+
+.btn-danger-ghost {
+background: #0b1120;
+border: 1px solid #b91c1c;
+color: #fecaca;
+}
+.btn-danger-ghost:hover {
+background: #1f2937;
+}
+
+.icon {
+font-size: 14px;
+}
+
+/* Report UI */
+.report-block {
+margin-top: 10px;
+font-size: 12px;
+color: #9ca3af;
+}
+.report-textarea {
+width: 100%;
+min-height: 60px;
+border-radius: 8px;
+border: 1px solid #374151;
+background: #020617;
+color: #e5e7eb;
+font-size: 12px;
+padding: 6px 8px;
+margin-top: 4px;
+}
+
+/* Reviews */
 .review-item {
 margin-bottom: 10px;
 font-size: 13px;
@@ -112,6 +202,10 @@ font-size: 13px;
 .review-meta {
 font-size: 11px;
 color: #9ca3af;
+display: flex;
+justify-content: space-between;
+align-items: center;
+gap: 6px;
 }
 .review-images {
 margin-top: 4px;
@@ -140,6 +234,7 @@ letter-spacing: 1px;
 color: #4b5563;
 }
 
+/* Toast */
 #toast {
 position: fixed;
 left: 50%;
@@ -185,12 +280,58 @@ margin-right: 40px;
 </div>
 <p id="serviceAddressText" style="font-size:13px; color:#e5e7eb; margin:4px 0 0;"></p>
 
+<!-- Provider images row -->
+<div id="providerImagesRow" class="provider-images-row" style="display:none;"></div>
+
 <div class="btn-row">
-<button class="btn-primary" type="button" onclick="openAddReview()">Add review</button>
-<!-- NEW: delete service button (only change in HTML) -->
-<button class="btn-primary" type="button" style="background:#b91c1c" onclick="promptDeleteService()">
-Delete service
+<button class="btn-primary" type="button" onclick="openAddReview()">
+<span class="icon">✍️</span>
+<span>Add review</span>
 </button>
+
+<button class="btn-primary btn-secondary" type="button" onclick="navigateToService()">
+<span class="icon">📍</span>
+<span>Navigate</span>
+</button>
+
+<!-- Creator-only delete request button -->
+<button
+  id="requestDeleteBtn"
+  class="btn-primary btn-danger-ghost"
+  type="button"
+  style="display:none;"
+  onclick="requestDeleteService()"
+>
+  <span class="icon">🗑️</span>
+  <span>Request delete</span>
+</button>
+</div>
+
+<!-- Report service block -->
+<div class="report-block">
+  <button
+    class="btn-primary btn-danger-ghost"
+    type="button"
+    onclick="toggleServiceReport()"
+    style="padding:6px 10px; font-size:12px;"
+  >
+    <span class="icon">🚩</span>
+    <span>Report this service</span>
+  </button>
+  <div id="serviceReportForm" style="display:none; margin-top:8px;">
+    <label style="font-size:11px; color:#9ca3af;">Why are you reporting this service?</label>
+    <textarea id="serviceReportReason" class="report-textarea" placeholder="Describe the issue..."></textarea>
+    <div style="margin-top:6px; display:flex; gap:6px; justify-content:flex-end;">
+      <button
+        type="button"
+        class="btn-primary btn-danger-ghost"
+        style="padding:5px 10px; font-size:12px;"
+        onclick="submitServiceReport()"
+      >
+        Submit report
+      </button>
+    </div>
+  </div>
 </div>
 </div>
 
@@ -209,6 +350,8 @@ Delete service
 <script>
 const API_BASE = window.location.origin + '/api';
 let toastTimer = null;
+let currentService = null;
+let currentUser = null;
 
 function getServiceIdFromUrl() {
 const params = new URLSearchParams(window.location.search);
@@ -243,12 +386,9 @@ t.style.transform = 'translateX(-50%) translateY(0)';
 
 function getServiceImageUrl(svc) {
 if (svc.imagePath) {
-return '/image/' + encodeURIComponent(svc.imagePath);
+return svc.imagePath;
 }
-if (svc.imageUrl) {
-return svc.imageUrl;
-}
-return 'https://placehold.co/120x120?text=Svc';
+return 'https://placehold.co/120x120/020617/64748b?text=Svc';
 }
 
 function buildRatingText(s) {
@@ -275,6 +415,51 @@ return '<span class="stars">' + full +
 '</span><span class="stars stars-empty">' + empty + '</span>';
 }
 
+function buildNavigationUrl(svc) {
+const parts = [];
+if (svc.address) parts.push(svc.address);
+else {
+if (svc.name) parts.push(svc.name);
+if (svc.city) parts.push(svc.city);
+if (svc.pincode) parts.push(svc.pincode);
+}
+const query = encodeURIComponent(parts.join(', '));
+return 'https://www.google.com/maps/search/?api=1&query=' + query;
+}
+
+function navigateToService() {
+if (!currentService) return;
+const url = buildNavigationUrl(currentService);
+window.open(url, '_blank');
+}
+
+async function loadCurrentUser() {
+try {
+const res = await fetch(API_BASE + '/auth/me', {
+credentials: 'include',
+});
+if (!res.ok) return;
+const data = await res.json();
+currentUser = data.user || null;
+} catch (e) {
+currentUser = null;
+}
+}
+
+function updateCreatorActionsVisibility() {
+const btn = document.getElementById('requestDeleteBtn');
+if (!btn || !currentService) return;
+if (!currentUser || !currentService.createdBy) {
+btn.style.display = 'none';
+return;
+}
+if (String(currentService.createdBy) === String(currentUser.id)) {
+btn.style.display = 'inline-flex';
+} else {
+btn.style.display = 'none';
+}
+}
+
 async function loadService() {
 const id = getServiceIdFromUrl();
 const loadingEl = document.getElementById('loadingText');
@@ -288,6 +473,7 @@ try {
 const res = await fetch(API_BASE + '/services/' + id);
 if (!res.ok) throw new Error();
 const s = await res.json();
+currentService = s;
 
 document.getElementById('serviceTitle').textContent = s.name || 'Service';
 document.getElementById('serviceSub').textContent =
@@ -303,9 +489,27 @@ const imgEl = document.getElementById('serviceImage');
 imgEl.src = getServiceImageUrl(s);
 imgEl.alt = s.name || 'Service';
 
+/* provider images row */
+const row = document.getElementById('providerImagesRow');
+const imgs = s.providerImages || [];
+row.innerHTML = '';
+if (imgs.length > 0) {
+row.style.display = 'flex';
+imgs.forEach((url) => {
+const el = document.createElement('img');
+el.src = url;
+el.className = 'provider-thumb';
+el.onclick = () => window.open(url, '_blank');
+row.appendChild(el);
+});
+} else {
+row.style.display = 'none';
+}
+
 if (loadingEl) loadingEl.style.display = 'none';
 if (cardEl) cardEl.style.display = 'block';
 
+updateCreatorActionsVisibility();
 loadReviews();
 } catch (err) {
 console.error(err);
@@ -351,7 +555,17 @@ paths
 
 item.innerHTML = `
 <div>${buildStars(r.rating)} <span>${r.rating}</span> – ${r.comment || ''}</div>
-<div class="review-meta">${r.username || 'Anonymous'}</div>
+<div class="review-meta">
+  <span>${r.username || 'Anonymous'}</span>
+  <button
+    type="button"
+    class="btn-primary btn-danger-ghost"
+    style="padding:3px 8px; font-size:11px;"
+    onclick="openReviewReport('${r._id || ''}')"
+  >
+    🚩 Report
+  </button>
+</div>
 ${imagesHtml}
 `;
 container.appendChild(item);
@@ -362,39 +576,98 @@ container.innerHTML = '<p class="no-reviews">Error loading reviews.</p>';
 }
 }
 
-// NEW: delete service function (only change in JS)
-async function promptDeleteService() {
-const id = getServiceIdFromUrl();
+/* Request delete (creator-only) */
+async function requestDeleteService() {
+if (!currentService) return;
+const id = currentService._id;
 if (!id) return;
 
-const code = prompt('Enter the delete code for this service:');
-if (!code) return;
-
 try {
-const res = await fetch(API_BASE + '/services/' + id + '/delete-with-code', {
+const res = await fetch(API_BASE + '/services/' + id + '/request-remove', {
 method: 'POST',
+credentials: 'include',
 headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({ code }),
 });
 const data = await res.json().catch(() => ({}));
-
 if (!res.ok) {
-showToast(data.message || 'Failed to delete service');
+showToast(data.message || 'Failed to request delete');
 return;
 }
-
-showToast('Service deleted');
-setTimeout(() => {
-window.location.href = '/services.html';
-}, 1000);
+showToast('Delete request sent to admin.');
 } catch (err) {
 console.error(err);
-showToast('Error deleting service');
+showToast('Error requesting delete');
 }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-loadService();
+/* Service report */
+function toggleServiceReport() {
+const block = document.getElementById('serviceReportForm');
+if (!block) return;
+block.style.display =
+block.style.display === 'none' || !block.style.display ? 'block' : 'none';
+}
+
+async function submitServiceReport() {
+if (!currentService) return;
+const reasonEl = document.getElementById('serviceReportReason');
+const reason = reasonEl ? reasonEl.value.trim() : '';
+if (!reason) {
+showToast('Please describe the issue.');
+return;
+}
+try {
+const res = await fetch(API_BASE + '/reports/service', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ serviceId: currentService._id, reason }),
+});
+const data = await res.json().catch(() => ({}));
+if (!res.ok) {
+showToast(data.message || 'Failed to submit report');
+return;
+}
+showToast('Service reported');
+if (reasonEl) reasonEl.value = '';
+toggleServiceReport();
+} catch (err) {
+console.error(err);
+showToast('Error submitting report');
+}
+}
+
+/* Review report */
+let activeReviewReportId = null;
+
+function openReviewReport(reviewId) {
+activeReviewReportId = reviewId || null;
+const reason = prompt('Why are you reporting this review?');
+if (!reason || !reviewId) return;
+submitReviewReport(reviewId, reason);
+}
+
+async function submitReviewReport(reviewId, reason) {
+try {
+const res = await fetch(API_BASE + '/reports/review', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ reviewId, reason }),
+});
+const data = await res.json().catch(() => ({}));
+if (!res.ok) {
+showToast(data.message || 'Failed to report review');
+return;
+}
+showToast('Review reported');
+} catch (err) {
+console.error(err);
+showToast('Error reporting review');
+}
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+await loadCurrentUser();
+await loadService();
 });
 </script>
 </body>
