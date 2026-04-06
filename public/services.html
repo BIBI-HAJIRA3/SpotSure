@@ -16,11 +16,7 @@
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      background-image: url("https://images.pexels.com/photos/35385537/pexels-photo-35385537.png");
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
+      background: #020617;
       color: #e5e7eb;
     }
 
@@ -31,8 +27,6 @@
       display: flex;
       flex-direction: column;
       padding: 20px 14px 28px;
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(4px);
     }
 
     .top-bar {
@@ -142,6 +136,7 @@
       align-items: center;
     }
 
+    /* Base sign style */
     .service-sign {
       width: 52px;
       height: 52px;
@@ -157,6 +152,7 @@
       animation: sign-pulse 1.8s ease-in-out infinite;
     }
 
+    /* Category colors (subtle/pastel) */
     .service-sign--hospital {
       background: linear-gradient(135deg, #bbf7d0, #6ee7b7);
     }
@@ -424,7 +420,8 @@
       try {
         const res = await fetch(API_BASE + '/services');
         if (!res.ok) throw new Error('Failed to load services');
-        const data = await res.json();
+        const text = await res.text();
+        const data = JSON.parse(text);
         allServices = Array.isArray(data.services) ? data.services : [];
         renderServices();
       } catch (err) {
