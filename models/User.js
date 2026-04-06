@@ -1,4 +1,4 @@
-// models/User.js
+// SpotSure/models/User.js
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
@@ -35,7 +35,6 @@ const UserSchema = new mongoose.Schema(
   }
 );
 
-// Virtual for plain password
 UserSchema.virtual('password')
   .set(function (value) {
     this._password = value;
@@ -44,7 +43,6 @@ UserSchema.virtual('password')
     return this._password;
   });
 
-// Hash before save
 UserSchema.pre('save', async function (next) {
   try {
     if (!this._password) return next();
