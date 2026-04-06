@@ -9,10 +9,7 @@ const ServiceSchema = new mongoose.Schema(
     pincode: { type: String, required: true, trim: true },
     address: { type: String, required: true, trim: true },
 
-    // Legacy single main image
     imagePath: { type: String, default: '' },
-
-    // Multiple images added by provider (Cloudinary public_ids or URLs)
     providerImages: { type: [String], default: [] },
 
     averageRating: { type: Number, default: 0 },
@@ -20,8 +17,6 @@ const ServiceSchema = new mongoose.Schema(
     reviewCount: { type: Number, default: 0 },
 
     isApproved: { type: Boolean, default: true },
-
-    deleteCode: { type: String, required: true },
   },
   { timestamps: true }
 );
