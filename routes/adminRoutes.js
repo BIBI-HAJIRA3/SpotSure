@@ -6,12 +6,12 @@ const Review = require('../models/Review');
 const Report = require('../models/Report');
 const requireAdmin = require('../middleware/requireAdmin');
 
-// who am I
+// who am I (for admin.html)
 router.get('/me', requireAdmin, (req, res) => {
-  res.json({ user: req.user });
+  res.json({ user: { username: 'admin', role: 'admin' } });
 });
 
-// PENDING SERVICES (you currently auto-approve; keep this for future use)
+// PENDING SERVICES (if you ever set isApproved=false)
 router.get('/services/pending', requireAdmin, async (req, res) => {
   try {
     const services = await Service.find({ isApproved: false }).sort({
@@ -24,7 +24,7 @@ router.get('/services/pending', requireAdmin, async (req, res) => {
   }
 });
 
-// APPROVE SERVICE (flip isApproved & clear removalRequested)
+// APPROVE SERVICE
 router.patch('/services/:id/approve', requireAdmin, async (req, res) => {
   try {
     const service = await Service.findByIdAndUpdate(
@@ -132,6 +132,24 @@ router.get('/reports/reviews', requireAdmin, async (req, res) => {
     res.json({ reports: filtered });
   } catch (err) {
     console.error('GET /api/admin/reports/reviews error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// SERVICE SEARCH BY NAME (used in admin.html)
+router.get('/services/search', requireAdmin, async (req, res) => {
+  try {
+    const { name } = req.query;
+    if (!name || !name.trim()) {
+      return res.json({ services: [] });
+    }
+    const services = await Service.find({
+      name: { $regex: name.trim(), $options: 'i' },
+    }).sort({ createdAt: -1 });
+
+    res.json({ services });
+  } catch (err) {
+    console.error('GET /api/admin/services/search error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });
