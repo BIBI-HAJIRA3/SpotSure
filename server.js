@@ -13,11 +13,7 @@ const app = express();
 
 // --- MongoDB connection ---
 mongoose
-  .connect(process.env.MONGODB_URI, {
-    // optional options if you want:
-    // useNewUrlParser: true,
-    // useUnifiedTopology: true,
-  })
+  .connect(process.env.MONGODB_URI)
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.error('MongoDB connection error:', err));
 
@@ -27,26 +23,26 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   session({
-    secret: 'spotsure-secret', // change in production
+    secret: 'spotsure-secret',
     resave: false,
     saveUninitialized: true,
   })
 );
 
-// Serve static files from /public
+// Static files
 app.use(express.static(path.join(__dirname, 'public')));
 
-// --- API routes ---
+// --- Routes ---
 app.use('/api', serviceRoutes);
-app.use('/api/admin', adminAuthRoutes); // /api/admin/login, /logout
-app.use('/api/admin', adminRoutes);     // protected admin APIs
+app.use('/api/admin', adminAuthRoutes); // login/logout
+app.use('/api/admin', adminRoutes);     // protected admin
 
-// Admin panel HTML
+// Admin HTML
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
 
-// Health check / root
+// Simple root
 app.get('/', (req, res) => {
   res.send('Spotsure server is running');
 });
