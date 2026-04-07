@@ -1,64 +1,30 @@
-// models/User.js
+// SpotSure/models/User.js
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
-const UserSchema = new mongoose.Schema(
-{
-username: {
-type: String,
-required: true,
-unique: true,
-trim: true,
-},
-displayName: {
-type: String,
-trim: true,
-},
-passwordHash: {
-type: String,
-required: true,
-},
-role: {
-type: String,
-enum: ['user', 'admin'],
-default: 'user',
-},
-savedServices: [
-{
-type: mongoose.Schema.Types.ObjectId,
-ref: 'Service',
-},
-],
-},
-{
-timestamps: true,
-}
+const userSchema = new mongoose.Schema(
+  {
+    username: { type: String, required: true, unique: true, trim: true },
+    password: { type: String, required: true },
+    role: { type: String, enum: ['user', 'admin'], default: 'user' },
+    savedServices: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Service' }],
+  },
+  { timestamps: true }
 );
 
-// Virtual for plain password
-UserSchema.virtual('password')
-.set(function (value) {
-this._password = value;
-})
-.get(function () {
-return this._password;
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (err) {
+    next(err);
+  }
 });
 
-// Hash before save
-UserSchema.pre('save', async function (next) {
-try {
-if (!this._password) return next();
-const saltRounds = 10;
-const hash = await bcrypt.hash(this._password, saltRounds);
-this.passwordHash = hash;
-next();
-} catch (err) {
-next(err);
-}
-});
-
-UserSchema.methods.comparePassword = async function (candidatePassword) {
-return bcrypt.compare(candidatePassword, this.passwordHash);
+userSchema.methods.comparePassword = function (candidate) {
+  return bcrypt.compare(candidate, this.password);
 };
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', userSchema);
