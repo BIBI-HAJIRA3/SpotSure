@@ -1,128 +1,145 @@
 // SpotSure/routes/adminRoutes.js
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const Service = require("../models/Service");
-const Review = require("../models/Review");
-const ServiceReport = require("../models/ServiceReport");
-const ReviewReport = require("../models/ReviewReport");
-const requireAdmin = require("../middleware/requireAdmin");
+const Service = require('../models/Service');
+const Review = require('../models/Review');
+const Report = require('../models/Report');
+const requireAdmin = require('../middleware/requireAdmin');
 
-// pending services
-router.get("/services/pending", requireAdmin, async (req, res) => {
+// current admin
+router.get('/me', requireAdmin, (req, res) => {
+  res.json({ user: req.user });
+});
+
+// PENDING SERVICES
+router.get('/services/pending', requireAdmin, async (req, res) => {
   try {
-    const services = await Service.find({ status: "pending" }).sort({
+    const services = await Service.find({ status: 'pending' }).sort({
       createdAt: -1,
     });
     res.json({ services });
   } catch (err) {
-    console.error("GET /api/admin/services/pending error:", err);
-    res.status(500).json({ message: "Server error" });
+    console.error('GET /api/admin/services/pending error:', err);
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
-// approve service
-router.patch("/services/:id/approve", requireAdmin, async (req, res) => {
+// APPROVE SERVICE
+router.patch('/services/:id/approve', requireAdmin, async (req, res) => {
   try {
     const service = await Service.findByIdAndUpdate(
       req.params.id,
-      { status: "approved" },
+      { status: 'approved', removalRequested: false },
       { new: true }
     );
     if (!service) {
-      return res.status(404).json({ message: "Service not found" });
+      return res.status(404).json({ message: 'Service not found' });
     }
-    res.json({ message: "Service approved", service });
+    res.json({ message: 'Service approved', service });
   } catch (err) {
-    console.error("PATCH /api/admin/services/:id/approve error:", err);
-    res.status(500).json({ message: "Server error" });
+    console.error('PATCH /api/admin/services/:id/approve error:', err);
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
-// delete service + its reviews + reports
-router.delete("/services/:id", requireAdmin, async (req, res) => {
+// DELETE SERVICE + ITS REVIEWS + REPORTS
+router.delete('/services/:id', requireAdmin, async (req, res) => {
   try {
     const serviceId = req.params.id;
-    await Review.deleteMany({ service: serviceId });
-    await ServiceReport.deleteMany({ service: serviceId });
 
+    // find reviews for this service
+    const reviews = await Review.find({ service: serviceId }).select('_id');
+    const reviewIds = reviews.map((r) => r._id);
+
+    // delete reviews
+    await Review.deleteMany({ service: serviceId });
+
+    // delete reports for this service and its reviews
+    await Report.deleteMany({
+      $or: [
+        { type: 'service', service: serviceId },
+        { type: 'review', review: { $in: reviewIds } },
+      ],
+    });
+
+    // delete the service itself
     const service = await Service.findByIdAndDelete(serviceId);
     if (!service) {
-      return res.status(404).json({ message: "Service not found" });
+      return res.status(404).json({ message: 'Service not found' });
     }
-    res.json({ message: "Service, reviews and reports deleted" });
+
+    res.json({ message: 'Service, reviews and reports deleted' });
   } catch (err) {
-    console.error("DELETE /api/admin/services/:id error:", err);
-    res.status(500).json({ message: "Server error" });
+    console.error('DELETE /api/admin/services/:id error:', err);
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
-// removal requests
-router.get(
-  "/services/removal-requests",
-  requireAdmin,
-  async (req, res) => {
-    try {
-      const services = await Service.find({ removalRequested: true }).sort({
-        createdAt: -1,
-      });
-      res.json({ services });
-    } catch (err) {
-      console.error(
-        "GET /api/admin/services/removal-requests error:",
-        err
-      );
-      res.status(500).json({ message: "Server error" });
-    }
-  }
-);
-
-// reported services
-router.get("/reports/services", requireAdmin, async (req, res) => {
+// REMOVAL REQUESTS
+router.get('/services/removal-requests', requireAdmin, async (req, res) => {
   try {
-    const reports = await ServiceReport.find()
-      .populate("service")
+    const services = await Service.find({ removalRequested: true }).sort({
+      createdAt: -1,
+    });
+    res.json({ services });
+  } catch (err) {
+    console.error(
+      'GET /api/admin/services/removal-requests error:',
+      err
+    );
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// REPORTED SERVICES (type = 'service')
+router.get('/reports/services', requireAdmin, async (req, res) => {
+  try {
+    const reports = await Report.find({ type: 'service' })
+      .populate('service')
       .sort({ createdAt: -1 });
 
     // only keep reports where service still exists
     const filtered = reports.filter((r) => r.service);
     res.json({ reports: filtered });
   } catch (err) {
-    console.error("GET /api/admin/reports/services error:", err);
-    res.status(500).json({ message: "Server error" });
+    console.error('GET /api/admin/reports/services error:', err);
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
-// delete single review + its reports
-router.delete("/reviews/:id", requireAdmin, async (req, res) => {
+// DELETE REVIEW + ITS REPORTS
+router.delete('/reviews/:id', requireAdmin, async (req, res) => {
   try {
     const reviewId = req.params.id;
+
     const review = await Review.findByIdAndDelete(reviewId);
     if (!review) {
-      return res.status(404).json({ message: "Review not found" });
+      return res.status(404).json({ message: 'Review not found' });
     }
 
-    await ReviewReport.deleteMany({ review: reviewId });
+    // delete all reports pointing at this review
+    await Report.deleteMany({ type: 'review', review: reviewId });
 
-    res.json({ message: "Review and its reports deleted" });
+    res.json({ message: 'Review and its reports deleted' });
   } catch (err) {
-    console.error("DELETE /api/admin/reviews/:id error:", err);
-    res.status(500).json({ message: "Server error" });
+    console.error('DELETE /api/admin/reviews/:id error:', err);
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
-// reported reviews
-router.get("/reports/reviews", requireAdmin, async (req, res) => {
+// REPORTED REVIEWS (type = 'review')
+router.get('/reports/reviews', requireAdmin, async (req, res) => {
   try {
-    const reports = await ReviewReport.find()
-      .populate("review")
+    const reports = await Report.find({ type: 'review' })
+      .populate('review')
       .sort({ createdAt: -1 });
 
-    // filter out ones where review is already deleted
+    // drop reports where review is already deleted / null
     const filtered = reports.filter((r) => r.review);
     res.json({ reports: filtered });
   } catch (err) {
-    console.error("GET /api/admin/reports/reviews error:", err);
-    res.status(500).json({ message: "Server error" });
+    console.error('GET /api/admin/reports/reviews error:', err);
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
