@@ -47,7 +47,7 @@ body::before {
   font-size: 18px;
   font-weight: 600;
   color: #f9fafb;
-  margin-bottom: 4px; /* extra breathing room */
+  margin-bottom: 4px;
 }
 .top-sub {
   font-size: 12px;
@@ -134,7 +134,6 @@ body::before {
   margin-top: 6px;
 }
 
-/* Provider image row */
 .provider-images-row {
   margin-top: 10px;
   display: flex;
@@ -153,7 +152,6 @@ body::before {
   cursor: pointer;
 }
 
-/* Buttons */
 .btn-row {
   display: flex;
   gap: 8px;
@@ -178,14 +176,12 @@ body::before {
   box-shadow: 0 6px 14px rgba(15,23,42,0.7);
   background: #1d4ed8;
 }
-
 .btn-secondary {
   background: #059669;
 }
 .btn-secondary:hover {
   background: #047857;
 }
-
 .btn-danger-ghost {
   background: #0b1120;
   border: 1px solid #b91c1c;
@@ -199,7 +195,6 @@ body::before {
   font-size: 14px;
 }
 
-/* Report UI */
 .report-block {
   margin-top: 10px;
   font-size: 12px;
@@ -289,7 +284,6 @@ body::before {
       <div class="top-title" id="serviceTitle">Service</div>
       <div class="top-sub" id="serviceSub"></div>
     </div>
-    <!-- back button removed -->
   </div>
 
   <div class="card" id="serviceCard" style="display:none;">
@@ -303,7 +297,6 @@ body::before {
     </div>
     <p id="serviceAddressText" style="font-size:13px; color:#e5e7eb; margin:4px 0 0;"></p>
 
-    <!-- Provider images row -->
     <div id="providerImagesRow" class="provider-images-row" style="display:none;"></div>
 
     <div class="btn-row">
@@ -496,13 +489,11 @@ async function loadService() {
     document.getElementById('serviceRating').textContent = buildRatingText(s);
     document.getElementById('serviceAddressText').textContent = s.address || '';
 
-    // icon
     const iconInfo = getCategoryIconInfo(s.category);
     const iconEl = document.getElementById('serviceIcon');
     iconEl.textContent = iconInfo.icon;
     iconEl.className = 'service-thumb ' + iconInfo.cls;
 
-    // provider images row
     const row = document.getElementById('providerImagesRow');
     const imgs = s.providerImages || [];
     row.innerHTML = '';
@@ -573,10 +564,11 @@ async function loadReviews() {
           <button
             type="button"
             class="btn-primary btn-danger-ghost"
-            style="padding:3px 8px; font-size:11px;"
+            style="padding:4px 8px; border-radius:999px; min-width:auto;"
+            title="Report review"
             onclick="openReviewReport('${r._id || ''}')"
           >
-            🚩 Report
+            <span class="icon">🚩</span>
           </button>
         </div>
         ${imagesHtml}
@@ -602,7 +594,6 @@ function buildStars(rating) {
   );
 }
 
-/* Request delete (creator-only) */
 async function requestDeleteService() {
   if (!currentService) return;
   const id = currentService._id;
@@ -626,7 +617,6 @@ async function requestDeleteService() {
   }
 }
 
-/* Service report */
 function toggleServiceReport() {
   const block = document.getElementById('serviceReportForm');
   if (!block) return;
@@ -662,7 +652,6 @@ async function submitServiceReport() {
   }
 }
 
-/* Review report */
 function openReviewReport(reviewId) {
   const reason = prompt('Why are you reporting this review?');
   if (!reason || !reviewId) return;
