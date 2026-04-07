@@ -1,49 +1,41 @@
 // SpotSure/routes/adminRoutes.js
 const express = require('express');
-const bcrypt = require('bcryptjs');
-const User = require('../models/User');
 const Service = require('../models/Service');
 const Review = require('../models/Review');
 
 const router = express.Router();
 
+// Hardcoded admin credentials
+const ADMIN_USER = process.env.ADMIN_USER || 'admin';
+const ADMIN_PASS = process.env.ADMIN_PASS || 'Admin123';
+
+// Session guard
 function requireAdmin(req, res, next) {
-  if (!req.session || !req.session.userId || req.session.userRole !== 'admin') {
+  if (!req.session || req.session.userRole !== 'admin') {
     return res.status(401).json({ message: 'Admin access required' });
   }
   next();
 }
 
 // POST /api/admin/login
-router.post('/login', async (req, res) => {
-  try {
-    const { username, password } = req.body;
+router.post('/login', (req, res) => {
+  const { username, password } = req.body || {};
 
-    if (!username || !password) {
-      return res.status(400).json({ message: 'Username and password required' });
-    }
-
-    const user = await User.findOne({ username: username.trim() });
-    if (!user) {
-      return res.status(401).json({ message: 'Invalid credentials' });
-    }
-
-    const ok = await bcrypt.compare(password, user.password);
-    if (!ok || user.role !== 'admin') {
-      return res.status(401).json({ message: 'Invalid credentials' });
-    }
-
-    req.session.userId = user._id;
-    req.session.userRole = 'admin';
-
-    res.json({
-      message: 'Logged in',
-      user: { id: user._id, username: user.username, role: user.role },
-    });
-  } catch (err) {
-    console.error('POST /api/admin/login error:', err);
-    res.status(500).json({ message: 'Server error' });
+  if (!username || !password) {
+    return res.status(400).json({ message: 'Username and password required' });
   }
+
+  if (username !== ADMIN_USER || password !== ADMIN_PASS) {
+    return res.status(401).json({ message: 'Invalid credentials' });
+  }
+
+  req.session.userId = 'hardcoded-admin';
+  req.session.userRole = 'admin';
+
+  res.json({
+    message: 'Logged in',
+    user: { id: 'hardcoded-admin', username: ADMIN_USER, role: 'admin' },
+  });
 });
 
 // GET /api/admin/services/pending
