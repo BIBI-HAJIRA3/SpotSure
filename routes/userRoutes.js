@@ -1,4 +1,4 @@
-// routes/userRoutes.js
+// SpotSure/routes/userRoutes.js
 const express = require('express');
 const User = require('../models/User');
 const Service = require('../models/Service');
