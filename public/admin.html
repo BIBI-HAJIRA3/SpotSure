@@ -407,9 +407,11 @@
             method: "PATCH",
             credentials: "include",
           });
+          // Refresh all relevant sections
           await loadPendingServices();
           await loadRemovalRequests();
           await loadReportedServices();
+          await searchServicesByName();
         } catch (e) {
           alert("Error approving service");
         }
@@ -422,6 +424,7 @@
             method: "DELETE",
             credentials: "include",
           });
+          // Re-fetch lists so deleted service disappears everywhere
           await loadPendingServices();
           await loadRemovalRequests();
           await loadReportedServices();
@@ -578,6 +581,7 @@
             method: "DELETE",
             credentials: "include",
           });
+          // Refresh reported reviews so deleted one disappears
           await loadReportedReviews();
         } catch (e) {
           alert("Error deleting review");
