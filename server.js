@@ -12,6 +12,8 @@ const serviceRoutes = require('./routes/serviceRoutes');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const imageRoutes = require('./routes/imageRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+const reportRoutes = require('./routes/reportRoutes');
 
 const app = express();
 
@@ -56,6 +58,8 @@ app.use('/api', serviceRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/image', imageRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api', reportRoutes); // /api/reports/service, /api/reports/review
 
 const publicDir = path.join(__dirname, 'public');
 app.use(express.static(publicDir));
