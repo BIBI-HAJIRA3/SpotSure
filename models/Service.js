@@ -15,7 +15,8 @@ const ServiceSchema = new mongoose.Schema(
     ratingCount: { type: Number, default: 0 },
     reviewCount: { type: Number, default: 0 },
 
-    isApproved: { type: Boolean, default: true },
+    // Changed: default from true -> false
+    isApproved: { type: Boolean, default: false },
 
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
