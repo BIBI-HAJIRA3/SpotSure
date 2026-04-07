@@ -2,7 +2,7 @@
 const express = require('express');
 const Service = require('../models/Service');
 const Review = require('../models/Review');
-const Report = require('../models/Report'); // assuming you have a Report model
+const Report = require('../models/Report'); // your Report model
 
 const router = express.Router();
 
@@ -30,7 +30,6 @@ router.post('/login', (req, res, next) => {
     return res.status(401).json({ message: 'Invalid credentials' });
   }
 
-  // Regenerate then save to avoid session race issues
   req.session.regenerate((err) => {
     if (err) return next(err);
 
@@ -47,7 +46,7 @@ router.post('/login', (req, res, next) => {
   });
 });
 
-// GET /api/admin/me – used by dashboard to check login
+// GET /api/admin/me
 router.get('/me', (req, res) => {
   if (!req.session || req.session.userRole !== 'admin') {
     return res.status(401).json({ message: 'Not admin' });
@@ -61,7 +60,7 @@ router.get('/me', (req, res) => {
   });
 });
 
-// POST /api/admin/logout – optional
+// POST /api/admin/logout
 router.post('/logout', requireAdmin, (req, res, next) => {
   req.session.userId = null;
   req.session.userRole = null;
@@ -74,7 +73,7 @@ router.post('/logout', requireAdmin, (req, res, next) => {
   });
 });
 
-// GET /api/admin/services/pending – new services
+// Pending services
 router.get('/services/pending', requireAdmin, async (req, res) => {
   try {
     const services = await Service.find({ isApproved: false }).sort({
@@ -87,7 +86,7 @@ router.get('/services/pending', requireAdmin, async (req, res) => {
   }
 });
 
-// GET /api/admin/services/removal-requests – removal requested
+// Removal requests
 router.get('/services/removal-requests', requireAdmin, async (req, res) => {
   try {
     const services = await Service.find({ removalRequested: true }).sort({
@@ -100,7 +99,7 @@ router.get('/services/removal-requests', requireAdmin, async (req, res) => {
   }
 });
 
-// PATCH /api/admin/services/:id/approve – approve service
+// Approve service
 router.patch('/services/:id/approve', requireAdmin, async (req, res) => {
   try {
     const service = await Service.findByIdAndUpdate(
@@ -118,7 +117,7 @@ router.patch('/services/:id/approve', requireAdmin, async (req, res) => {
   }
 });
 
-// DELETE /api/admin/services/:id – delete service + its reviews
+// Delete service + its reviews
 router.delete('/services/:id', requireAdmin, async (req, res) => {
   try {
     const id = req.params.id;
@@ -134,7 +133,7 @@ router.delete('/services/:id', requireAdmin, async (req, res) => {
   }
 });
 
-// DELETE /api/admin/reviews/:id – delete any review
+// Delete any review
 router.delete('/reviews/:id', requireAdmin, async (req, res) => {
   try {
     const review = await Review.findByIdAndDelete(req.params.id);
@@ -148,7 +147,7 @@ router.delete('/reviews/:id', requireAdmin, async (req, res) => {
   }
 });
 
-// GET /api/admin/reports/services – service reports
+// Service reports
 router.get('/reports/services', requireAdmin, async (req, res) => {
   try {
     const reports = await Report.find({ type: 'service' })
@@ -161,7 +160,7 @@ router.get('/reports/services', requireAdmin, async (req, res) => {
   }
 });
 
-// GET /api/admin/reports/reviews – review reports
+// Review reports
 router.get('/reports/reviews', requireAdmin, async (req, res) => {
   try {
     const reports = await Report.find({ type: 'review' })
@@ -174,13 +173,11 @@ router.get('/reports/reviews', requireAdmin, async (req, res) => {
   }
 });
 
-// GET /api/admin/services/search?name=... – search service by name
+// Search services by name (for deletion)
 router.get('/services/search', requireAdmin, async (req, res) => {
   try {
     const q = (req.query.name || '').trim();
-    if (!q) {
-      return res.json({ services: [] });
-    }
+    if (!q) return res.json({ services: [] });
     const regex = new RegExp(q, 'i');
     const services = await Service.find({ name: regex, isApproved: true })
       .limit(20)
