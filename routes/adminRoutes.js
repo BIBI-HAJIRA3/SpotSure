@@ -38,6 +38,20 @@ router.post('/login', (req, res) => {
   });
 });
 
+// GET /api/admin/me  – used by admin-dashboard.html to keep you logged in
+router.get('/me', (req, res) => {
+  if (!req.session || req.session.userRole !== 'admin') {
+    return res.status(401).json({ message: 'Not admin' });
+  }
+  res.json({
+    user: {
+      id: req.session.userId || 'hardcoded-admin',
+      username: ADMIN_USER,
+      role: 'admin',
+    },
+  });
+});
+
 // GET /api/admin/services/pending
 router.get('/services/pending', requireAdmin, async (req, res) => {
   try {
