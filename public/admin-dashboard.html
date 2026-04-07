@@ -1,0 +1,343 @@
+<!--SpotSure/public/admin-dashboard.html-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Spotsure Admin Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background: #020617;
+      color: #e5e7eb;
+    }
+    .page {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 20px 14px 28px;
+      min-height: 100vh;
+    }
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .top-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #f9fafb;
+    }
+    .top-sub {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+    .pill-btn {
+      border-radius: 999px;
+      border: 1px solid #374151;
+      background: #020617;
+      color: #e5e7eb;
+      padding: 6px 10px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .pill-btn.danger {
+      border-color: #b91c1c;
+      color: #fecaca;
+    }
+    .section {
+      margin-top: 16px;
+      background: #0b1120;
+      border-radius: 14px;
+      border: 1px solid #1f2937;
+      padding: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.7);
+    }
+    .section h2 {
+      margin: 0 0 8px;
+      font-size: 15px;
+      color: #f9fafb;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    th, td {
+      padding: 6px 4px;
+      border-bottom: 1px solid #1f2937;
+      vertical-align: top;
+    }
+    th {
+      text-align: left;
+      color: #9ca3af;
+      font-weight: 500;
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    .tag {
+      display: inline-flex;
+      border-radius: 999px;
+      padding: 2px 6px;
+      font-size: 11px;
+      border: 1px solid #374151;
+      color: #9ca3af;
+    }
+    .btn-xs {
+      border-radius: 999px;
+      border: none;
+      padding: 3px 7px;
+      font-size: 11px;
+      cursor: pointer;
+      background: #1d4ed8;
+      color: #f9fafb;
+      margin-right: 4px;
+      margin-top: 2px;
+    }
+    .btn-xs.danger {
+      background: #b91c1c;
+    }
+    .btn-xs.muted {
+      background: #374151;
+    }
+    .empty {
+      font-size: 12px;
+      color: #6b7280;
+      padding: 4px 0;
+    }
+    @media (max-width: 640px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+      th {
+        display: none;
+      }
+      td {
+        border-bottom: 1px solid #1f2937;
+        padding: 6px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="top-bar">
+      <div>
+        <div class="top-title">Spotsure Admin</div>
+        <div class="top-sub">Approve services, handle removals and reports.</div>
+      </div>
+      <div style="display:flex; gap:6px;">
+        <button class="pill-btn" type="button" onclick="window.location.href='/services.html'">
+          ⬅ User view
+        </button>
+        <button class="pill-btn danger" type="button" onclick="adminLogout()">
+          Logout
+        </button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Pending service requests</h2>
+      <div id="pendingServicesContainer" class="empty">Loading...</div>
+    </div>
+
+    <div class="section">
+      <h2>Delete service requests</h2>
+      <div id="removalServicesContainer" class="empty">Loading...</div>
+    </div>
+
+    <div class="section">
+      <h2>Reported services</h2>
+      <div id="reportedServicesContainer" class="empty">Loading...</div>
+    </div>
+
+    <div class="section">
+      <h2>Reported reviews</h2>
+      <div id="reportedReviewsContainer" class="empty">Loading...</div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = window.location.origin + '/api';
+
+    async function ensureAdmin() {
+      try {
+        const res = await fetch(API_BASE + '/auth/me', {
+          credentials: 'include',
+        });
+        const data = await res.json();
+        if (!data.user || data.user.role !== 'admin') {
+          window.location.href = '/admin.html';
+        }
+      } catch (e) {
+        window.location.href = '/admin.html';
+      }
+    }
+
+    async function adminLogout() {
+      try {
+        await fetch(API_BASE + '/auth/logout', {
+          method: 'POST',
+          credentials: 'include',
+        });
+      } catch (e) {}
+      window.location.href = '/admin.html';
+    }
+
+    async function loadPendingServices() {
+      const container = document.getElementById('pendingServicesContainer');
+      try {
+        const res = await fetch(API_BASE + '/admin/services/pending', {
+          credentials: 'include',
+        });
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        const services = data.services || [];
+        if (!services.length) {
+          container.textContent = 'No pending service requests.';
+          container.className = 'empty';
+          return;
+        }
+        container.className = '';
+        container.innerHTML = buildServiceTable(services, { mode: 'pending' });
+      } catch (e) {
+        container.textContent = 'Error loading pending services.';
+        container.className = 'empty';
+      }
+    }
+
+    async function loadRemovalRequests() {
+      const container = document.getElementById('removalServicesContainer');
+      try {
+        const res = await fetch(API_BASE + '/admin/services/removal-requests', {
+          credentials: 'include',
+        });
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        const services = data.services || [];
+        if (!services.length) {
+          container.textContent = 'No delete requests.';
+          container.className = 'empty';
+          return;
+        }
+        container.className = '';
+        container.innerHTML = buildServiceTable(services, { mode: 'removal' });
+      } catch (e) {
+        container.textContent = 'Error loading delete requests.';
+        container.className = 'empty';
+      }
+    }
+
+    function buildServiceTable(services, opts) {
+      const mode = opts.mode;
+      let rows = '';
+      services.forEach((s) => {
+        rows += `
+          <tr>
+            <td>
+              <div>${s.name || 'Service'}</div>
+              <div style="font-size:11px; color:#9ca3af;">
+                ${(s.category || 'Service')} • ${(s.city || '')}${s.pincode ? ' (PIN ' + s.pincode + ')' : ''}
+              </div>
+            </td>
+            <td>
+              <span class="tag">
+                ${new Date(s.createdAt || s.updatedAt || Date.now()).toLocaleString()}
+              </span>
+            </td>
+            <td>
+              <button class="btn-xs" onclick="viewService('${s._id}')">View</button>
+              ${
+                mode === 'pending'
+                  ? `<button class="btn-xs" onclick="approveService('${s._id}')">Approve</button>`
+                  : ''
+              }
+              <button class="btn-xs danger" onclick="deleteServiceAdmin('${s._id}')">Delete</button>
+            </td>
+          </tr>
+        `;
+      });
+      return `
+        <table>
+          <thead>
+            <tr>
+              <th>Service</th>
+              <th>When</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+    }
+
+    function viewService(id) {
+      window.open('/service.html?id=' + encodeURIComponent(id), '_blank');
+    }
+
+    async function approveService(id) {
+      if (!confirm('Approve this service?')) return;
+      try {
+        const res = await fetch(API_BASE + '/admin/services/' + id + '/approve', {
+          method: 'PATCH',
+          credentials: 'include',
+        });
+        if (!res.ok) {
+          alert('Failed to approve service');
+          return;
+        }
+        await loadPendingServices();
+      } catch (e) {
+        alert('Error approving service');
+      }
+    }
+
+    async function deleteServiceAdmin(id) {
+      if (!confirm('Permanently delete this service and its reviews?')) return;
+      try {
+        const res = await fetch(API_BASE + '/admin/services/' + id, {
+          method: 'DELETE',
+          credentials: 'include',
+        });
+        if (!res.ok) {
+          alert('Failed to delete service');
+          return;
+        }
+        await loadPendingServices();
+        await loadRemovalRequests();
+        await loadReportedServices();
+      } catch (e) {
+        alert('Error deleting service');
+      }
+    }
+
+    async function loadReportedServices() {
+      const container = document.getElementById('reportedServicesContainer');
+      container.textContent =
+        'Reports are stored in the Report collection. Add admin list/delete endpoints (e.g. GET /api/admin/reports/services) to display them here.';
+      container.className = 'empty';
+    }
+
+    async function loadReportedReviews() {
+      const container = document.getElementById('reportedReviewsContainer');
+      container.textContent =
+        'You can delete reported reviews via DELETE /api/admin/reviews/:id once you expose a list endpoint for reported reviews.';
+      container.className = 'empty';
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      await ensureAdmin();
+      await loadPendingServices();
+      await loadRemovalRequests();
+      await loadReportedServices();
+      await loadReportedReviews();
+    });
+  </script>
+</body>
+</html>
