@@ -1,3 +1,4 @@
+<!--SpotSure/public/admin.html-->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -9,7 +10,7 @@
         margin: 0;
         font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
           sans-serif;
-        background: #0f172a url("/images/bg-pattern.png") repeat;
+        background: #0f172a;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -108,7 +109,7 @@
             id="admin-username"
             type="text"
             autocomplete="username"
-            value="adminatspotsure"
+            value="admin"
           />
         </div>
         <div class="field">
@@ -117,15 +118,15 @@
             id="admin-password"
             type="password"
             autocomplete="current-password"
-            value="AdminAtSpotsure123"
+            value="Admin123"
           />
         </div>
         <button id="admin-submit" type="submit">Sign in</button>
         <div id="admin-error" class="error"></div>
         <div class="hint">
           Default admin:
-          <code>adminatspotsure</code> /
-          <code>AdminAtSpotsure123</code>
+          <code>admin</code> /
+          <code>Admin123</code>
         </div>
       </form>
     </div>
@@ -161,18 +162,10 @@
             credentials: "include",
           });
 
-          const data = await res.json();
+          const data = await res.json().catch(() => ({}));
 
           if (!res.ok) {
             errorBox.textContent = data.message || "Invalid credentials";
-            errorBox.style.display = "block";
-            submitBtn.disabled = false;
-            submitBtn.textContent = "Sign in";
-            return;
-          }
-
-          if (!data.user || data.user.role !== "admin") {
-            errorBox.textContent = "You are not authorized as admin.";
             errorBox.style.display = "block";
             submitBtn.disabled = false;
             submitBtn.textContent = "Sign in";
