@@ -2,6 +2,7 @@
 const express = require('express');
 const Service = require('../models/Service');
 const Review = require('../models/Review');
+const Report = require('../models/Report'); // assuming you have a Report model
 
 const router = express.Router();
 
@@ -18,7 +19,7 @@ function requireAdmin(req, res, next) {
 }
 
 // POST /api/admin/login
-router.post('/login', (req, res) => {
+router.post('/login', (req, res, next) => {
   const { username, password } = req.body || {};
 
   if (!username || !password) {
@@ -29,16 +30,24 @@ router.post('/login', (req, res) => {
     return res.status(401).json({ message: 'Invalid credentials' });
   }
 
-  req.session.userId = 'hardcoded-admin';
-  req.session.userRole = 'admin';
+  // Regenerate then save to avoid session race issues
+  req.session.regenerate((err) => {
+    if (err) return next(err);
 
-  res.json({
-    message: 'Logged in',
-    user: { id: 'hardcoded-admin', username: ADMIN_USER, role: 'admin' },
+    req.session.userId = 'hardcoded-admin';
+    req.session.userRole = 'admin';
+
+    req.session.save((err2) => {
+      if (err2) return next(err2);
+      res.json({
+        message: 'Logged in',
+        user: { id: 'hardcoded-admin', username: ADMIN_USER, role: 'admin' },
+      });
+    });
   });
 });
 
-// GET /api/admin/me  – for dashboard auth check
+// GET /api/admin/me – used by dashboard to check login
 router.get('/me', (req, res) => {
   if (!req.session || req.session.userRole !== 'admin') {
     return res.status(401).json({ message: 'Not admin' });
@@ -52,7 +61,20 @@ router.get('/me', (req, res) => {
   });
 });
 
-// GET /api/admin/services/pending
+// POST /api/admin/logout – optional
+router.post('/logout', requireAdmin, (req, res, next) => {
+  req.session.userId = null;
+  req.session.userRole = null;
+  req.session.save((err) => {
+    if (err) return next(err);
+    req.session.regenerate((err2) => {
+      if (err2) return next(err2);
+      res.json({ message: 'Logged out' });
+    });
+  });
+});
+
+// GET /api/admin/services/pending – new services
 router.get('/services/pending', requireAdmin, async (req, res) => {
   try {
     const services = await Service.find({ isApproved: false }).sort({
@@ -65,7 +87,7 @@ router.get('/services/pending', requireAdmin, async (req, res) => {
   }
 });
 
-// GET /api/admin/services/removal-requests
+// GET /api/admin/services/removal-requests – removal requested
 router.get('/services/removal-requests', requireAdmin, async (req, res) => {
   try {
     const services = await Service.find({ removalRequested: true }).sort({
@@ -78,7 +100,7 @@ router.get('/services/removal-requests', requireAdmin, async (req, res) => {
   }
 });
 
-// PATCH /api/admin/services/:id/approve
+// PATCH /api/admin/services/:id/approve – approve service
 router.patch('/services/:id/approve', requireAdmin, async (req, res) => {
   try {
     const service = await Service.findByIdAndUpdate(
@@ -96,7 +118,7 @@ router.patch('/services/:id/approve', requireAdmin, async (req, res) => {
   }
 });
 
-// DELETE /api/admin/services/:id
+// DELETE /api/admin/services/:id – delete service + its reviews
 router.delete('/services/:id', requireAdmin, async (req, res) => {
   try {
     const id = req.params.id;
@@ -112,7 +134,7 @@ router.delete('/services/:id', requireAdmin, async (req, res) => {
   }
 });
 
-// DELETE /api/admin/reviews/:id
+// DELETE /api/admin/reviews/:id – delete any review
 router.delete('/reviews/:id', requireAdmin, async (req, res) => {
   try {
     const review = await Review.findByIdAndDelete(req.params.id);
@@ -122,6 +144,50 @@ router.delete('/reviews/:id', requireAdmin, async (req, res) => {
     res.json({ message: 'Review deleted' });
   } catch (err) {
     console.error('DELETE /api/admin/reviews/:id error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// GET /api/admin/reports/services – service reports
+router.get('/reports/services', requireAdmin, async (req, res) => {
+  try {
+    const reports = await Report.find({ type: 'service' })
+      .populate('service')
+      .sort({ createdAt: -1 });
+    res.json({ reports });
+  } catch (err) {
+    console.error('GET /api/admin/reports/services error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// GET /api/admin/reports/reviews – review reports
+router.get('/reports/reviews', requireAdmin, async (req, res) => {
+  try {
+    const reports = await Report.find({ type: 'review' })
+      .populate('review')
+      .sort({ createdAt: -1 });
+    res.json({ reports });
+  } catch (err) {
+    console.error('GET /api/admin/reports/reviews error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// GET /api/admin/services/search?name=... – search service by name
+router.get('/services/search', requireAdmin, async (req, res) => {
+  try {
+    const q = (req.query.name || '').trim();
+    if (!q) {
+      return res.json({ services: [] });
+    }
+    const regex = new RegExp(q, 'i');
+    const services = await Service.find({ name: regex, isApproved: true })
+      .limit(20)
+      .sort({ createdAt: -1 });
+    res.json({ services });
+  } catch (err) {
+    console.error('GET /api/admin/services/search error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });
