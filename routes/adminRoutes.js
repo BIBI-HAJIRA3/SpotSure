@@ -6,15 +6,15 @@ const Review = require('../models/Review');
 const Report = require('../models/Report');
 const requireAdmin = require('../middleware/requireAdmin');
 
-// current admin
+// who am I
 router.get('/me', requireAdmin, (req, res) => {
   res.json({ user: req.user });
 });
 
-// PENDING SERVICES
+// PENDING SERVICES (you currently auto-approve; keep this for future use)
 router.get('/services/pending', requireAdmin, async (req, res) => {
   try {
-    const services = await Service.find({ status: 'pending' }).sort({
+    const services = await Service.find({ isApproved: false }).sort({
       createdAt: -1,
     });
     res.json({ services });
@@ -24,12 +24,12 @@ router.get('/services/pending', requireAdmin, async (req, res) => {
   }
 });
 
-// APPROVE SERVICE
+// APPROVE SERVICE (flip isApproved & clear removalRequested)
 router.patch('/services/:id/approve', requireAdmin, async (req, res) => {
   try {
     const service = await Service.findByIdAndUpdate(
       req.params.id,
-      { status: 'approved', removalRequested: false },
+      { isApproved: true, removalRequested: false },
       { new: true }
     );
     if (!service) {
@@ -47,14 +47,11 @@ router.delete('/services/:id', requireAdmin, async (req, res) => {
   try {
     const serviceId = req.params.id;
 
-    // find reviews for this service
     const reviews = await Review.find({ service: serviceId }).select('_id');
     const reviewIds = reviews.map((r) => r._id);
 
-    // delete reviews
     await Review.deleteMany({ service: serviceId });
 
-    // delete reports for this service and its reviews
     await Report.deleteMany({
       $or: [
         { type: 'service', service: serviceId },
@@ -62,7 +59,6 @@ router.delete('/services/:id', requireAdmin, async (req, res) => {
       ],
     });
 
-    // delete the service itself
     const service = await Service.findByIdAndDelete(serviceId);
     if (!service) {
       return res.status(404).json({ message: 'Service not found' });
@@ -91,14 +87,13 @@ router.get('/services/removal-requests', requireAdmin, async (req, res) => {
   }
 });
 
-// REPORTED SERVICES (type = 'service')
+// REPORTED SERVICES
 router.get('/reports/services', requireAdmin, async (req, res) => {
   try {
     const reports = await Report.find({ type: 'service' })
       .populate('service')
       .sort({ createdAt: -1 });
 
-    // only keep reports where service still exists
     const filtered = reports.filter((r) => r.service);
     res.json({ reports: filtered });
   } catch (err) {
@@ -117,7 +112,6 @@ router.delete('/reviews/:id', requireAdmin, async (req, res) => {
       return res.status(404).json({ message: 'Review not found' });
     }
 
-    // delete all reports pointing at this review
     await Report.deleteMany({ type: 'review', review: reviewId });
 
     res.json({ message: 'Review and its reports deleted' });
@@ -127,14 +121,13 @@ router.delete('/reviews/:id', requireAdmin, async (req, res) => {
   }
 });
 
-// REPORTED REVIEWS (type = 'review')
+// REPORTED REVIEWS
 router.get('/reports/reviews', requireAdmin, async (req, res) => {
   try {
     const reports = await Report.find({ type: 'review' })
       .populate('review')
       .sort({ createdAt: -1 });
 
-    // drop reports where review is already deleted / null
     const filtered = reports.filter((r) => r.review);
     res.json({ reports: filtered });
   } catch (err) {
