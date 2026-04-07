@@ -2,6 +2,7 @@
 const express = require('express');
 const Service = require('../models/Service');
 const Review = require('../models/Review');
+const Report = require('../models/Report');
 
 const router = express.Router();
 
@@ -48,7 +49,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// OPTIONAL: GET /api/admin/me (for auto-login in admin.html)
+// GET /api/admin/me (for auto-login in admin.html)
 router.get('/me', (req, res) => {
   if (!req.session || req.session.userRole !== 'admin') {
     return res.status(200).json({ user: null });
@@ -95,6 +96,26 @@ router.get('/services/removal-requests', requireAdmin, async (req, res) => {
   }
 });
 
+// NEW: GET /api/admin/services/search?name=...
+router.get('/services/search', requireAdmin, async (req, res) => {
+  try {
+    const name = (req.query.name || '').trim();
+    if (!name || name.length < 2) {
+      return res.status(400).json({ message: 'Name too short' });
+    }
+
+    const regex = new RegExp(name, 'i');
+    const services = await Service.find({ name: regex })
+      .sort({ createdAt: -1 })
+      .limit(50);
+
+    res.json({ services });
+  } catch (err) {
+    console.error('GET /api/admin/services/search error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 // PATCH /api/admin/services/:id/approve
 router.patch('/services/:id/approve', requireAdmin, async (req, res) => {
   try {
@@ -103,6 +124,8 @@ router.patch('/services/:id/approve', requireAdmin, async (req, res) => {
       return res.status(404).json({ message: 'Service not found' });
     }
     service.isApproved = true;
+    service.removalRequested = false;
+    service.removalRequestedBy = undefined;
     await service.save();
     res.json({ message: 'Service approved', service });
   } catch (err) {
@@ -115,8 +138,16 @@ router.patch('/services/:id/approve', requireAdmin, async (req, res) => {
 router.delete('/services/:id', requireAdmin, async (req, res) => {
   try {
     const serviceId = req.params.id;
+
     await Review.deleteMany({ service: serviceId });
     await Service.findByIdAndDelete(serviceId);
+
+    // Mark related service reports as reviewed
+    await Report.updateMany(
+      { type: 'service', service: serviceId },
+      { status: 'reviewed' }
+    );
+
     res.json({ message: 'Service deleted' });
   } catch (err) {
     console.error('DELETE /api/admin/services/:id error:', err);
@@ -132,7 +163,15 @@ router.delete('/reviews/:id', requireAdmin, async (req, res) => {
     if (!review) {
       return res.status(404).json({ message: 'Review not found' });
     }
+
     await review.deleteOne();
+
+    // Mark related review reports as reviewed
+    await Report.updateMany(
+      { type: 'review', review: reviewId },
+      { status: 'reviewed' }
+    );
+
     res.json({ message: 'Review deleted' });
   } catch (err) {
     console.error('DELETE /api/admin/reviews/:id error:', err);
@@ -140,6 +179,34 @@ router.delete('/reviews/:id', requireAdmin, async (req, res) => {
   }
 });
 
-// (If you have extra admin search/report routes, keep them here too.)
+// NEW: reported services for admin dashboard
+router.get('/reports/services', requireAdmin, async (req, res) => {
+  try {
+    const reports = await Report.find({ type: 'service' })
+      .sort({ createdAt: -1 })
+      .limit(100)
+      .populate('service');
+
+    res.json({ reports });
+  } catch (err) {
+    console.error('GET /api/admin/reports/services error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// NEW: reported reviews for admin dashboard
+router.get('/reports/reviews', requireAdmin, async (req, res) => {
+  try {
+    const reports = await Report.find({ type: 'review' })
+      .sort({ createdAt: -1 })
+      .limit(100)
+      .populate('review');
+
+    res.json({ reports });
+  } catch (err) {
+    console.error('GET /api/admin/reports/reviews error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
 module.exports = router;
