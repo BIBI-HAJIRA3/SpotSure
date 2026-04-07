@@ -8,7 +8,7 @@ const router = express.Router();
 
 // Shorter but still non‑trivial admin credentials
 const ADMIN_USER = process.env.ADMIN_USER || 'spotsure_admin';
-const ADMIN_PASS = process.env.ADMIN_PASS || 'Sp0t2026!admin';
+const ADMIN_PASS = process.env.ADMIN_PASS || 'Spot2026!admin';
 
 // Session guard
 function requireAdmin(req, res, next) {
