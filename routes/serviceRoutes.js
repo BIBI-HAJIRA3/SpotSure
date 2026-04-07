@@ -5,21 +5,19 @@ const Service = require('../models/Service');
 const Review = require('../models/Review');
 const Report = require('../models/Report');
 
-// LIST SERVICES (basic)
+// LIST SERVICES
 router.get('/services', async (req, res) => {
   try {
     const { category, city, sort } = req.query;
 
-    const query = {};
+    const query = { isApproved: true };
+
     if (category && category !== 'all') {
       query.category = category;
     }
-    if (city) {
-      query.city = city;
+    if (city && city.trim()) {
+      query.city = city.trim();
     }
-
-    // Only show approved ones
-    query.isApproved = true;
 
     let q = Service.find(query);
 
@@ -39,6 +37,33 @@ router.get('/services', async (req, res) => {
   }
 });
 
+// GET SINGLE SERVICE
+router.get('/services/:id', async (req, res) => {
+  try {
+    const service = await Service.findById(req.params.id);
+    if (!service || !service.isApproved) {
+      return res.status(404).json({ message: 'Service not found' });
+    }
+    res.json({ service });
+  } catch (err) {
+    console.error('GET /api/services/:id error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// GET REVIEWS FOR A SERVICE
+router.get('/services/:id/reviews', async (req, res) => {
+  try {
+    const reviews = await Review.find({ service: req.params.id }).sort({
+      createdAt: -1,
+    });
+    res.json({ reviews });
+  } catch (err) {
+    console.error('GET /api/services/:id/reviews error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 // CREATE / REQUEST A SERVICE
 router.post('/services', async (req, res) => {
   try {
@@ -48,11 +73,11 @@ router.post('/services', async (req, res) => {
       city,
       pincode,
       address,
-      imagePath,
-      providerImages,
       lat,
       lng,
-    } = req.body;
+      imagePath,
+      providerImages,
+    } = req.body || {};
 
     if (!name || !category || !city || !pincode || !address) {
       return res
@@ -61,19 +86,19 @@ router.post('/services', async (req, res) => {
     }
 
     const serviceData = {
-      name,
-      category,
-      city,
-      pincode,
-      address,
+      name: name.trim(),
+      category: category.trim(),
+      city: city.trim(),
+      pincode: pincode.toString().trim(),
+      address: address.trim(),
       imagePath: imagePath || '',
       providerImages: Array.isArray(providerImages)
         ? providerImages
         : [],
-      isApproved: true, // matches your schema default
+      isApproved: true,
     };
 
-    if (lat !== undefined && lng !== undefined) {
+    if (lat !== undefined && lng !== undefined && lat !== '' && lng !== '') {
       serviceData.location = {
         lat: Number(lat),
         lng: Number(lng),
@@ -96,7 +121,7 @@ router.post('/services', async (req, res) => {
 router.post('/services/:id/reviews', async (req, res) => {
   try {
     const serviceId = req.params.id;
-    const { username, rating, comment, imageUrls } = req.body;
+    const { username, rating, comment, imageUrls } = req.body || {};
 
     if (rating === undefined || rating === null) {
       return res.status(400).json({ message: 'Rating is required' });
@@ -119,8 +144,6 @@ router.post('/services/:id/reviews', async (req, res) => {
 
     await review.save();
 
-    // TODO: update Service averageRating / ratingCount / reviewCount if needed
-
     res.status(201).json({ message: 'Review added', review });
   } catch (err) {
     console.error('POST /api/services/:id/reviews error:', err);
@@ -131,7 +154,7 @@ router.post('/services/:id/reviews', async (req, res) => {
 // REPORT SERVICE
 router.post('/services/:id/report', async (req, res) => {
   try {
-    const { reason } = req.body;
+    const { reason } = req.body || {};
     const serviceId = req.params.id;
 
     if (!reason || !reason.trim()) {
@@ -155,7 +178,7 @@ router.post('/services/:id/report', async (req, res) => {
 // REPORT REVIEW
 router.post('/reviews/:id/report', async (req, res) => {
   try {
-    const { reason } = req.body;
+    const { reason } = req.body || {};
     const reviewId = req.params.id;
 
     if (!reason || !reason.trim()) {
