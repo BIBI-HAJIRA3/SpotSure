@@ -1,12 +1,13 @@
+// SpotSure/routes/authRoutes.js
 const express = require('express');
 const User = require('../models/User');
 
 const router = express.Router();
 
-// SIGNUP
-router.post('/signup', async (req, res) => {
+// POST /api/auth/register
+router.post('/register', async (req, res) => {
   try {
-    const { username, password, displayName } = req.body;
+    const { username, password } = req.body;
 
     if (!username || !password) {
       return res
@@ -16,15 +17,14 @@ router.post('/signup', async (req, res) => {
 
     const existing = await User.findOne({ username: username.trim() });
     if (existing) {
-      return res.status(409).json({ message: 'Username already exists' });
+      return res.status(409).json({ message: 'Username already taken' });
     }
 
     const user = new User({
       username: username.trim(),
-      displayName: (displayName || username).trim(),
+      password,
       role: 'user',
     });
-    user.password = password; // virtual
     await user.save();
 
     req.session.userId = user._id;
@@ -34,17 +34,16 @@ router.post('/signup', async (req, res) => {
       user: {
         id: user._id,
         username: user.username,
-        displayName: user.displayName,
         role: user.role,
       },
     });
   } catch (err) {
-    console.error('POST /api/auth/signup error:', err);
+    console.error('POST /api/auth/register error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });
 
-// LOGIN
+// POST /api/auth/login
 router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -72,7 +71,6 @@ router.post('/login', async (req, res) => {
       user: {
         id: user._id,
         username: user.username,
-        displayName: user.displayName,
         role: user.role,
       },
     });
@@ -82,28 +80,31 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// LOGOUT
+// POST /api/auth/logout
 router.post('/logout', (req, res) => {
   req.session.destroy(() => {
     res.json({ message: 'Logged out' });
   });
 });
 
-// ME
+// GET /api/auth/me
 router.get('/me', async (req, res) => {
   try {
-    if (!req.session.userId) {
+    if (!req.session || !req.session.userId) {
       return res.status(200).json({ user: null });
     }
-    const user = await User.findById(req.session.userId).lean();
+
+    const user = await User.findById(req.session.userId).select(
+      '_id username role'
+    );
     if (!user) {
       return res.status(200).json({ user: null });
     }
+
     res.json({
       user: {
         id: user._id,
         username: user.username,
-        displayName: user.displayName,
         role: user.role,
       },
     });
