@@ -1,4 +1,4 @@
-<!--SpotSure/public/admin.html-->
+<!-- SpotSure/public/admin.html -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -183,6 +183,35 @@
         color: #e5e7eb;
         font-size: 13px;
       }
+
+      /* confirm modal */
+      #confirmOverlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.75);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
+      #confirmBox {
+        background: #020617;
+        border-radius: 12px;
+        padding: 14px 16px;
+        border: 1px solid #4b5563;
+        max-width: 280px;
+        width: 90%;
+        font-size: 13px;
+      }
+      #confirmMessage {
+        color: #e5e7eb;
+        margin-bottom: 10px;
+      }
+      #confirmButtons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+      }
     </style>
   </head>
   <body>
@@ -259,6 +288,21 @@
       </section>
     </div>
 
+    <!-- in-app confirm dialog -->
+    <div id="confirmOverlay">
+      <div id="confirmBox">
+        <div id="confirmMessage">Are you sure?</div>
+        <div id="confirmButtons">
+          <button id="confirmCancelBtn" class="btn" style="background:#111827; color:#e5e7eb;">
+            Cancel
+          </button>
+          <button id="confirmOkBtn" class="btn danger">
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+
     <script>
       const API_BASE = window.location.origin + "/api";
 
@@ -274,6 +318,30 @@
         loginView.style.display = "none";
         dashboardView.style.display = "block";
       }
+
+      // in-app confirm
+      let confirmResolve = null;
+      function openConfirm(message) {
+        return new Promise((resolve) => {
+          confirmResolve = resolve;
+          document.getElementById("confirmMessage").textContent = message;
+          document.getElementById("confirmOverlay").style.display = "flex";
+        });
+      }
+      function closeConfirm() {
+        document.getElementById("confirmOverlay").style.display = "none";
+        confirmResolve = null;
+      }
+      document
+        .getElementById("confirmCancelBtn")
+        .addEventListener("click", () => {
+          if (confirmResolve) confirmResolve(false);
+          closeConfirm();
+        });
+      document.getElementById("confirmOkBtn").addEventListener("click", () => {
+        if (confirmResolve) confirmResolve(true);
+        closeConfirm();
+      });
 
       async function checkAdminOnLoad() {
         try {
@@ -401,7 +469,8 @@
       }
 
       async function approveService(id) {
-        if (!confirm("Approve this service?")) return;
+        const ok = await openConfirm("Approve this service?");
+        if (!ok) return;
         try {
           await fetch(API_BASE + "/admin/services/" + id + "/approve", {
             method: "PATCH",
@@ -417,7 +486,10 @@
       }
 
       async function deleteService(id) {
-        if (!confirm("Delete this service and all its reviews?")) return;
+        const ok = await openConfirm(
+          "Delete this service and all its reviews?"
+        );
+        if (!ok) return;
         try {
           await fetch(API_BASE + "/admin/services/" + id, {
             method: "DELETE",
@@ -573,13 +645,14 @@
           alert("Missing review id");
           return;
         }
-        if (!confirm("Delete this review?")) return;
+        const ok = await openConfirm("Delete this review?");
+        if (!ok) return;
         try {
           await fetch(API_BASE + "/admin/reviews/" + id, {
             method: "DELETE",
             credentials: "include",
           });
-          // This re-fetches the list so the deleted report disappears
+          // re-fetch list so the report disappears
           await loadReportedReviews();
         } catch (e) {
           alert("Error deleting review");
@@ -608,7 +681,9 @@
         container.textContent = "Searching...";
         try {
           const url =
-            API_BASE + "/admin/services/search?name=" + encodeURIComponent(query);
+            API_BASE +
+            "/admin/services/search?name=" +
+            encodeURIComponent(query);
           const res = await fetch(url, { credentials: "include" });
           const data = await res.json().catch(() => ({}));
           if (!res.ok) {
@@ -646,9 +721,7 @@
       }
 
       function initDashboard() {
-        document
-          .getElementById("logoutBtn")
-          .addEventListener("click", logout);
+        document.getElementById("logoutBtn").addEventListener("click", logout);
         setupSearch();
         loadPendingServices();
         loadRemovalRequests();
