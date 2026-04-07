@@ -38,7 +38,7 @@ router.post('/login', (req, res) => {
   });
 });
 
-// GET /api/admin/me  – used by admin-dashboard.html to keep you logged in
+// GET /api/admin/me  – for dashboard auth check
 router.get('/me', (req, res) => {
   if (!req.session || req.session.userRole !== 'admin') {
     return res.status(401).json({ message: 'Not admin' });
