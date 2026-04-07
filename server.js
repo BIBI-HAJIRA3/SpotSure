@@ -64,12 +64,10 @@ app.use('/api', reportRoutes); // /api/reports/service, /api/reports/review
 const publicDir = path.join(__dirname, 'public');
 app.use(express.static(publicDir));
 
-// Intro at root
 app.get('/', (req, res) => {
   res.sendFile(path.join(publicDir, 'index.html'));
 });
 
-// Services list
 app.get('/services.html', (req, res) => {
   res.sendFile(path.join(publicDir, 'services.html'));
 });
