@@ -7,7 +7,7 @@ const ADMIN_PASSWORD = 'spotsure123';
 
 router.post('/login', (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, password } = req.body || {};
 
     if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
       req.session = req.session || {};
