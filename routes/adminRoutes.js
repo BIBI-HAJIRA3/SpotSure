@@ -2,13 +2,14 @@
 const express = require('express');
 const Service = require('../models/Service');
 const Review = require('../models/Review');
-const Report = require('../models/Report'); // your Report model
+const Report = require('../models/Report');
 
 const router = express.Router();
 
-// Hardcoded admin credentials
-const ADMIN_USER = process.env.ADMIN_USER || 'admin';
-const ADMIN_PASS = process.env.ADMIN_PASS || 'Admin123';
+// Hardcoded admin credentials (harder)
+const ADMIN_USER = process.env.ADMIN_USER || 'admin_spotsure_2026';
+const ADMIN_PASS =
+  process.env.ADMIN_PASS || 'Sp0tSure_Admin!2026#Secure';
 
 // Session guard
 function requireAdmin(req, res, next) {
@@ -153,7 +154,7 @@ router.get('/reports/services', requireAdmin, async (req, res) => {
     const reports = await Report.find({ type: 'service' })
       .populate('service')
       .sort({ createdAt: -1 });
-    res.json({ reports });
+  res.json({ reports });
   } catch (err) {
     console.error('GET /api/admin/reports/services error:', err);
     res.status(500).json({ message: 'Server error' });
@@ -173,7 +174,7 @@ router.get('/reports/reviews', requireAdmin, async (req, res) => {
   }
 });
 
-// Search services by name (for deletion)
+// Search services by name
 router.get('/services/search', requireAdmin, async (req, res) => {
   try {
     const q = (req.query.name || '').trim();
