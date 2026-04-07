@@ -2,8 +2,42 @@
 const express = require('express');
 const router = express.Router();
 const Service = require('../models/Service');
-const Report = require('../models/Report');
 const Review = require('../models/Review');
+const Report = require('../models/Report');
+
+// LIST SERVICES (basic)
+router.get('/services', async (req, res) => {
+  try {
+    const { category, city, sort } = req.query;
+
+    const query = {};
+    if (category && category !== 'all') {
+      query.category = category;
+    }
+    if (city) {
+      query.city = city;
+    }
+
+    // Only show approved ones
+    query.isApproved = true;
+
+    let q = Service.find(query);
+
+    if (sort === 'highest') {
+      q = q.sort({ averageRating: -1 });
+    } else if (sort === 'lowest') {
+      q = q.sort({ averageRating: 1 });
+    } else {
+      q = q.sort({ createdAt: -1 });
+    }
+
+    const services = await q.exec();
+    res.json({ services });
+  } catch (err) {
+    console.error('GET /api/services error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
 // CREATE / REQUEST A SERVICE
 router.post('/services', async (req, res) => {
@@ -36,8 +70,7 @@ router.post('/services', async (req, res) => {
       providerImages: Array.isArray(providerImages)
         ? providerImages
         : [],
-      // Service is visible immediately with your schema
-      isApproved: true,
+      isApproved: true, // matches your schema default
     };
 
     if (lat !== undefined && lng !== undefined) {
@@ -59,32 +92,7 @@ router.post('/services', async (req, res) => {
   }
 });
 
-// (example) report a service
-router.post('/services/:id/report', async (req, res) => {
-  try {
-    const { reason } = req.body;
-    const serviceId = req.params.id;
-
-    if (!reason || !reason.trim()) {
-      return res.status(400).json({ message: 'Reason is required' });
-    }
-
-    const report = new Report({
-      type: 'service',
-      service: serviceId,
-      reason: reason.trim(),
-      // reporter: req.user?._id (if auth),
-    });
-
-    await report.save();
-    res.status(201).json({ message: 'Report submitted', report });
-  } catch (err) {
-    console.error('POST /api/services/:id/report error:', err);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-// (example) create a review (must satisfy rating 1–5)
+// CREATE REVIEW
 router.post('/services/:id/reviews', async (req, res) => {
   try {
     const serviceId = req.params.id;
@@ -111,11 +119,59 @@ router.post('/services/:id/reviews', async (req, res) => {
 
     await review.save();
 
-    // TODO: update averageRating / ratingCount / reviewCount if you want
+    // TODO: update Service averageRating / ratingCount / reviewCount if needed
 
     res.status(201).json({ message: 'Review added', review });
   } catch (err) {
     console.error('POST /api/services/:id/reviews error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// REPORT SERVICE
+router.post('/services/:id/report', async (req, res) => {
+  try {
+    const { reason } = req.body;
+    const serviceId = req.params.id;
+
+    if (!reason || !reason.trim()) {
+      return res.status(400).json({ message: 'Reason is required' });
+    }
+
+    const report = new Report({
+      type: 'service',
+      service: serviceId,
+      reason: reason.trim(),
+    });
+
+    await report.save();
+    res.status(201).json({ message: 'Report submitted', report });
+  } catch (err) {
+    console.error('POST /api/services/:id/report error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// REPORT REVIEW
+router.post('/reviews/:id/report', async (req, res) => {
+  try {
+    const { reason } = req.body;
+    const reviewId = req.params.id;
+
+    if (!reason || !reason.trim()) {
+      return res.status(400).json({ message: 'Reason is required' });
+    }
+
+    const report = new Report({
+      type: 'review',
+      review: reviewId,
+      reason: reason.trim(),
+    });
+
+    await report.save();
+    res.status(201).json({ message: 'Report submitted', report });
+  } catch (err) {
+    console.error('POST /api/reviews/:id/report error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });
