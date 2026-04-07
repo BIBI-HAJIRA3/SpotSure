@@ -24,7 +24,6 @@
         min-height: 100vh;
       }
 
-      /* Shared headings */
       .top-title {
         font-size: 20px;
         font-weight: 700;
@@ -68,7 +67,6 @@
         color: #fecaca;
       }
 
-      /* Login layout */
       .login-wrap {
         max-width: 420px;
         margin: 40px auto 0;
@@ -138,7 +136,6 @@
         margin-top: 8px;
       }
 
-      /* Dashboard (from admin-dashboard.html) */
       .top-bar {
         display: flex;
         justify-content: space-between;
@@ -231,7 +228,22 @@
         color: #9ca3af;
       }
 
-      /* Toast (optional, reuse style if desired) */
+      .confirm-row {
+        margin-top: 6px;
+        padding-top: 6px;
+        border-top: 1px dashed #374151;
+        font-size: 11px;
+        color: #fecaca;
+        display: none;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .confirm-text {
+        margin-right: auto;
+      }
+
       #toast {
         position: fixed;
         left: 50%;
@@ -297,7 +309,7 @@
         </div>
       </section>
 
-      <!-- DASHBOARD VIEW (hidden until login) -->
+      <!-- DASHBOARD VIEW -->
       <section id="adminDashboardSection" style="display:none;">
         <header class="top-bar">
           <div>
@@ -343,7 +355,7 @@
           <div id="reportedServices"></div>
         </section>
 
-        <!-- Review reports + delete any review -->
+        <!-- Review reports -->
         <section class="card">
           <h2>Reported reviews</h2>
           <div id="reportedReviews"></div>
@@ -375,7 +387,6 @@
         }, 2000);
       }
 
-      // ----- LOGIN LOGIC -----
       async function adminLogin() {
         const usernameEl = document.getElementById("adminUsername");
         const passwordEl = document.getElementById("adminPassword");
@@ -407,13 +418,11 @@
             return;
           }
 
-          // Logged in
           showToast("Signed in");
           document.getElementById("adminLoginSection").style.display = "none";
           document.getElementById("adminDashboardSection").style.display =
             "block";
 
-          // Load dashboard data
           initDashboard();
         } catch (e) {
           console.error(e);
@@ -436,7 +445,6 @@
         });
       }
 
-      // ----- OPTIONAL AUTO-CHECK (if session already admin) -----
       async function checkExistingAdminSession() {
         try {
           const res = await fetch(API_BASE + "/admin/me", {
@@ -460,13 +468,37 @@
             credentials: "include",
           });
         } catch (e) {}
-        // Show login again
         document.getElementById("adminDashboardSection").style.display = "none";
         document.getElementById("adminLoginSection").style.display = "block";
         showToast("Logged out");
       }
 
-      // ----- DASHBOARD LOGIC (from previous admin-dashboard.html) -----
+      function renderConfirmRow(id, text, onConfirm, onCancel) {
+        const row = document.getElementById(id);
+        if (!row) return;
+        row.style.display = "flex";
+        const yesBtn = row.querySelector('[data-role="yes"]');
+        const noBtn = row.querySelector('[data-role="no"]');
+
+        const cleanup = () => {
+          row.style.display = "none";
+          yesBtn.onclick = null;
+          noBtn.onclick = null;
+        };
+
+        yesBtn.onclick = async () => {
+          try {
+            await onConfirm();
+          } finally {
+            cleanup();
+          }
+        };
+        noBtn.onclick = () => {
+          if (onCancel) onCancel();
+          cleanup();
+        };
+      }
+
       async function loadPendingServices() {
         const container = document.getElementById("pendingServices");
         container.textContent = "Loading...";
@@ -487,6 +519,8 @@
           container.innerHTML = "";
           list.forEach((s) => {
             const div = document.createElement("div");
+            const confirmIdApprove = "confirm_approve_" + s._id;
+            const confirmIdDelete = "confirm_delete_service_pending_" + s._id;
             div.className = "item";
             div.innerHTML = `
               <div class="item-title">${s.name}</div>
@@ -495,19 +529,36 @@
             } • PIN ${s.pincode || ""}</div>
               <div class="item-row">
                 <span class="small">Created: ${
-                  new Date(s.createdAt).toLocaleString() || ""
+                  s.createdAt ? new Date(s.createdAt).toLocaleString() : ""
                 }</span>
                 <div class="btn-row">
-                  <button class="btn primary" onclick="approveService('${
-                    s._id
-                  }')">Approve</button>
-                  <button class="btn danger" onclick="deleteService('${
-                    s._id
-                  }')">Delete</button>
+                  <button class="btn primary" data-approve="${s._id}">Approve</button>
+                  <button class="btn danger" data-delete="${s._id}">Delete</button>
                 </div>
+              </div>
+              <div id="${confirmIdApprove}" class="confirm-row">
+                <span class="confirm-text">Approve this service?</span>
+                <button class="btn ghost" data-role="no">Cancel</button>
+                <button class="btn primary" data-role="yes">Yes</button>
+              </div>
+              <div id="${confirmIdDelete}" class="confirm-row">
+                <span class="confirm-text">Delete this service and its reviews?</span>
+                <button class="btn ghost" data-role="no">Cancel</button>
+                <button class="btn danger" data-role="yes">Yes</button>
               </div>
             `;
             container.appendChild(div);
+
+            div.querySelector('[data-approve]').onclick = () => {
+              renderConfirmRow(confirmIdApprove, "", async () => {
+                await approveService(s._id);
+              });
+            };
+            div.querySelector('[data-delete]').onclick = () => {
+              renderConfirmRow(confirmIdDelete, "", async () => {
+                await deleteService(s._id);
+              });
+            };
           });
         } catch (e) {
           container.textContent = "Error loading pending services.";
@@ -515,31 +566,41 @@
       }
 
       async function approveService(id) {
-        if (!confirm("Approve this service?")) return;
         try {
-          await fetch(API_BASE + "/admin/services/" + id + "/approve", {
+          const res = await fetch(API_BASE + "/admin/services/" + id + "/approve", {
             method: "PATCH",
             credentials: "include",
           });
+          if (!res.ok) {
+            const data = await res.json().catch(() => ({}));
+            showToast(data.message || "Error approving");
+            return;
+          }
+          showToast("Service approved");
           loadPendingServices();
           loadRemovalRequests();
         } catch (e) {
-          alert("Error approving service");
+          showToast("Error approving service");
         }
       }
 
       async function deleteService(id) {
-        if (!confirm("Delete this service and all its reviews?")) return;
         try {
-          await fetch(API_BASE + "/admin/services/" + id, {
+          const res = await fetch(API_BASE + "/admin/services/" + id, {
             method: "DELETE",
             credentials: "include",
           });
+          if (!res.ok) {
+            const data = await res.json().catch(() => ({}));
+            showToast(data.message || "Error deleting");
+            return;
+          }
+          showToast("Service deleted");
           loadPendingServices();
           loadRemovalRequests();
-          searchServicesByName(); // refresh if displayed in search
+          searchServicesByName();
         } catch (e) {
-          alert("Error deleting service");
+          showToast("Error deleting service");
         }
       }
 
@@ -566,6 +627,8 @@
           container.innerHTML = "";
           list.forEach((s) => {
             const div = document.createElement("div");
+            const confirmIdKeep = "confirm_keep_" + s._id;
+            const confirmIdDelete = "confirm_delete_service_removal_" + s._id;
             div.className = "item";
             div.innerHTML = `
               <div class="item-title">${s.name}</div>
@@ -575,16 +638,33 @@
               <div class="item-row">
                 <span class="small">Removal requested</span>
                 <div class="btn-row">
-                  <button class="btn primary" onclick="approveService('${
-                    s._id
-                  }')">Keep</button>
-                  <button class="btn danger" onclick="deleteService('${
-                    s._id
-                  }')">Delete</button>
+                  <button class="btn primary" data-keep="${s._id}">Keep</button>
+                  <button class="btn danger" data-delete="${s._id}">Delete</button>
                 </div>
+              </div>
+              <div id="${confirmIdKeep}" class="confirm-row">
+                <span class="confirm-text">Keep this service and clear removal request?</span>
+                <button class="btn ghost" data-role="no">Cancel</button>
+                <button class="btn primary" data-role="yes">Yes</button>
+              </div>
+              <div id="${confirmIdDelete}" class="confirm-row">
+                <span class="confirm-text">Delete this service and its reviews?</span>
+                <button class="btn ghost" data-role="no">Cancel</button>
+                <button class="btn danger" data-role="yes">Yes</button>
               </div>
             `;
             container.appendChild(div);
+
+            div.querySelector('[data-keep]').onclick = () => {
+              renderConfirmRow(confirmIdKeep, "", async () => {
+                await approveService(s._id);
+              });
+            };
+            div.querySelector('[data-delete]').onclick = () => {
+              renderConfirmRow(confirmIdDelete, "", async () => {
+                await deleteService(s._id);
+              });
+            };
           });
         } catch (e) {
           container.textContent = "Error loading removal requests.";
@@ -611,6 +691,8 @@
           container.innerHTML = "";
           list.forEach((r) => {
             const s = r.service || {};
+            if (!s || !s._id) return;
+            const confirmIdDelete = "confirm_delete_reported_service_" + s._id;
             const div = document.createElement("div");
             div.className = "item";
             div.innerHTML = `
@@ -618,16 +700,26 @@
               <div class="item-sub">Reason: ${r.reason || ""}</div>
               <div class="item-row">
                 <span class="small">Reported at: ${
-                  new Date(r.createdAt).toLocaleString() || ""
+                  r.createdAt ? new Date(r.createdAt).toLocaleString() : ""
                 }</span>
                 <div class="btn-row">
-                  <button class="btn danger" onclick="deleteService('${
-                    s._id
-                  }')">Delete service</button>
+                  <button class="btn danger" data-delete="${s._id}">Delete service</button>
                 </div>
+              </div>
+              <div id="${confirmIdDelete}" class="confirm-row">
+                <span class="confirm-text">Delete this service and its reviews?</span>
+                <button class="btn ghost" data-role="no">Cancel</button>
+                <button class="btn danger" data-role="yes">Yes</button>
               </div>
             `;
             container.appendChild(div);
+
+            div.querySelector('[data-delete]').onclick = () => {
+              renderConfirmRow(confirmIdDelete, "", async () => {
+                await deleteService(s._id);
+                loadReportedServices();
+              });
+            };
           });
         } catch (e) {
           container.textContent = "Error loading reported services.";
@@ -654,27 +746,40 @@
           container.innerHTML = "";
           list.forEach((r) => {
             const review = r.review || {};
+            if (!review || !review._id) return;
+            const confirmIdDelete = "confirm_delete_review_" + review._id;
             const div = document.createElement("div");
             div.className = "item";
             div.innerHTML = `
               <div class="item-title">Rating: ${
                 review.rating || "-"
               } – ${review.username || "Anonymous"}</div>
-              <div class="item-sub">Comment: ${
-                review.comment || ""
-              }<br />Reason: ${r.reason || ""}</div>
+              <div class="item-sub">
+                Comment: ${review.comment || ""}<br />
+                Reason: ${r.reason || ""}
+              </div>
               <div class="item-row">
                 <span class="small">Reported at: ${
-                  new Date(r.createdAt).toLocaleString() || ""
+                  r.createdAt ? new Date(r.createdAt).toLocaleString() : ""
                 }</span>
                 <div class="btn-row">
-                  <button class="btn danger" onclick="deleteReview('${
-                    review._id
-                  }')">Delete review</button>
+                  <button class="btn danger" data-delete="${review._id}">Delete review</button>
                 </div>
+              </div>
+              <div id="${confirmIdDelete}" class="confirm-row">
+                <span class="confirm-text">Delete this review?</span>
+                <button class="btn ghost" data-role="no">Cancel</button>
+                <button class="btn danger" data-role="yes">Yes</button>
               </div>
             `;
             container.appendChild(div);
+
+            div.querySelector('[data-delete]').onclick = () => {
+              renderConfirmRow(confirmIdDelete, "", async () => {
+                await deleteReview(review._id);
+                loadReportedReviews();
+              });
+            };
           });
         } catch (e) {
           container.textContent = "Error loading reported reviews.";
@@ -682,23 +787,22 @@
       }
 
       async function deleteReview(id) {
-        if (!id) {
-          alert("Missing review id");
-          return;
-        }
-        if (!confirm("Delete this review?")) return;
         try {
-          await fetch(API_BASE + "/admin/reviews/" + id, {
+          const res = await fetch(API_BASE + "/admin/reviews/" + id, {
             method: "DELETE",
             credentials: "include",
           });
-          loadReportedReviews();
+          if (!res.ok) {
+            const data = await res.json().catch(() => ({}));
+            showToast(data.message || "Error deleting review");
+            return;
+          }
+          showToast("Review deleted");
         } catch (e) {
-          alert("Error deleting review");
+          showToast("Error deleting review");
         }
       }
 
-      // Search services by name to delete
       let searchTimer = null;
       function setupSearch() {
         const input = document.getElementById("serviceSearchInput");
@@ -738,6 +842,7 @@
           container.innerHTML = "";
           list.forEach((s) => {
             const div = document.createElement("div");
+            const confirmIdDelete = "confirm_delete_search_" + s._id;
             div.className = "item";
             div.innerHTML = `
               <div class="item-title">${s.name}</div>
@@ -747,13 +852,23 @@
               <div class="item-row">
                 <span class="small">ID: ${s._id}</span>
                 <div class="btn-row">
-                  <button class="btn danger" onclick="deleteService('${
-                    s._id
-                  }')">Delete</button>
+                  <button class="btn danger" data-delete="${s._id}">Delete</button>
                 </div>
+              </div>
+              <div id="${confirmIdDelete}" class="confirm-row">
+                <span class="confirm-text">Delete this service and its reviews?</span>
+                <button class="btn ghost" data-role="no">Cancel</button>
+                <button class="btn danger" data-role="yes">Yes</button>
               </div>
             `;
             container.appendChild(div);
+
+            div.querySelector('[data-delete]').onclick = () => {
+              renderConfirmRow(confirmIdDelete, "", async () => {
+                await deleteService(s._id);
+                searchServicesByName();
+              });
+            };
           });
         } catch (e) {
           container.textContent = "Error searching.";
@@ -761,9 +876,7 @@
       }
 
       function initDashboard() {
-        document
-          .getElementById("logoutBtn")
-          .addEventListener("click", logout);
+        document.getElementById("logoutBtn").addEventListener("click", logout);
         setupSearch();
         loadPendingServices();
         loadRemovalRequests();
