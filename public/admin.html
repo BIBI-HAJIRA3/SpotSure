@@ -223,7 +223,6 @@
         </button>
       </header>
 
-      <!-- Search & delete service by name -->
       <section class="card">
         <h2>Find & delete service</h2>
         <div class="search-bar">
@@ -239,25 +238,21 @@
         </div>
       </section>
 
-      <!-- Pending services -->
       <section class="card">
         <h2>Pending service approvals</h2>
         <div id="pendingServices"></div>
       </section>
 
-      <!-- Removal requests -->
       <section class="card">
         <h2>Removal requests</h2>
         <div id="removalRequests"></div>
       </section>
 
-      <!-- Service reports -->
       <section class="card">
         <h2>Reported services</h2>
         <div id="reportedServices"></div>
       </section>
 
-      <!-- Review reports -->
       <section class="card">
         <h2>Reported reviews</h2>
         <div id="reportedReviews"></div>
@@ -358,7 +353,6 @@
         showLogin();
       }
 
-      // Dashboard logic (same as before, just in functions)
       async function loadPendingServices() {
         const container = document.getElementById("pendingServices");
         container.textContent = "Loading...";
@@ -413,8 +407,9 @@
             method: "PATCH",
             credentials: "include",
           });
-          loadPendingServices();
-          loadRemovalRequests();
+          await loadPendingServices();
+          await loadRemovalRequests();
+          await loadReportedServices();
         } catch (e) {
           alert("Error approving service");
         }
@@ -427,9 +422,10 @@
             method: "DELETE",
             credentials: "include",
           });
-          loadPendingServices();
-          loadRemovalRequests();
-          searchServicesByName();
+          await loadPendingServices();
+          await loadRemovalRequests();
+          await loadReportedServices();
+          await searchServicesByName();
         } catch (e) {
           alert("Error deleting service");
         }
@@ -582,13 +578,12 @@
             method: "DELETE",
             credentials: "include",
           });
-          loadReportedReviews();
+          await loadReportedReviews();
         } catch (e) {
           alert("Error deleting review");
         }
       }
 
-      // Search services by name
       let searchTimer = null;
       function setupSearch() {
         const input = document.getElementById("serviceSearchInput");
