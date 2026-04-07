@@ -37,7 +37,7 @@ body::before {
 
 .top-bar {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 10px;
   margin-bottom: 16px;
@@ -47,6 +47,7 @@ body::before {
   font-size: 18px;
   font-weight: 600;
   color: #f9fafb;
+  margin-bottom: 4px; /* extra breathing room */
 }
 .top-sub {
   font-size: 12px;
@@ -288,7 +289,7 @@ body::before {
       <div class="top-title" id="serviceTitle">Service</div>
       <div class="top-sub" id="serviceSub"></div>
     </div>
-    <button class="pill-btn" type="button" onclick="goBackToServices()">⬅ Services</button>
+    <!-- back button removed -->
   </div>
 
   <div class="card" id="serviceCard" style="display:none;">
@@ -316,6 +317,16 @@ body::before {
       </button>
 
       <button
+        class="btn-primary btn-danger-ghost"
+        type="button"
+        onclick="toggleServiceReport()"
+        style="padding:6px 10px; font-size:13px; border-radius:999px; min-width:auto;"
+        title="Report service"
+      >
+        <span class="icon">🚩</span>
+      </button>
+
+      <button
         id="requestDeleteBtn"
         class="btn-primary btn-danger-ghost"
         type="button"
@@ -328,15 +339,6 @@ body::before {
     </div>
 
     <div class="report-block">
-      <button
-        class="btn-primary btn-danger-ghost"
-        type="button"
-        onclick="toggleServiceReport()"
-        style="padding:4px 8px; font-size:12px; border-radius:999px; min-width:auto;"
-        title="Report service"
-      >
-        <span class="icon">🚩</span>
-      </button>
       <div id="serviceReportForm" style="display:none; margin-top:8px;">
         <label style="font-size:11px; color:#9ca3af;">Why are you reporting this service?</label>
         <textarea id="serviceReportReason" class="report-textarea" placeholder="Describe the issue..."></textarea>
@@ -375,10 +377,6 @@ let currentUser = null;
 function getServiceIdFromUrl() {
   const params = new URLSearchParams(window.location.search);
   return params.get('id');
-}
-
-function goBackToServices() {
-  window.location.href = '/services.html';
 }
 
 function openAddReview() {
