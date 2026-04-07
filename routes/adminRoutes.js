@@ -1,55 +1,52 @@
-// SpotSure/routes/adminRoutes.js
 const express = require('express');
 const Service = require('../models/Service');
 const Review = require('../models/Review');
+const User = require('../models/User');
 
 const router = express.Router();
 
-// Hardcoded admin credentials
-const ADMIN_USER = process.env.ADMIN_USER || 'admin';
-const ADMIN_PASS = process.env.ADMIN_PASS || 'Admin123';
-
-// Session guard
 function requireAdmin(req, res, next) {
   if (!req.session || req.session.userRole !== 'admin') {
-    return res.status(401).json({ message: 'Admin access required' });
+    return res.status(403).json({ message: 'Admin access required' });
   }
   next();
 }
 
 // POST /api/admin/login
-router.post('/login', (req, res) => {
-  const { username, password } = req.body || {};
+router.post('/login', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    if (!username || !password) {
+      return res
+        .status(400)
+        .json({ message: 'Username and password are required' });
+    }
 
-  if (!username || !password) {
-    return res.status(400).json({ message: 'Username and password required' });
+    const user = await User.findOne({ username: username.trim() });
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    const ok = await user.comparePassword(password);
+    if (!ok || user.role !== 'admin') {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    req.session.userId = user._id;
+    req.session.userRole = user.role;
+
+    res.json({
+      user: {
+        id: user._id,
+        username: user.username,
+        displayName: user.displayName,
+        role: user.role,
+      },
+    });
+  } catch (err) {
+    console.error('POST /api/admin/login error:', err);
+    res.status(500).json({ message: 'Server error' });
   }
-
-  if (username !== ADMIN_USER || password !== ADMIN_PASS) {
-    return res.status(401).json({ message: 'Invalid credentials' });
-  }
-
-  req.session.userId = 'hardcoded-admin';
-  req.session.userRole = 'admin';
-
-  res.json({
-    message: 'Logged in',
-    user: { id: 'hardcoded-admin', username: ADMIN_USER, role: 'admin' },
-  });
-});
-
-// GET /api/admin/me  – used by admin-dashboard.html to keep you logged in
-router.get('/me', (req, res) => {
-  if (!req.session || req.session.userRole !== 'admin') {
-    return res.status(401).json({ message: 'Not admin' });
-  }
-  res.json({
-    user: {
-      id: req.session.userId || 'hardcoded-admin',
-      username: ADMIN_USER,
-      role: 'admin',
-    },
-  });
 });
 
 // GET /api/admin/services/pending
@@ -81,14 +78,12 @@ router.get('/services/removal-requests', requireAdmin, async (req, res) => {
 // PATCH /api/admin/services/:id/approve
 router.patch('/services/:id/approve', requireAdmin, async (req, res) => {
   try {
-    const service = await Service.findByIdAndUpdate(
-      req.params.id,
-      { isApproved: true, removalRequested: false },
-      { new: true }
-    );
+    const service = await Service.findById(req.params.id);
     if (!service) {
       return res.status(404).json({ message: 'Service not found' });
     }
+    service.isApproved = true;
+    await service.save();
     res.json({ message: 'Service approved', service });
   } catch (err) {
     console.error('PATCH /api/admin/services/:id/approve error:', err);
@@ -99,13 +94,10 @@ router.patch('/services/:id/approve', requireAdmin, async (req, res) => {
 // DELETE /api/admin/services/:id
 router.delete('/services/:id', requireAdmin, async (req, res) => {
   try {
-    const id = req.params.id;
-    await Review.deleteMany({ service: id });
-    const service = await Service.findByIdAndDelete(id);
-    if (!service) {
-      return res.status(404).json({ message: 'Service not found' });
-    }
-    res.json({ message: 'Service and reviews deleted' });
+    const serviceId = req.params.id;
+    await Review.deleteMany({ service: serviceId });
+    await Service.findByIdAndDelete(serviceId);
+    res.json({ message: 'Service deleted' });
   } catch (err) {
     console.error('DELETE /api/admin/services/:id error:', err);
     res.status(500).json({ message: 'Server error' });
@@ -115,10 +107,12 @@ router.delete('/services/:id', requireAdmin, async (req, res) => {
 // DELETE /api/admin/reviews/:id
 router.delete('/reviews/:id', requireAdmin, async (req, res) => {
   try {
-    const review = await Review.findByIdAndDelete(req.params.id);
+    const reviewId = req.params.id;
+    const review = await Review.findById(reviewId);
     if (!review) {
       return res.status(404).json({ message: 'Review not found' });
     }
+    await review.deleteOne();
     res.json({ message: 'Review deleted' });
   } catch (err) {
     console.error('DELETE /api/admin/reviews/:id error:', err);
