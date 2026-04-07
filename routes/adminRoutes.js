@@ -11,7 +11,7 @@ router.get('/me', requireAdmin, (req, res) => {
   res.json({ user: { username: 'admin', role: 'admin' } });
 });
 
-// PENDING SERVICES (if you ever set isApproved=false)
+// PENDING SERVICES (if you ever use isApproved = false)
 router.get('/services/pending', requireAdmin, async (req, res) => {
   try {
     const services = await Service.find({ isApproved: false }).sort({
@@ -136,7 +136,7 @@ router.get('/reports/reviews', requireAdmin, async (req, res) => {
   }
 });
 
-// SERVICE SEARCH BY NAME (used in admin.html)
+// SERVICE SEARCH BY NAME (for admin search box)
 router.get('/services/search', requireAdmin, async (req, res) => {
   try {
     const { name } = req.query;
