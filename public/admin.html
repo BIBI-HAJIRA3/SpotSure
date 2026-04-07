@@ -1,4 +1,3 @@
-<!-- SpotSure/public/admin.html -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -293,11 +292,15 @@
       <div id="confirmBox">
         <div id="confirmMessage">Are you sure?</div>
         <div id="confirmButtons">
-          <button id="confirmCancelBtn" class="btn" style="background:#111827; color:#e5e7eb;">
+          <button
+            id="confirmCancelBtn"
+            class="btn"
+            style="background: #111827; color: #e5e7eb"
+          >
             Cancel
           </button>
           <button id="confirmOkBtn" class="btn danger">
-            Delete
+            OK
           </button>
         </div>
       </div>
@@ -319,12 +322,13 @@
         dashboardView.style.display = "block";
       }
 
-      // in-app confirm
+      // in-app confirm with dynamic OK label
       let confirmResolve = null;
-      function openConfirm(message) {
+      function openConfirm(message, okLabel = "OK") {
         return new Promise((resolve) => {
           confirmResolve = resolve;
           document.getElementById("confirmMessage").textContent = message;
+          document.getElementById("confirmOkBtn").textContent = okLabel;
           document.getElementById("confirmOverlay").style.display = "flex";
         });
       }
@@ -469,13 +473,18 @@
       }
 
       async function approveService(id) {
-        const ok = await openConfirm("Approve this service?");
+        const ok = await openConfirm("Do you approve this service?", "Approve");
         if (!ok) return;
         try {
-          await fetch(API_BASE + "/admin/services/" + id + "/approve", {
+          const res = await fetch(API_BASE + "/admin/services/" + id + "/approve", {
             method: "PATCH",
             credentials: "include",
           });
+          if (!res.ok) {
+            const data = await res.json().catch(() => ({}));
+            alert(data.message || "Server error while approving");
+            return;
+          }
           await loadPendingServices();
           await loadRemovalRequests();
           await loadReportedServices();
@@ -487,14 +496,20 @@
 
       async function deleteService(id) {
         const ok = await openConfirm(
-          "Delete this service and all its reviews?"
+          "Delete this service and all its reviews?",
+          "Delete"
         );
         if (!ok) return;
         try {
-          await fetch(API_BASE + "/admin/services/" + id, {
+          const res = await fetch(API_BASE + "/admin/services/" + id, {
             method: "DELETE",
             credentials: "include",
           });
+          if (!res.ok) {
+            const data = await res.json().catch(() => ({}));
+            alert(data.message || "Server error while deleting service");
+            return;
+          }
           await loadPendingServices();
           await loadRemovalRequests();
           await loadReportedServices();
@@ -645,17 +660,21 @@
           alert("Missing review id");
           return;
         }
-        const ok = await openConfirm("Delete this review?");
+        const ok = await openConfirm("Delete this review?", "Delete");
         if (!ok) return;
         try {
-          await fetch(API_BASE + "/admin/reviews/" + id, {
+          const res = await fetch(API_BASE + "/admin/reviews/" + id, {
             method: "DELETE",
             credentials: "include",
           });
-          // re-fetch list so the report disappears
+          if (!res.ok) {
+            const data = await res.json().catch(() => ({}));
+            alert(data.message || "Server error while deleting review");
+            return;
+          }
           await loadReportedReviews();
         } catch (e) {
-          alert("Error deleting review");
+          alert("Network error while deleting review");
         }
       }
 
