@@ -5,7 +5,7 @@ const Service = require('../models/Service');
 const Review = require('../models/Review');
 const Report = require('../models/Report');
 
-// LIST SERVICES
+// LIST SERVICES (home page with filters/sort)
 router.get('/services', async (req, res) => {
   try {
     const { category, city, sort } = req.query;
@@ -37,7 +37,7 @@ router.get('/services', async (req, res) => {
   }
 });
 
-// GET SINGLE SERVICE
+// SINGLE SERVICE (details page)
 router.get('/services/:id', async (req, res) => {
   try {
     const service = await Service.findById(req.params.id);
@@ -51,7 +51,7 @@ router.get('/services/:id', async (req, res) => {
   }
 });
 
-// GET REVIEWS FOR A SERVICE
+// REVIEWS FOR SERVICE (details page)
 router.get('/services/:id/reviews', async (req, res) => {
   try {
     const reviews = await Review.find({ service: req.params.id }).sort({
@@ -64,7 +64,7 @@ router.get('/services/:id/reviews', async (req, res) => {
   }
 });
 
-// CREATE / REQUEST A SERVICE
+// CREATE SERVICE (request a service form)
 router.post('/services', async (req, res) => {
   try {
     const {
@@ -117,18 +117,18 @@ router.post('/services', async (req, res) => {
   }
 });
 
-// CREATE REVIEW
+// CREATE REVIEW (Add review)
 router.post('/services/:id/reviews', async (req, res) => {
   try {
     const serviceId = req.params.id;
     const { username, rating, comment, imageUrls } = req.body || {};
 
-    if (rating === undefined || rating === null) {
+    if (rating === undefined || rating === null || rating === '') {
       return res.status(400).json({ message: 'Rating is required' });
     }
 
     const numericRating = Number(rating);
-    if (numericRating < 1 || numericRating > 5) {
+    if (Number.isNaN(numericRating) || numericRating < 1 || numericRating > 5) {
       return res
         .status(400)
         .json({ message: 'Rating must be between 1 and 5' });
@@ -143,6 +143,8 @@ router.post('/services/:id/reviews', async (req, res) => {
     });
 
     await review.save();
+
+    // TODO: recompute averageRating/ratingCount if you want later
 
     res.status(201).json({ message: 'Review added', review });
   } catch (err) {
