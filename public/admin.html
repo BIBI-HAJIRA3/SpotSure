@@ -164,7 +164,7 @@
           const data = await res.json();
 
           if (!res.ok) {
-            errorBox.textContent = data.message || "Login failed";
+            errorBox.textContent = data.message || "Invalid credentials";
             errorBox.style.display = "block";
             submitBtn.disabled = false;
             submitBtn.textContent = "Sign in";
