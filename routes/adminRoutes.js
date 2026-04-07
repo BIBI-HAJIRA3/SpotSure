@@ -6,10 +6,9 @@ const Report = require('../models/Report');
 
 const router = express.Router();
 
-// Hardcoded admin credentials (harder)
-const ADMIN_USER = process.env.ADMIN_USER || 'admin_spotsure_2026';
-const ADMIN_PASS =
-  process.env.ADMIN_PASS || 'Sp0tSure_Admin!2026#Secure';
+// Shorter but still non‑trivial admin credentials
+const ADMIN_USER = process.env.ADMIN_USER || 'spotsure_admin';
+const ADMIN_PASS = process.env.ADMIN_PASS || 'Sp0t2026!admin';
 
 // Session guard
 function requireAdmin(req, res, next) {
@@ -19,24 +18,19 @@ function requireAdmin(req, res, next) {
   next();
 }
 
-// POST /api/admin/login
 router.post('/login', (req, res, next) => {
   const { username, password } = req.body || {};
-
   if (!username || !password) {
     return res.status(400).json({ message: 'Username and password required' });
   }
-
   if (username !== ADMIN_USER || password !== ADMIN_PASS) {
     return res.status(401).json({ message: 'Invalid credentials' });
   }
 
   req.session.regenerate((err) => {
     if (err) return next(err);
-
     req.session.userId = 'hardcoded-admin';
     req.session.userRole = 'admin';
-
     req.session.save((err2) => {
       if (err2) return next(err2);
       res.json({
@@ -47,7 +41,6 @@ router.post('/login', (req, res, next) => {
   });
 });
 
-// GET /api/admin/me
 router.get('/me', (req, res) => {
   if (!req.session || req.session.userRole !== 'admin') {
     return res.status(401).json({ message: 'Not admin' });
@@ -61,7 +54,6 @@ router.get('/me', (req, res) => {
   });
 });
 
-// POST /api/admin/logout
 router.post('/logout', requireAdmin, (req, res, next) => {
   req.session.userId = null;
   req.session.userRole = null;
@@ -154,7 +146,7 @@ router.get('/reports/services', requireAdmin, async (req, res) => {
     const reports = await Report.find({ type: 'service' })
       .populate('service')
       .sort({ createdAt: -1 });
-  res.json({ reports });
+    res.json({ reports });
   } catch (err) {
     console.error('GET /api/admin/reports/services error:', err);
     res.status(500).json({ message: 'Server error' });
