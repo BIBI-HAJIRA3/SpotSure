@@ -52,7 +52,7 @@ body::before {
   font-size: 20px;
   font-weight: 700;
   color: #f9fafb;
-  margin-bottom: 4px; /* spacing from welcome line */
+  margin-bottom: 4px;
 }
 .top-sub {
   font-size: 12px;
@@ -137,30 +137,19 @@ body::before {
   box-shadow: 0 6px 14px rgba(15,23,42,0.7);
 }
 
+/* sort dropdown */
 .sort-row {
   margin: 4px 0 10px;
   display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
+  justify-content: flex-end;
 }
-.sort-btn {
-  padding: 4px 10px;
+.sort-select {
+  padding: 4px 8px;
   border-radius: 999px;
   border: 1px solid #374151;
   background: #020617;
   color: #d1d5db;
   font-size: 11px;
-  cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
-}
-.sort-btn.active {
-  border-color: #fbbf24;
-  background: #facc15;
-  color: #111827;
-}
-.sort-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(15,23,42,0.7);
 }
 
 .list-section-title {
@@ -321,8 +310,11 @@ body::before {
   </div>
 
   <div class="sort-row">
-    <button class="sort-btn" id="sortHigh">Highest rated</button>
-    <button class="sort-btn" id="sortLow">Lowest rated</button>
+    <select id="sortSelect" class="sort-select">
+      <option value="none">Sort: none</option>
+      <option value="high">Highest rated</option>
+      <option value="low">Lowest rated</option>
+    </select>
   </div>
 
   <div class="list-section-title"></div>
@@ -334,7 +326,7 @@ const API_BASE = window.location.origin + '/api';
 
 let allServices = [];
 let currentCategory = 'All';
-let sortMode = 'none'; // 'none' | 'high' | 'low'
+let sortMode = 'none';
 
 function getUsername() {
   return localStorage.getItem('spotsureUsername') || null;
@@ -498,22 +490,11 @@ function setupSearch() {
   }
 }
 
-function setupSortButtons() {
-  const high = document.getElementById('sortHigh');
-  const low = document.getElementById('sortLow');
-  if (!high || !low) return;
-
-  high.addEventListener('click', () => {
-    sortMode = sortMode === 'high' ? 'none' : 'high';
-    high.classList.toggle('active', sortMode === 'high');
-    low.classList.toggle('active', sortMode === 'low');
-    renderServices();
-  });
-
-  low.addEventListener('click', () => {
-    sortMode = sortMode === 'low' ? 'none' : 'low';
-    low.classList.toggle('active', sortMode === 'low');
-    high.classList.toggle('active', sortMode === 'high');
+function setupSortDropdown() {
+  const select = document.getElementById('sortSelect');
+  if (!select) return;
+  select.addEventListener('change', () => {
+    sortMode = select.value; // 'none' | 'high' | 'low'
     renderServices();
   });
 }
@@ -523,7 +504,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadServices();
   setupCategoryFilters();
   setupSearch();
-  setupSortButtons();
+  setupSortDropdown();
 });
 </script>
 </body>
