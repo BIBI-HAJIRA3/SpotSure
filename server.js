@@ -17,13 +17,15 @@ const reportRoutes = require('./routes/reportRoutes');
 
 const app = express();
 
+// CORS (allow your frontend URL or "*")
 app.use(
   cors({
-    origin: 'http://localhost:5000',
+    origin: true,
     credentials: true,
   })
 );
 
+// Sessions
 app.use(
   session({
     secret: process.env.SESSION_SECRET || 'dev-secret',
@@ -33,6 +35,7 @@ app.use(
   })
 );
 
+// MongoDB
 const mongoUri =
   process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/SpotSure';
 mongoose
@@ -40,6 +43,7 @@ mongoose
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.error('MongoDB connection error:', err));
 
+// Cloudinary
 cloudinaryLib.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME || '',
   api_key: process.env.CLOUDINARY_API_KEY || '',
@@ -54,18 +58,21 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// API routes
 app.use('/api', serviceRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/image', imageRoutes);
 app.use('/api/admin', adminRoutes);
-app.use('/api', reportRoutes); // /api/reports/service, /api/reports/review
+app.use('/api', reportRoutes);
 
+// Static frontend
 const publicDir = path.join(__dirname, 'public');
 app.use(express.static(publicDir));
 
+// HTML routes
 app.get('/', (req, res) => {
-  res.sendFile(path.join(publicDir, 'index.html'));
+  res.sendFile(path.join(publicDir, 'services.html'));
 });
 
 app.get('/services.html', (req, res) => {
@@ -76,10 +83,6 @@ app.get('/service.html', (req, res) => {
   res.sendFile(path.join(publicDir, 'service.html'));
 });
 
-app.get('/reviews.html', (req, res) => {
-  res.sendFile(path.join(publicDir, 'reviews.html'));
-});
-
 app.get('/add-review.html', (req, res) => {
   res.sendFile(path.join(publicDir, 'add-review.html'));
 });
@@ -88,6 +91,15 @@ app.get('/add-service.html', (req, res) => {
   res.sendFile(path.join(publicDir, 'add-service.html'));
 });
 
+app.get('/admin.html', (req, res) => {
+  res.sendFile(path.join(publicDir, 'admin.html'));
+});
+
+app.get('/admin-dashboard.html', (req, res) => {
+  res.sendFile(path.join(publicDir, 'admin-dashboard.html'));
+});
+
+// IMPORTANT: listen on Render port
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`SpotSure server running on http://localhost:${PORT}`);
