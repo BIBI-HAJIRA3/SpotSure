@@ -5,13 +5,13 @@ const Service = require('../models/Service');
 const router = express.Router();
 
 function requireAdmin(req, res, next) {
-  if (!req.session || req.session.userRole !== 'admin') {
+  if (!req.session || !req.session.isAdmin) {
     return res.status(403).json({ message: 'Admin only' });
   }
   next();
 }
 
-// FIXED PATH: now /api/admin/services/removal-requests
+// GET /api/admin/services/removal-requests
 router.get('/services/removal-requests', requireAdmin, async (req, res) => {
   try {
     const services = await Service.find({ removalRequested: true })
