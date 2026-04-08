@@ -2,6 +2,10 @@
 const express = require('express');
 const Service = require('../models/Service');
 
+// Uncomment and fix paths when you have these models
+// const ServiceReport = require('../models/ServiceReport');
+// const ReviewReport = require('../models/ReviewReport');
+
 const router = express.Router();
 
 function requireAdmin(req, res, next) {
@@ -14,7 +18,9 @@ function requireAdmin(req, res, next) {
 // Pending services – GET /api/admin/services/pending
 router.get('/services/pending', requireAdmin, async (req, res) => {
   try {
-    const services = await Service.find({ isApproved: false }).sort({ createdAt: -1 });
+    const services = await Service.find({ isApproved: false }).sort({
+      createdAt: -1,
+    });
     res.json({ services });
   } catch (err) {
     console.error('GET /admin/services/pending error:', err);
@@ -47,6 +53,7 @@ router.patch('/services/:id/approve', requireAdmin, async (req, res) => {
     }
 
     service.isApproved = true;
+    // If it had a removal request, clear it on approve/keep
     service.removalRequested = false;
     service.removalRequestedBy = undefined;
 
@@ -58,5 +65,72 @@ router.patch('/services/:id/approve', requireAdmin, async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
+
+// Delete service – DELETE /api/admin/services/:id
+router.delete('/services/:id', requireAdmin, async (req, res) => {
+  try {
+    const serviceId = req.params.id;
+    const service = await Service.findByIdAndDelete(serviceId);
+    if (!service) {
+      return res.status(404).json({ message: 'Service not found' });
+    }
+
+    // TODO: if you want, also delete associated reviews here
+
+    res.json({ message: 'Service deleted' });
+  } catch (err) {
+    console.error('DELETE /admin/services/:id error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Search services by name – GET /api/admin/services/search?name=...
+router.get('/services/search', requireAdmin, async (req, res) => {
+  try {
+    const { name } = req.query;
+    if (!name || name.trim().length < 2) {
+      return res.json({ services: [] });
+    }
+
+    const regex = new RegExp(name.trim(), 'i');
+    const services = await Service.find({ name: regex }).sort({
+      createdAt: -1,
+    });
+
+    res.json({ services });
+  } catch (err) {
+    console.error('GET /admin/services/search error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Reported services – GET /api/admin/reports/services
+// Uncomment and adjust once you share your report models
+/*
+router.get('/reports/services', requireAdmin, async (req, res) => {
+  try {
+    const reports = await ServiceReport.find({})
+      .sort({ createdAt: -1 })
+      .populate('service');
+    res.json({ reports });
+  } catch (err) {
+    console.error('GET /admin/reports/services error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Reported reviews – GET /api/admin/reports/reviews
+router.get('/reports/reviews', requireAdmin, async (req, res) => {
+  try {
+    const reports = await ReviewReport.find({})
+      .sort({ createdAt: -1 })
+      .populate('review');
+    res.json({ reports });
+  } catch (err) {
+    console.error('GET /admin/reports/reviews error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+*/
 
 module.exports = router;
