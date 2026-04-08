@@ -22,7 +22,7 @@ router.get('/services/pending', requireAdmin, async (req, res) => {
   }
 });
 
-// Removal requests – already present
+// Removal requests – GET /api/admin/services/removal-requests
 router.get('/services/removal-requests', requireAdmin, async (req, res) => {
   try {
     const services = await Service.find({ removalRequested: true })
@@ -33,6 +33,28 @@ router.get('/services/removal-requests', requireAdmin, async (req, res) => {
     res.json({ services });
   } catch (err) {
     console.error('GET /admin/services/removal-requests error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Approve service – PATCH /api/admin/services/:id/approve
+router.patch('/services/:id/approve', requireAdmin, async (req, res) => {
+  try {
+    const serviceId = req.params.id;
+    const service = await Service.findById(serviceId);
+    if (!service) {
+      return res.status(404).json({ message: 'Service not found' });
+    }
+
+    service.isApproved = true;
+    service.removalRequested = false;
+    service.removalRequestedBy = undefined;
+
+    await service.save();
+
+    res.json({ message: 'Service approved', service });
+  } catch (err) {
+    console.error('PATCH /admin/services/:id/approve error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });
