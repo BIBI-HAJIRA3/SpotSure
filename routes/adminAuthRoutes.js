@@ -1,36 +1,82 @@
 // SpotSure/routes/adminAuthRoutes.js
 const express = require('express');
+const User = require('../models/User');
+
 const router = express.Router();
 
-const ADMIN_USERNAME = 'admin';
-const ADMIN_PASSWORD = 'spotsure123';
-
-router.post('/login', (req, res) => {
+// POST /api/admin/login
+router.post('/admin/login', async (req, res) => {
   try {
-    const { username, password } = req.body || {};
+    const { username, password } = req.body;
 
-    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-      req.session = req.session || {};
-      req.session.isAdmin = true;
-
-      return res.json({
-        message: 'Logged in',
-        user: { username, role: 'admin' },
-      });
+    if (!username || !password) {
+      return res
+        .status(400)
+        .json({ message: 'Username and password are required' });
     }
 
-    return res.status(401).json({ message: 'Invalid credentials' });
+    // Admins only
+    const user = await User.findOne({
+      username: username.trim(),
+      role: 'admin',
+    });
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    const ok = await user.comparePassword(password);
+    if (!ok) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    req.session.userId = user._id;
+    req.session.userRole = user.role;
+
+    res.json({
+      user: {
+        id: user._id,
+        username: user.username,
+        role: user.role,
+      },
+    });
   } catch (err) {
     console.error('POST /api/admin/login error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });
 
-router.post('/logout', (req, res) => {
-  if (req.session) {
-    req.session.isAdmin = false;
+// GET /api/admin/me
+router.get('/admin/me', async (req, res) => {
+  try {
+    if (!req.session || !req.session.userId || req.session.userRole !== 'admin') {
+      return res.json({ user: null });
+    }
+
+    const user = await User.findById(req.session.userId).select(
+      '_id username role'
+    );
+    if (!user || user.role !== 'admin') {
+      return res.json({ user: null });
+    }
+
+    res.json({
+      user: {
+        id: user._id,
+        username: user.username,
+        role: user.role,
+      },
+    });
+  } catch (err) {
+    console.error('GET /api/admin/me error:', err);
+    res.status(500).json({ message: 'Server error' });
   }
-  res.json({ message: 'Logged out' });
+});
+
+// POST /api/admin/logout
+router.post('/admin/logout', (req, res) => {
+  req.session.destroy(() => {
+    res.json({ message: 'Logged out' });
+  });
 });
 
 module.exports = router;
