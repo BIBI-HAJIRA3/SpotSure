@@ -1,10 +1,7 @@
 // SpotSure/routes/adminRoutes.js
 const express = require('express');
 const Service = require('../models/Service');
-
-// Uncomment and fix paths when you have these models
-// const ServiceReport = require('../models/ServiceReport');
-// const ReviewReport = require('../models/ReviewReport');
+const Report = require('../models/Report'); // unified report model
 
 const router = express.Router();
 
@@ -43,7 +40,7 @@ router.get('/services/removal-requests', requireAdmin, async (req, res) => {
   }
 });
 
-// Approve service – PATCH /api/admin/services/:id/approve
+// Approve / keep – PATCH /api/admin/services/:id/approve
 router.patch('/services/:id/approve', requireAdmin, async (req, res) => {
   try {
     const serviceId = req.params.id;
@@ -53,7 +50,6 @@ router.patch('/services/:id/approve', requireAdmin, async (req, res) => {
     }
 
     service.isApproved = true;
-    // If it had a removal request, clear it on approve/keep
     service.removalRequested = false;
     service.removalRequestedBy = undefined;
 
@@ -75,7 +71,7 @@ router.delete('/services/:id', requireAdmin, async (req, res) => {
       return res.status(404).json({ message: 'Service not found' });
     }
 
-    // TODO: if you want, also delete associated reviews here
+    // Optionally delete related reviews here
 
     res.json({ message: 'Service deleted' });
   } catch (err) {
@@ -84,7 +80,7 @@ router.delete('/services/:id', requireAdmin, async (req, res) => {
   }
 });
 
-// Search services by name – GET /api/admin/services/search?name=...
+// Search services – GET /api/admin/services/search?name=...
 router.get('/services/search', requireAdmin, async (req, res) => {
   try {
     const { name } = req.query;
@@ -105,11 +101,9 @@ router.get('/services/search', requireAdmin, async (req, res) => {
 });
 
 // Reported services – GET /api/admin/reports/services
-// Uncomment and adjust once you share your report models
-/*
 router.get('/reports/services', requireAdmin, async (req, res) => {
   try {
-    const reports = await ServiceReport.find({})
+    const reports = await Report.find({ type: 'service' })
       .sort({ createdAt: -1 })
       .populate('service');
     res.json({ reports });
@@ -122,7 +116,7 @@ router.get('/reports/services', requireAdmin, async (req, res) => {
 // Reported reviews – GET /api/admin/reports/reviews
 router.get('/reports/reviews', requireAdmin, async (req, res) => {
   try {
-    const reports = await ReviewReport.find({})
+    const reports = await Report.find({ type: 'review' })
       .sort({ createdAt: -1 })
       .populate('review');
     res.json({ reports });
@@ -131,6 +125,5 @@ router.get('/reports/reviews', requireAdmin, async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
-*/
 
 module.exports = router;
