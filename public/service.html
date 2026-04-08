@@ -454,7 +454,7 @@ function buildNavigationUrl(svc) {
   return 'https://www.google.com/maps/search/?api=1&query=' + query;
 }
 
-/* Navigation reverted: open Maps URL in new tab/window */
+/* Navigation – open Maps URL in new tab */
 function navigateToService() {
   if (!currentService) return;
   const url = buildNavigationUrl(currentService);
