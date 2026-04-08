@@ -4,7 +4,6 @@ const Service = require('../models/Service');
 
 const router = express.Router();
 
-// Simple admin guard – replace with your existing one if you already have it
 function requireAdmin(req, res, next) {
   if (!req.session || req.session.userRole !== 'admin') {
     return res.status(403).json({ message: 'Admin only' });
@@ -12,8 +11,8 @@ function requireAdmin(req, res, next) {
   next();
 }
 
-// GET /api/admin/services/removal-requests
-router.get('/admin/services/removal-requests', requireAdmin, async (req, res) => {
+// FIXED PATH: now /api/admin/services/removal-requests
+router.get('/services/removal-requests', requireAdmin, async (req, res) => {
   try {
     const services = await Service.find({ removalRequested: true })
       .sort({ updatedAt: -1 })
