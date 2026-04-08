@@ -454,14 +454,11 @@ function buildNavigationUrl(svc) {
   return 'https://www.google.com/maps/search/?api=1&query=' + query;
 }
 
-/* UPDATED: navigation for Kodular (custom scheme) */
+/* Navigation reverted: open Maps URL in new tab/window */
 function navigateToService() {
   if (!currentService) return;
-  const mapsUrl = buildNavigationUrl(currentService);
-
-  // Kodular WebView will catch this URL and open with ActivityStarter
-  window.location.href =
-    'spotsure://openmaps?u=' + encodeURIComponent(mapsUrl);
+  const url = buildNavigationUrl(currentService);
+  window.open(url, '_blank');
 }
 
 async function loadCurrentUser() {
