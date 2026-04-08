@@ -65,10 +65,11 @@ app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/image', imageRoutes);
 
-// Admin: auth + admin operations
-app.use('/api/admin', adminAuthRoutes); // /api/admin/login, /me, /logout
-app.use('/api/admin', adminRoutes);     // /api/admin/services/..., /api/admin/reports/...
+// Admin routes (hard-coded admin login)
+app.use('/api/admin', adminAuthRoutes);  // /api/admin/login, /me, /logout
+app.use('/api/admin', adminRoutes);      // /api/admin/services/..., /api/admin/reports/...
 
+// Public report submission
 app.use('/api', reportRoutes);
 
 // Static frontend
@@ -104,7 +105,7 @@ app.get('/admin-dashboard.html', (req, res) => {
   res.sendFile(path.join(publicDir, 'admin-dashboard.html'));
 });
 
-// Listen
+// IMPORTANT: listen on Render port or local
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`SpotSure server running on http://localhost:${PORT}`);
