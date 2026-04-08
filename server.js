@@ -12,12 +12,13 @@ const serviceRoutes = require('./routes/serviceRoutes');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const imageRoutes = require('./routes/imageRoutes');
-const adminRoutes = require('./routes/adminRoutes');
+const adminRoutes = require('./routes/adminRoutes');       // admin data routes
+const adminAuthRoutes = require('./routes/adminAuthRoutes'); // NEW
 const reportRoutes = require('./routes/reportRoutes');
 
 const app = express();
 
-// CORS (allow your frontend URL or "*")
+// CORS
 app.use(
   cors({
     origin: true,
@@ -63,7 +64,8 @@ app.use('/api', serviceRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/image', imageRoutes);
-app.use('/api/admin', adminRoutes);
+app.use('/api/admin', adminRoutes);      // e.g. /api/admin/services/removal-requests
+app.use('/api/admin', adminAuthRoutes);  // /api/admin/login, /me, /logout
 app.use('/api', reportRoutes);
 
 // Static frontend
@@ -99,7 +101,7 @@ app.get('/admin-dashboard.html', (req, res) => {
   res.sendFile(path.join(publicDir, 'admin-dashboard.html'));
 });
 
-// IMPORTANT: listen on Render port
+// Listen
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`SpotSure server running on http://localhost:${PORT}`);
