@@ -5,7 +5,7 @@ const User = require('../models/User');
 const router = express.Router();
 
 // POST /api/admin/login
-router.post('/admin/login', async (req, res) => {
+router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
 
@@ -15,7 +15,7 @@ router.post('/admin/login', async (req, res) => {
         .json({ message: 'Username and password are required' });
     }
 
-    // Admins only
+    // Only admin users
     const user = await User.findOne({
       username: username.trim(),
       role: 'admin',
@@ -46,7 +46,7 @@ router.post('/admin/login', async (req, res) => {
 });
 
 // GET /api/admin/me
-router.get('/admin/me', async (req, res) => {
+router.get('/me', async (req, res) => {
   try {
     if (!req.session || !req.session.userId || req.session.userRole !== 'admin') {
       return res.json({ user: null });
@@ -73,7 +73,7 @@ router.get('/admin/me', async (req, res) => {
 });
 
 // POST /api/admin/logout
-router.post('/admin/logout', (req, res) => {
+router.post('/logout', (req, res) => {
   req.session.destroy(() => {
     res.json({ message: 'Logged out' });
   });
