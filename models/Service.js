@@ -1,3 +1,5 @@
+<!--SpotSure/models/Service.js-->
+  
 const mongoose = require('mongoose');
 
 const ServiceSchema = new mongoose.Schema(
