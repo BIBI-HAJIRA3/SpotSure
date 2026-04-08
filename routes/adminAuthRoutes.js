@@ -25,7 +25,6 @@ router.post('/login', (req, res) => {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    // Mark this session as admin
     req.session.isAdmin = true;
 
     res.json({
