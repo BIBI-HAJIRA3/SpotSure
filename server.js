@@ -12,8 +12,8 @@ const serviceRoutes = require('./routes/serviceRoutes');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const imageRoutes = require('./routes/imageRoutes');
-const adminRoutes = require('./routes/adminRoutes');       // admin data routes
-const adminAuthRoutes = require('./routes/adminAuthRoutes'); // NEW
+const adminRoutes = require('./routes/adminRoutes');
+const adminAuthRoutes = require('./routes/adminAuthRoutes');
 const reportRoutes = require('./routes/reportRoutes');
 
 const app = express();
@@ -64,8 +64,11 @@ app.use('/api', serviceRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/image', imageRoutes);
-app.use('/api/admin', adminRoutes);      // e.g. /api/admin/services/removal-requests
-app.use('/api/admin', adminAuthRoutes);  // /api/admin/login, /me, /logout
+
+// Admin: auth + admin operations
+app.use('/api/admin', adminAuthRoutes); // /api/admin/login, /me, /logout
+app.use('/api/admin', adminRoutes);     // /api/admin/services/..., /api/admin/reports/...
+
 app.use('/api', reportRoutes);
 
 // Static frontend
