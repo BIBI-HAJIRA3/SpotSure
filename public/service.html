@@ -1,737 +1,915 @@
+<!-- SpotSure/public/admin.html -->
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8" />
-<title>SpotSure – Service</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<style>
-* { box-sizing: border-box; }
-
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  background: radial-gradient(circle at top, #0f172a 0, #020617 55%, #000 100%);
-  color: #e5e7eb;
-}
-
-.page {
-  max-width: 520px;
-  margin: 0 auto;
-  padding: 20px 14px 28px;
-  min-height: 100vh;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background-image:
-    radial-gradient(2px 2px at 20% 30%, rgba(148,163,184,0.18) 0, transparent 55%),
-    radial-gradient(1px 1px at 80% 70%, rgba(148,163,184,0.14) 0, transparent 55%),
-    radial-gradient(1.5px 1.5px at 40% 80%, rgba(148,163,184,0.1) 0, transparent 60%);
-  opacity: 0.6;
-  z-index: -1;
-}
-
-.top-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
-}
-.top-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #f9fafb;
-}
-.top-sub {
-  font-size: 12px;
-  color: #9ca3af;
-}
-.pill-btn {
-  border-radius: 999px;
-  border: 1px solid #374151;
-  background: #111827;
-  color: #e5e7eb;
-  padding: 6px 10px;
-  font-size: 12px;
-  cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
-}
-.pill-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(15,23,42,0.7);
-  background: #020617;
-}
-
-.card {
-  background: #0b1120;
-  border-radius: 14px;
-  border: 1px solid #1f2937;
-  padding: 14px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-  margin-bottom: 14px;
-  backdrop-filter: blur(4px);
-}
-
-.service-header {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 10px;
-}
-.service-thumb {
-  width: 54px;
-  height: 54px;
-  border-radius: 14px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 26px;
-  color: #f9fafb;
-  background: radial-gradient(circle at 0 0, #22c55e 0, #16a34a 35%, #15803d 65%, #0f172a 100%);
-  box-shadow: 0 4px 12px rgba(21,128,61,0.9);
-  flex-shrink: 0;
-}
-.service-thumb.hospital {
-  background: radial-gradient(circle at 0 0, #38bdf8 0, #0ea5e9 35%, #0369a1 65%, #0f172a 100%);
-}
-.service-thumb.clinic {
-  background: radial-gradient(circle at 0 0, #22c55e 0, #16a34a 35%, #166534 65%, #0f172a 100%);
-}
-.service-thumb.school {
-  background: radial-gradient(circle at 0 0, #a855f7 0, #7c3aed 35%, #5b21b6 65%, #0f172a 100%);
-}
-.service-thumb.restaurant {
-  background: radial-gradient(circle at 0 0, #fb923c 0, #f97316 35%, #c2410c 65%, #0f172a 100%);
-}
-.service-thumb.grocery {
-  background: radial-gradient(circle at 0 0, #22c55e 0, #16a34a 35%, #166534 65%, #0f172a 100%);
-}
-.service-thumb.default {
-  background: radial-gradient(circle at 0 0, #6366f1 0, #4f46e5 35%, #312e81 65%, #0f172a 100%);
-}
-
-.service-main h1 {
-  margin: 0 0 4px;
-  font-size: 18px;
-  color: #f9fafb;
-}
-.service-main p {
-  margin: 0;
-  font-size: 12px;
-  color: #9ca3af;
-  line-height: 1.4;
-}
-
-.rating-row {
-  font-size: 12px;
-  color: #9ca3af;
-  margin-top: 6px;
-}
-
-/* Provider image row */
-.provider-images-row {
-  margin-top: 10px;
-  display: flex;
-  gap: 6px;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  padding-bottom: 2px;
-}
-.provider-thumb {
-  width: 54px;
-  height: 54px;
-  border-radius: 8px;
-  object-fit: cover;
-  flex-shrink: 0;
-  border: 1px solid #1f2937;
-  cursor: pointer;
-}
-
-/* Buttons */
-.btn-row {
-  display: flex;
-  gap: 8px;
-  margin-top: 10px;
-  flex-wrap: wrap;
-}
-.btn-primary {
-  padding: 8px 12px;
-  border-radius: 999px;
-  border: none;
-  font-size: 13px;
-  cursor: pointer;
-  background: #2563eb;
-  color: #ffffff;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
-}
-.btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(15,23,42,0.7);
-  background: #1d4ed8;
-}
-
-.btn-secondary {
-  background: #059669;
-}
-.btn-secondary:hover {
-  background: #047857;
-}
-
-.btn-danger-ghost {
-  background: #0b1120;
-  border: 1px solid #b91c1c;
-  color: #fecaca;
-}
-.btn-danger-ghost:hover {
-  background: #1f2937;
-}
-
-.icon {
-  font-size: 14px;
-}
-
-/* Report UI */
-.report-block {
-  margin-top: 10px;
-  font-size: 12px;
-  color: #9ca3af;
-}
-.report-textarea {
-  width: 100%;
-  min-height: 60px;
-  border-radius: 8px;
-  border: 1px solid #374151;
-  background: #020617;
-  color: #e5e7eb;
-  font-size: 12px;
-  padding: 6px 8px;
-  margin-top: 4px;
-}
-
-/* Reviews */
-.review-item {
-  margin-bottom: 10px;
-  font-size: 13px;
-}
-.review-meta {
-  font-size: 11px;
-  color: #9ca3af;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 6px;
-}
-.review-images {
-  margin-top: 4px;
-  display: flex;
-  gap: 4px;
-  flex-wrap: wrap;
-}
-.review-thumb {
-  width: 40px;
-  height: 40px;
-  border-radius: 4px;
-  object-fit: cover;
-  cursor: pointer;
-  border: 1px solid #4b5563;
-}
-.no-reviews {
-  font-size: 13px;
-  color: #6b7280;
-}
-.stars {
-  color: #fbbf24;
-  font-size: 14px;
-  letter-spacing: 1px;
-}
-.stars-empty {
-  color: #4b5563;
-}
-
-/* Inline review report */
-.review-report-form {
-  margin-top: 6px;
-  padding-top: 6px;
-  border-top: 1px dashed #374151;
-}
-.review-report-textarea {
-  width: 100%;
-  min-height: 50px;
-  border-radius: 8px;
-  border: 1px solid #374151;
-  background: #020617;
-  color: #e5e7eb;
-  font-size: 12px;
-  padding: 6px 8px;
-}
-
-/* Toast */
-#toast {
-  position: fixed;
-  left: 50%;
-  bottom: 20px;
-  transform: translateX(-50%);
-  background: #111827;
-  color: #e5e7eb;
-  padding: 9px 14px;
-  border-radius: 12px;
-  font-size: 13px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.6);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-  z-index: 60;
-  max-width: 90%;
-  text-align: left;
-  white-space: pre-line;
-}
-#toastMessage {
-  margin-right: 40px;
-}
-</style>
-</head>
-<body>
-<div class="page">
-  <div class="top-bar">
-    <div>
-      <div class="top-title" id="serviceTitle">Service</div>
-      <div class="top-sub" id="serviceSub"></div>
-    </div>
-  </div>
-
-  <div class="card" id="serviceCard" style="display:none;">
-    <div class="service-header">
-      <div id="serviceIcon" class="service-thumb default">⭐</div>
-      <div class="service-main">
-        <h1 id="serviceName"></h1>
-        <p id="serviceMeta"></p>
-        <div class="rating-row" id="serviceRating"></div>
-      </div>
-    </div>
-    <p id="serviceAddressText" style="font-size:13px; color:#e5e7eb; margin:4px 0 0;"></p>
-
-    <!-- Provider images row -->
-    <div id="providerImagesRow" class="provider-images-row" style="display:none;"></div>
-
-    <div class="btn-row">
-      <button class="btn-primary" type="button" onclick="openAddReview()">
-        <span class="icon">✍️</span>
-        <span>Add review</span>
-      </button>
-
-      <button class="btn-primary btn-secondary" type="button" onclick="navigateToService()" title="Navigate">
-        <span class="icon">📍</span>
-      </button>
-
-      <button
-        class="btn-primary btn-danger-ghost"
-        type="button"
-        onclick="toggleServiceReport()"
-        style="padding:4px 8px; font-size:12px; border-radius:999px; min-width:auto;"
-        title="Report service"
-      >
-        <span class="icon">🚩</span>
-      </button>
-
-      <button
-        id="requestDeleteBtn"
-        class="btn-primary btn-danger-ghost"
-        type="button"
-        style="display:none;"
-        onclick="requestDeleteService()"
-      >
-        <span class="icon">🗑️</span>
-        <span>Request delete</span>
-      </button>
-    </div>
-
-    <div class="report-block">
-      <div id="serviceReportForm" style="display:none; margin-top:8px;">
-        <label style="font-size:11px; color:#9ca3af;">Why are you reporting this service?</label>
-        <textarea id="serviceReportReason" class="report-textarea" placeholder="Describe the issue..."></textarea>
-        <div style="margin-top:6px; display:flex; gap:6px; justify-content:flex-end;">
-          <button
-            type="button"
-            class="btn-primary btn-danger-ghost"
-            style="padding:5px 10px; font-size:12px;"
-            onclick="submitServiceReport()"
-          >
-            Submit report
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2 style="margin:0 0 8px; font-size:15px; color:#f9fafb;">Reviews</h2>
-    <div id="reviewsContainer"></div>
-  </div>
-
-  <p id="loadingText" style="font-size:13px; color:#9ca3af;">Loading service...</p>
-</div>
-
-<div id="toast">
-  <span id="toastMessage"></span>
-</div>
-
-<script>
-const API_BASE = window.location.origin + '/api';
-let toastTimer = null;
-let currentService = null;
-let currentUser = null;
-
-function getServiceIdFromUrl() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get('id');
-}
-
-function openAddReview() {
-  const id = getServiceIdFromUrl();
-  if (!id) return;
-  window.location.href = '/add-review.html?id=' + encodeURIComponent(id);
-}
-
-function showToast(message) {
-  const t = document.getElementById('toast');
-  const msg = document.getElementById('toastMessage');
-  if (!t || !msg) return;
-  msg.textContent = message;
-  t.style.opacity = '1';
-  t.style.pointerEvents = 'auto';
-  t.style.transform = 'translateX(-50%) translateY(-4px)';
-  if (toastTimer) clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => {
-    t.style.opacity = '0';
-    t.style.pointerEvents = 'none';
-    t.style.transform = 'translateX(-50%) translateY(0)';
-  }, 2000);
-}
-
-function getCategoryIconInfo(category) {
-  const c = (category || '').toLowerCase();
-  if (c === 'hospital') return { icon: '➕', cls: 'hospital' };
-  if (c === 'clinic') return { icon: '🩺', cls: 'clinic' };
-  if (c === 'school') return { icon: '🏫', cls: 'school' };
-  if (c === 'restaurant') return { icon: '🍽️', cls: 'restaurant' };
-  if (c === 'grocery') return { icon: '🛒', cls: 'grocery' };
-  return { icon: '⭐', cls: 'default' };
-}
-
-function buildRatingText(s) {
-  const avg = Number(s.averageRating || 0).toFixed(1);
-  const ratingsCount = Number(s.ratingCount || 0);
-  const reviewsCount = Number(s.reviewCount || 0);
-
-  const ratingsLabel = ratingsCount === 1
-    ? '1 rating'
-    : ratingsCount + ' ratings';
-
-  const reviewsLabel = reviewsCount === 0
-    ? 'No reviews'
-    : (reviewsCount === 1 ? '1 review' : reviewsCount + ' reviews');
-
-  return avg + ' ★ • ' + ratingsLabel + ' • ' + reviewsLabel;
-}
-
-function buildNavigationUrl(svc) {
-  const parts = [];
-  if (svc.address) parts.push(svc.address);
-  else {
-    if (svc.name) parts.push(svc.name);
-    if (svc.city) parts.push(svc.city);
-    if (svc.pincode) parts.push(svc.pincode);
-  }
-  const query = encodeURIComponent(parts.join(', '));
-  return 'https://www.google.com/maps/search/?api=1&query=' + query;
-}
-
-function navigateToService() {
-  if (!currentService) return;
-  const url = buildNavigationUrl(currentService);
-  window.open(url, '_blank');
-}
-
-async function loadCurrentUser() {
-  try {
-    const res = await fetch(API_BASE + '/auth/me', {
-      credentials: 'include',
-    });
-    if (!res.ok) return;
-    const data = await res.json();
-    currentUser = data.user || null;
-  } catch (e) {
-    currentUser = null;
-  }
-}
-
-function updateCreatorActionsVisibility() {
-  const btn = document.getElementById('requestDeleteBtn');
-  if (!btn || !currentService) return;
-  if (!currentUser || !currentService.createdBy) {
-    btn.style.display = 'none';
-    return;
-  }
-  if (String(currentService.createdBy) === String(currentUser.id)) {
-    btn.style.display = 'inline-flex';
-  } else {
-    btn.style.display = 'none';
-  }
-}
-
-async function loadService() {
-  const id = getServiceIdFromUrl();
-  const loadingEl = document.getElementById('loadingText');
-  const cardEl = document.getElementById('serviceCard');
-  if (!id) {
-    if (loadingEl) loadingEl.textContent = 'Missing service id.';
-    return;
-  }
-
-  try {
-    const res = await fetch(API_BASE + '/services/' + id);
-    if (!res.ok) throw new Error();
-    const s = await res.json();
-    currentService = s;
-
-    document.getElementById('serviceTitle').textContent = s.name || 'Service';
-    document.getElementById('serviceSub').textContent =
-      (s.category || 'Service') + ' • ' + (s.city || '');
-    document.getElementById('serviceName').textContent = s.name || 'Service';
-    document.getElementById('serviceMeta').textContent =
-      (s.city || '') + (s.pincode ? ' • PIN ' + s.pincode : '');
-    document.getElementById('serviceRating').textContent = buildRatingText(s);
-    document.getElementById('serviceAddressText').textContent =
-      s.address || '';
-
-    const iconInfo = getCategoryIconInfo(s.category);
-    const iconEl = document.getElementById('serviceIcon');
-    iconEl.textContent = iconInfo.icon;
-    iconEl.className = 'service-thumb ' + iconInfo.cls;
-
-    const row = document.getElementById('providerImagesRow');
-    const imgs = s.providerImages || [];
-    row.innerHTML = '';
-    if (imgs.length > 0) {
-      row.style.display = 'flex';
-      imgs.forEach((url) => {
-        const el = document.createElement('img');
-        el.src = url;
-        el.className = 'provider-thumb';
-        el.onclick = () => window.open(url, '_blank');
-        row.appendChild(el);
-      });
-    } else {
-      row.style.display = 'none';
-    }
-
-    if (loadingEl) loadingEl.style.display = 'none';
-    if (cardEl) cardEl.style.display = 'block';
-
-    updateCreatorActionsVisibility();
-    loadReviews();
-  } catch (err) {
-    console.error(err);
-    if (loadingEl) loadingEl.textContent = 'Error loading service.';
-    showToast('Error loading service');
-  }
-}
-
-async function loadReviews() {
-  const id = getServiceIdFromUrl();
-  if (!id) return;
-  try {
-    const res = await fetch(API_BASE + '/services/' + id + '/reviews');
-    if (!res.ok) throw new Error();
-    const data = await res.json();
-    const reviews = data.reviews || data;
-    const container = document.getElementById('reviewsContainer');
-    container.innerHTML = '';
-
-    if (!reviews.length) {
-      container.innerHTML =
-        '<p class="no-reviews">No reviews yet. Be the first to add one.</p>';
-      return;
-    }
-
-    reviews.forEach((r) => {
-      const item = document.createElement('div');
-      item.className = 'review-item';
-
-      const paths = r.imagePaths || r.imageUrls || [];
-      let imagesHtml = '';
-      if (paths.length > 0) {
-        imagesHtml =
-          '<div class="review-images">' +
-          paths
-            .map(
-              (path) =>
-                `<img src="${path}" class="review-thumb" onclick="window.open('${path}', '_blank')">`
-            )
-            .join('') +
-          '</div>';
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Spotsure Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      * {
+        box-sizing: border-box;
       }
 
-      const reviewId = r._id || '';
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        background: radial-gradient(circle at top, #0f172a 0, #020617 55%, #000 100%);
+        color: #e5e7eb;
+      }
 
-      item.innerHTML = `
-        <div>${buildStars(r.rating)} <span>${r.rating}</span> – ${r.comment || ''}</div>
-        <div class="review-meta">
-          <span>${r.username || 'Anonymous'}</span>
-          <button
-            type="button"
-            class="btn-primary btn-danger-ghost"
-            style="padding:3px 8px; font-size:11px;"
-            onclick="toggleReviewReport('${reviewId}')"
-            title="Report review"
+      .shell {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px 14px 32px;
+        min-height: 100vh;
+      }
+
+      .top-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #f9fafb;
+      }
+
+      .top-sub {
+        font-size: 12px;
+        color: #9ca3af;
+      }
+
+      .card {
+        background: #020617;
+        border-radius: 14px;
+        border: 1px solid #1f2937;
+        padding: 16px;
+        margin-bottom: 16px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+      }
+
+      .pill-btn {
+        border-radius: 999px;
+        border: 1px solid #4b5563;
+        background: #111827;
+        color: #e5e7eb;
+        padding: 6px 10px;
+        font-size: 13px;
+        cursor: pointer;
+        transition: transform 0.15s ease, box-shadow 0.15s ease,
+          background 0.15s ease;
+      }
+
+      .pill-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 14px rgba(15, 23, 42, 0.7);
+        background: #020617;
+      }
+
+      .pill-btn.danger {
+        border-color: #b91c1c;
+        color: #fecaca;
+      }
+
+      .login-wrap {
+        max-width: 420px;
+        margin: 40px auto 0;
+      }
+
+      .login-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: #f9fafb;
+        margin-bottom: 4px;
+      }
+
+      .login-sub {
+        font-size: 13px;
+        color: #9ca3af;
+        margin-bottom: 16px;
+      }
+
+      .field-label {
+        font-size: 12px;
+        color: #9ca3af;
+        margin-bottom: 4px;
+      }
+
+      .field-input {
+        width: 100%;
+        padding: 8px 10px;
+        border-radius: 999px;
+        border: 1px solid #374151;
+        background: #020617;
+        color: #e5e7eb;
+        font-size: 13px;
+        outline: none;
+      }
+
+      .field-input:focus {
+        border-color: #2563eb;
+      }
+
+      .login-btn {
+        width: 100%;
+        margin-top: 12px;
+        padding: 8px 10px;
+        border-radius: 999px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        background: #2563eb;
+        color: #eff6ff;
+      }
+
+      .login-btn:hover {
+        background: #1d4ed8;
+      }
+
+      .error-text {
+        font-size: 12px;
+        color: #fecaca;
+        margin-top: 8px;
+        min-height: 16px;
+      }
+
+      .hint-text {
+        font-size: 11px;
+        color: #6b7280;
+        margin-top: 8px;
+      }
+
+      .top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+      }
+
+      h2 {
+        font-size: 15px;
+        margin: 0 0 8px;
+        color: #f9fafb;
+      }
+
+      .item {
+        border-radius: 10px;
+        border: 1px solid #1f2937;
+        padding: 8px 10px;
+        margin-bottom: 8px;
+        background: #020617;
+      }
+
+      .item-title {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+
+      .item-sub {
+        font-size: 12px;
+        color: #9ca3af;
+      }
+
+      .item-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        margin-top: 6px;
+        font-size: 12px;
+      }
+
+      .btn-row {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        padding: 4px 9px;
+        border-radius: 999px;
+        border: none;
+        cursor: pointer;
+        font-size: 12px;
+      }
+
+      .btn.primary {
+        background: #22c55e;
+        color: #052e16;
+      }
+
+      .btn.danger {
+        background: #ef4444;
+        color: #fee2e2;
+      }
+
+      .btn.ghost {
+        background: #020617;
+        border: 1px solid #4b5563;
+        color: #e5e7eb;
+      }
+
+      .search-bar {
+        margin-bottom: 10px;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 7px 10px;
+        border-radius: 999px;
+        border: 1px solid #374151;
+        background: #020617;
+        color: #e5e7eb;
+        font-size: 13px;
+      }
+
+      .small {
+        font-size: 11px;
+        color: #9ca3af;
+      }
+
+      .confirm-row {
+        margin-top: 6px;
+        padding-top: 6px;
+        border-top: 1px dashed #374151;
+        font-size: 11px;
+        color: #fecaca;
+        display: none;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .confirm-text {
+        margin-right: auto;
+      }
+
+      #toast {
+        position: fixed;
+        left: 50%;
+        bottom: 20px;
+        transform: translateX(-50%);
+        background: #111827;
+        color: #e5e7eb;
+        padding: 9px 14px;
+        border-radius: 12px;
+        font-size: 13px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+        z-index: 60;
+        max-width: 90%;
+        text-align: left;
+        white-space: pre-line;
+      }
+
+      #toastMessage {
+        margin-right: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <!-- LOGIN VIEW -->
+      <section id="adminLoginSection">
+        <div class="login-wrap card">
+          <div class="login-title">Admin sign in</div>
+          <div class="login-sub">Use the Spotsure admin account.</div>
+
+          <label class="field-label" for="adminUsername">Username</label>
+          <input
+            id="adminUsername"
+            class="field-input"
+            type="text"
+            autocomplete="username"
+            placeholder="spotsureadmin"
+          />
+
+          <label class="field-label" for="adminPassword" style="margin-top:10px;"
+            >Password</label
           >
-            <span class="icon">🚩</span>
+          <input
+            id="adminPassword"
+            class="field-input"
+            type="password"
+            autocomplete="current-password"
+            placeholder="••••••••••"
+          />
+
+          <button id="adminLoginBtn" class="login-btn" type="button">
+            Sign in
           </button>
-        </div>
-        ${imagesHtml}
-        <div id="review-report-${reviewId}" class="review-report-form" style="display:none;">
-          <label style="font-size:11px; color:#9ca3af;">Why are you reporting this review?</label>
-          <textarea
-            class="review-report-textarea"
-            id="review-report-text-${reviewId}"
-            placeholder="Describe the issue..."
-          ></textarea>
-          <div style="margin-top:6px; display:flex; justify-content:flex-end; gap:6px;">
-            <button
-              type="button"
-              class="btn-primary btn-danger-ghost"
-              style="padding:4px 10px; font-size:12px;"
-              onclick="submitReviewReport('${reviewId}')"
-            >
-              Submit
-            </button>
+
+          <div id="adminLoginError" class="error-text"></div>
+
+          <div class="hint-text">
+            Default admin: <code>spotsureadmin</code> / <code>spotsure2026admin</code>
           </div>
         </div>
-      `;
-      container.appendChild(item);
-    });
-  } catch (e) {
-    const container = document.getElementById('reviewsContainer');
-    container.innerHTML = '<p class="no-reviews">Error loading reviews.</p>';
-  }
-}
+      </section>
 
-function buildStars(rating) {
-  const fullCount = Math.round(rating || 0);
-  const full = '★'.repeat(fullCount);
-  const empty = '☆'.repeat(5 - fullCount);
-  return '<span class="stars">' + full +
-    '</span><span class="stars stars-empty">' + empty + '</span>';
-}
+      <!-- DASHBOARD VIEW -->
+      <section id="adminDashboardSection" style="display:none;">
+        <header class="top-bar">
+          <div>
+            <div class="top-title">Spotsure Admin</div>
+            <div class="top-sub">Manage services, reviews, and reports</div>
+          </div>
+          <button id="logoutBtn" class="pill-btn danger" type="button">
+            Log out
+          </button>
+        </header>
 
-/* Request delete (creator-only) */
-async function requestDeleteService() {
-  if (!currentService) return;
-  const id = currentService._id;
-  if (!id) return;
+        <!-- Search & delete service by name -->
+        <section class="card">
+          <h2>Find & delete service</h2>
+          <div class="search-bar">
+            <input
+              id="serviceSearchInput"
+              class="search-input"
+              type="text"
+              placeholder="Type a service name to search"
+            />
+          </div>
+          <div id="serviceSearchResults" class="small">
+            Type at least 2 characters to search.
+          </div>
+        </section>
 
-  try {
-    const res = await fetch(API_BASE + '/services/' + id + '/request-remove', {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      showToast(data.message || 'Failed to request delete');
-      return;
-    }
-    showToast('Delete request sent to admin.');
-  } catch (err) {
-    console.error(err);
-    showToast('Error requesting delete');
-  }
-}
+        <!-- Pending services -->
+        <section class="card">
+          <h2>Pending service approvals</h2>
+          <div id="pendingServices"></div>
+        </section>
 
-/* Service report */
-function toggleServiceReport() {
-  const block = document.getElementById('serviceReportForm');
-  if (!block) return;
-  block.style.display =
-    block.style.display === 'none' || !block.style.display ? 'block' : 'none';
-}
+        <!-- Removal requests -->
+        <section class="card">
+          <h2>Removal requests</h2>
+          <div id="removalRequests"></div>
+        </section>
 
-async function submitServiceReport() {
-  if (!currentService) return;
-  const reasonEl = document.getElementById('serviceReportReason');
-  const reason = reasonEl ? reasonEl.value.trim() : '';
-  if (!reason) {
-    showToast('Please describe the issue.');
-    return;
-  }
-  try {
-    const res = await fetch(API_BASE + '/reports/service', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ serviceId: currentService._id, reason }),
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      showToast(data.message || 'Failed to submit report');
-      return;
-    }
-    showToast('Service reported');
-    if (reasonEl) reasonEl.value = '';
-    toggleServiceReport();
-  } catch (err) {
-    console.error(err);
-    showToast('Error submitting report');
-  }
-}
+        <!-- Service reports -->
+        <section class="card">
+          <h2>Reported services</h2>
+          <div id="reportedServices"></div>
+        </section>
 
-/* Review report - inline, no prompt */
-function toggleReviewReport(reviewId) {
-  if (!reviewId) return;
-  const block = document.getElementById('review-report-' + reviewId);
-  if (!block) return;
-  block.style.display =
-    block.style.display === 'none' || !block.style.display ? 'block' : 'none';
-}
+        <!-- Review reports -->
+        <section class="card">
+          <h2>Reported reviews</h2>
+          <div id="reportedReviews"></div>
+        </section>
+      </section>
+    </div>
 
-async function submitReviewReport(reviewId) {
-  if (!reviewId) return;
-  const reasonEl = document.getElementById('review-report-text-' + reviewId);
-  const reason = reasonEl ? reasonEl.value.trim() : '';
-  if (!reason) {
-    showToast('Please describe the issue.');
-    return;
-  }
-  try {
-    const res = await fetch(API_BASE + '/reports/review', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ reviewId, reason }),
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      showToast(data.message || 'Failed to report review');
-      return;
-    }
-    showToast('Review reported');
-    if (reasonEl) reasonEl.value = '';
-    toggleReviewReport(reviewId);
-  } catch (err) {
-    console.error(err);
-    showToast('Error reporting review');
-  }
-}
+    <div id="toast">
+      <span id="toastMessage"></span>
+    </div>
 
-document.addEventListener('DOMContentLoaded', async () => {
-  await loadCurrentUser();
-  await loadService();
-});
-</script>
-</body>
+    <script>
+      const API_BASE = window.location.origin + "/api";
+      let toastTimer = null;
+
+      function showToast(message) {
+        const t = document.getElementById("toast");
+        const msg = document.getElementById("toastMessage");
+        if (!t || !msg) return;
+        msg.textContent = message;
+        t.style.opacity = "1";
+        t.style.pointerEvents = "auto";
+        t.style.transform = "translateX(-50%) translateY(-4px)";
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          t.style.opacity = "0";
+          t.style.pointerEvents = "none";
+          t.style.transform = "translateX(-50%) translateY(0)";
+        }, 2000);
+      }
+
+      async function adminLogin() {
+        const usernameEl = document.getElementById("adminUsername");
+        const passwordEl = document.getElementById("adminPassword");
+        const errorEl = document.getElementById("adminLoginError");
+
+        const username = usernameEl.value.trim();
+        const password = passwordEl.value;
+
+        errorEl.textContent = "";
+
+        if (!username || !password) {
+          errorEl.textContent = "Username and password are required.";
+          return;
+        }
+
+        try {
+          const res = await fetch(API_BASE + "/admin/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({ username, password }),
+          });
+
+          const data = await res.json().catch(() => ({}));
+
+          if (!res.ok) {
+            errorEl.textContent = data.message || "Invalid credentials";
+            showToast("Invalid credentials");
+            return;
+          }
+
+          showToast("Signed in");
+          document.getElementById("adminLoginSection").style.display = "none";
+          document.getElementById("adminDashboardSection").style.display =
+            "block";
+
+          initDashboard();
+        } catch (e) {
+          console.error(e);
+          errorEl.textContent = "Server error. Please try again.";
+          showToast("Server error");
+        }
+      }
+
+      function wireLoginEvents() {
+        const btn = document.getElementById("adminLoginBtn");
+        const userInput = document.getElementById("adminUsername");
+        const passInput = document.getElementById("adminPassword");
+
+        btn.addEventListener("click", adminLogin);
+        passInput.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") adminLogin();
+        });
+        userInput.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") adminLogin();
+        });
+      }
+
+      async function checkExistingAdminSession() {
+        try {
+          const res = await fetch(API_BASE + "/admin/me", {
+            credentials: "include",
+          });
+          if (!res.ok) return;
+          const data = await res.json().catch(() => ({}));
+          if (data.user && data.user.role === "admin") {
+            document.getElementById("adminLoginSection").style.display = "none";
+            document.getElementById("adminDashboardSection").style.display =
+              "block";
+            initDashboard();
+          }
+        } catch (e) {}
+      }
+
+      async function logout() {
+        try {
+          await fetch(API_BASE + "/admin/logout", {
+            method: "POST",
+            credentials: "include",
+          });
+        } catch (e) {}
+        document.getElementById("adminDashboardSection").style.display = "none";
+        document.getElementById("adminLoginSection").style.display = "block";
+        showToast("Logged out");
+      }
+
+      function renderConfirmRow(id, text, onConfirm, onCancel) {
+        const row = document.getElementById(id);
+        if (!row) return;
+        row.style.display = "flex";
+        const yesBtn = row.querySelector('[data-role="yes"]');
+        const noBtn = row.querySelector('[data-role="no"]');
+
+        const cleanup = () => {
+          row.style.display = "none";
+          yesBtn.onclick = null;
+          noBtn.onclick = null;
+        };
+
+        yesBtn.onclick = async () => {
+          try {
+            await onConfirm();
+          } finally {
+            cleanup();
+          }
+        };
+        noBtn.onclick = () => {
+          if (onCancel) onCancel();
+          cleanup();
+        };
+      }
+
+      async function loadPendingServices() {
+        const container = document.getElementById("pendingServices");
+        container.textContent = "Loading...";
+        try {
+          const res = await fetch(API_BASE + "/admin/services/pending", {
+            credentials: "include",
+          });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) {
+            container.textContent = data.message || "Error loading.";
+            return;
+          }
+          const list = data.services || [];
+          if (!list.length) {
+            container.textContent = "No pending services.";
+            return;
+          }
+          container.innerHTML = "";
+          list.forEach((s) => {
+            const div = document.createElement("div");
+            const confirmIdApprove = "confirm_approve_" + s._id;
+            const confirmIdDelete =
+              "confirm_delete_service_pending_" + s._id;
+
+            div.className = "item";
+            div.innerHTML = `
+              <div class="item-title">${s.name}</div>
+              <div class="item-sub">${s.category || ""} • ${
+              s.city || ""
+            } • PIN ${s.pincode || ""}</div>
+              <div class="item-row">
+                <span class="small">Created: ${
+                  s.createdAt ? new Date(s.createdAt).toLocaleString() : ""
+                }</span>
+                <div class="btn-row">
+                  <button class="btn ghost" data-view="${s._id}">View</button>
+                  <button class="btn primary" data-approve="${s._id}">Approve</button>
+                  <button class="btn danger" data-delete="${s._id}">Delete</button>
+                </div>
+              </div>
+              <div id="details_${s._id}" class="small" style="display:none; margin-top:6px; color:#d1d5db;">
+                <strong>Address:</strong> ${s.address || ""}<br/>
+                <strong>City:</strong> ${s.city || ""}<br/>
+                <strong>PIN:</strong> ${s.pincode || ""}<br/>
+                <strong>Category:</strong> ${s.category || ""}<br/>
+              </div>
+              <div id="${confirmIdApprove}" class="confirm-row">
+                <span class="confirm-text">Approve this service?</span>
+                <button class="btn ghost" data-role="no">Cancel</button>
+                <button class="btn primary" data-role="yes">Yes</button>
+              </div>
+              <div id="${confirmIdDelete}" class="confirm-row">
+                <span class="confirm-text">Delete this service and its reviews?</span>
+                <button class="btn ghost" data-role="no">Cancel</button>
+                <button class="btn danger" data-role="yes">Yes</button>
+              </div>
+            `;
+            container.appendChild(div);
+
+            div.querySelector("[data-approve]").onclick = () => {
+              renderConfirmRow(confirmIdApprove, "", async () => {
+                await approveService(s._id);
+              });
+            };
+            div.querySelector("[data-delete]").onclick = () => {
+              renderConfirmRow(confirmIdDelete, "", async () => {
+                await deleteService(s._id);
+              });
+            };
+
+            // NEW: View toggle
+            const viewBtn = div.querySelector('[data-view]');
+            const detailsEl = document.getElementById("details_" + s._id);
+            if (viewBtn && detailsEl) {
+              viewBtn.onclick = () => {
+                const showing = detailsEl.style.display === "block";
+                detailsEl.style.display = showing ? "none" : "block";
+                viewBtn.textContent = showing ? "View" : "Hide";
+              };
+            }
+          });
+        } catch (e) {
+          container.textContent = "Error loading pending services.";
+        }
+      }
+
+      async function approveService(id) {
+        try {
+          const res = await fetch(API_BASE + "/admin/services/" + id + "/approve", {
+            method: "PATCH",
+            credentials: "include",
+          });
+          if (!res.ok) {
+            const data = await res.json().catch(() => ({}));
+            showToast(data.message || "Error approving");
+            return;
+          }
+          showToast("Service approved");
+          loadPendingServices();
+          loadRemovalRequests();
+        } catch (e) {
+          showToast("Error approving service");
+        }
+      }
+
+      async function deleteService(id) {
+        try {
+          const res = await fetch(API_BASE + "/admin/services/" + id, {
+            method: "DELETE",
+            credentials: "include",
+          });
+          if (!res.ok) {
+            const data = await res.json().catch(() => ({}));
+            showToast(data.message || "Error deleting");
+            return;
+          }
+          showToast("Service deleted");
+          loadPendingServices();
+          loadRemovalRequests();
+          searchServicesByName();
+        } catch (e) {
+          showToast("Error deleting service");
+        }
+      }
+
+      async function loadRemovalRequests() {
+        const container = document.getElementById("removalRequests");
+        container.textContent = "Loading...";
+        try {
+          const res = await fetch(
+            API_BASE + "/admin/services/removal-requests",
+            {
+              credentials: "include",
+            }
+          );
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) {
+            container.textContent = data.message || "Error loading.";
+            return;
+          }
+          const list = data.services || [];
+          if (!list.length) {
+            container.textContent = "No removal requests.";
+            return;
+          }
+          container.innerHTML = "";
+          list.forEach((s) => {
+            const div = document.createElement("div");
+            const confirmIdKeep = "confirm_keep_" + s._id;
+            const confirmIdDelete =
+              "confirm_delete_service_removal_" + s._id;
+            div.className = "item";
+            div.innerHTML = `
+              <div class="item-title">${s.name}</div>
+              <div class="item-sub">${s.category || ""} • ${
+              s.city || ""
+            } • PIN ${s.pincode || ""}</div>
+              <div class="item-row">
+                <span class="small">Removal requested</span>
+                <div class="btn-row">
+                  <button class="btn primary" data-keep="${s._id}">Keep</button>
+                  <button class="btn danger" data-delete="${s._id}">Delete</button>
+                </div>
+              </div>
+              <div id="${confirmIdKeep}" class="confirm-row">
+                <span class="confirm-text">Keep this service and clear removal request?</span>
+                <button class="btn ghost" data-role="no">Cancel</button>
+                <button class="btn primary" data-role="yes">Yes</button>
+              </div>
+              <div id="${confirmIdDelete}" class="confirm-row">
+                <span class="confirm-text">Delete this service and its reviews?</span>
+                <button class="btn ghost" data-role="no">Cancel</button>
+                <button class="btn danger" data-role="yes">Yes</button>
+              </div>
+            `;
+            container.appendChild(div);
+
+            div.querySelector("[data-keep]").onclick = () => {
+              renderConfirmRow(confirmIdKeep, "", async () => {
+                await approveService(s._id);
+              });
+            };
+            div.querySelector("[data-delete]").onclick = () => {
+              renderConfirmRow(confirmIdDelete, "", async () => {
+                await deleteService(s._id);
+              });
+            };
+          });
+        } catch (e) {
+          container.textContent = "Error loading removal requests.";
+        }
+      }
+
+      async function loadReportedServices() {
+        const container = document.getElementById("reportedServices");
+        container.textContent = "Loading...";
+        try {
+          const res = await fetch(API_BASE + "/admin/reports/services", {
+            credentials: "include",
+          });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) {
+            container.textContent = data.message || "Error loading.";
+            return;
+          }
+          const list = data.reports || [];
+          if (!list.length) {
+            container.textContent = "No reported services.";
+            return;
+          }
+          container.innerHTML = "";
+          list.forEach((r) => {
+            const s = r.service || {};
+            if (!s || !s._id) return;
+            const confirmIdDelete = "confirm_delete_reported_service_" + s._id;
+            const div = document.createElement("div");
+            div.className = "item";
+            div.innerHTML = `
+              <div class="item-title">${s.name || "Unknown service"}</div>
+              <div class="item-sub">Reason: ${r.reason || ""}</div>
+              <div class="item-row">
+                <span class="small">Reported at: ${
+                  r.createdAt ? new Date(r.createdAt).toLocaleString() : ""
+                }</span>
+                <div class="btn-row">
+                  <button class="btn danger" data-delete="${s._id}">Delete service</button>
+                </div>
+              </div>
+              <div id="${confirmIdDelete}" class="confirm-row">
+                <span class="confirm-text">Delete this service and its reviews?</span>
+                <button class="btn ghost" data-role="no">Cancel</button>
+                <button class="btn danger" data-role="yes">Yes</button>
+              </div>
+            `;
+            container.appendChild(div);
+
+            div.querySelector("[data-delete]").onclick = () => {
+              renderConfirmRow(confirmIdDelete, "", async () => {
+                await deleteService(s._id);
+                loadReportedServices();
+              });
+            };
+          });
+        } catch (e) {
+          container.textContent = "Error loading reported services.";
+        }
+      }
+
+      async function loadReportedReviews() {
+        const container = document.getElementById("reportedReviews");
+        container.textContent = "Loading...";
+        try {
+          const res = await fetch(API_BASE + "/admin/reports/reviews", {
+            credentials: "include",
+          });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) {
+            container.textContent = data.message || "Error loading.";
+            return;
+          }
+          const list = data.reports || [];
+          if (!list.length) {
+            container.textContent = "No reported reviews.";
+            return;
+          }
+          container.innerHTML = "";
+          list.forEach((r) => {
+            const review = r.review || {};
+            if (!review || !review._id) return;
+            const confirmIdDelete = "confirm_delete_review_" + review._id;
+            const div = document.createElement("div");
+            div.className = "item";
+            div.innerHTML = `
+              <div class="item-title">Rating: ${
+                review.rating || "-"
+              } – ${review.username || "Anonymous"}</div>
+              <div class="item-sub">
+                Comment: ${review.comment || ""}<br />
+                Reason: ${r.reason || ""}
+              </div>
+              <div class="item-row">
+                <span class="small">Reported at: ${
+                  r.createdAt ? new Date(r.createdAt).toLocaleString() : ""
+                }</span>
+                <div class="btn-row">
+                  <button class="btn danger" data-delete="${review._id}">Delete review</button>
+                </div>
+              </div>
+              <div id="${confirmIdDelete}" class="confirm-row">
+                <span class="confirm-text">Delete this review?</span>
+                <button class="btn ghost" data-role="no">Cancel</button>
+                <button class="btn danger" data-role="yes">Yes</button>
+              </div>
+            `;
+            container.appendChild(div);
+
+            div.querySelector("[data-delete]").onclick = () => {
+              renderConfirmRow(confirmIdDelete, "", async () => {
+                await deleteReview(review._id);
+                loadReportedReviews();
+              });
+            };
+          });
+        } catch (e) {
+          container.textContent = "Error loading reported reviews.";
+        }
+      }
+
+      async function deleteReview(id) {
+        try {
+          const res = await fetch(API_BASE + "/admin/reviews/" + id, {
+            method: "DELETE",
+            credentials: "include",
+          });
+          if (!res.ok) {
+            const data = await res.json().catch(() => ({}));
+            showToast(data.message || "Error deleting review");
+            return;
+          }
+          showToast("Review deleted");
+        } catch (e) {
+          showToast("Error deleting review");
+        }
+      }
+
+      let searchTimer = null;
+      function setupSearch() {
+        const input = document.getElementById("serviceSearchInput");
+        input.addEventListener("input", () => {
+          if (searchTimer) clearTimeout(searchTimer);
+          searchTimer = setTimeout(searchServicesByName, 300);
+        });
+      }
+
+      async function searchServicesByName() {
+        const input = document.getElementById("serviceSearchInput");
+        const query = input.value.trim();
+        const container = document.getElementById("serviceSearchResults");
+
+        if (query.length < 2) {
+          container.textContent = "Type at least 2 characters to search.";
+          return;
+        }
+
+        container.textContent = "Searching...";
+        try {
+          const url =
+            API_BASE +
+            "/admin/services/search?name=" +
+            encodeURIComponent(query);
+          const res = await fetch(url, { credentials: "include" });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) {
+            container.textContent = data.message || "Error searching.";
+            return;
+          }
+          const list = data.services || [];
+          if (!list.length) {
+            container.textContent = "No matching services.";
+            return;
+          }
+          container.innerHTML = "";
+          list.forEach((s) => {
+            const div = document.createElement("div");
+            const confirmIdDelete = "confirm_delete_search_" + s._id;
+            div.className = "item";
+            div.innerHTML = `
+              <div class="item-title">${s.name}</div>
+              <div class="item-sub">${s.category || ""} • ${
+              s.city || ""
+            } • PIN ${s.pincode || ""}</div>
+              <div class="item-row">
+                <span class="small">ID: ${s._id}</span>
+                <div class="btn-row">
+                  <button class="btn danger" data-delete="${s._id}">Delete</button>
+                </div>
+              </div>
+              <div id="${confirmIdDelete}" class="confirm-row">
+                <span class="confirm-text">Delete this service and its reviews?</span>
+                <button class="btn ghost" data-role="no">Cancel</button>
+                <button class="btn danger" data-role="yes">Yes</button>
+              </div>
+            `;
+            container.appendChild(div);
+
+            div.querySelector("[data-delete]").onclick = () => {
+              renderConfirmRow(confirmIdDelete, "", async () => {
+                await deleteService(s._id);
+                searchServicesByName();
+              });
+            };
+          });
+        } catch (e) {
+          container.textContent = "Error searching.";
+        }
+      }
+
+      function initDashboard() {
+        document.getElementById("logoutBtn").addEventListener("click", logout);
+        setupSearch();
+        loadPendingServices();
+        loadRemovalRequests();
+        loadReportedServices();
+        loadReportedReviews();
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        wireLoginEvents();
+        checkExistingAdminSession();
+      });
+    </script>
+  </body>
 </html>
