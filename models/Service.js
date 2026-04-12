@@ -33,7 +33,6 @@ const ServiceSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Performance indexes for listing/search/filter [web:58][web:60][web:95]
 ServiceSchema.index({ createdAt: -1 });
 ServiceSchema.index({ name: 1 });
 ServiceSchema.index({ category: 1, city: 1 });
