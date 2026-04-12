@@ -409,6 +409,7 @@ function filterServices() {
 }
 
 function openServicePage(serviceId) {
+  // Key fix: cards go to service details page instead of add-service
   window.location.href = '/service.html?id=' + encodeURIComponent(serviceId);
 }
 
@@ -457,6 +458,9 @@ function renderServices() {
 }
 
 async function loadServices() {
+  const container = document.getElementById('services');
+  container.innerHTML =
+    '<p style="font-size:13px; color:#9ca3af;">⏳ Finding nearby places for you…</p>';
   try {
     const res = await fetch(API_BASE + '/services');
     if (!res.ok) throw new Error('Failed to load services');
@@ -465,9 +469,8 @@ async function loadServices() {
     renderServices();
   } catch (err) {
     console.error(err);
-    const container = document.getElementById('services');
     container.innerHTML =
-      '<p style="font-size:13px; color:#f97316;">Error loading services.</p>';
+      '<p style="font-size:13px; color:#f97316;">⚠️ Error loading services.</p>';
   }
 }
 
@@ -477,7 +480,7 @@ function setupCategoryFilters() {
     btn.addEventListener('click', () => {
       buttons.forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
-      currentCategory = btn.getAttribute('data-category');
+      currentCategory = btn.getAttribute('data-category') || 'All';
       renderServices();
     });
   });
