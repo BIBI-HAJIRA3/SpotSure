@@ -202,4 +202,71 @@
       mode = nextMode;
       const tabReg = document.getElementById('tabRegister');
       const tabLog = document.getElementById('tabLogin');
-      const submitBtn = docu
+      const submitBtn = document.getElementById('submitBtn');
+      const errorBox = document.getElementById('errorBox');
+
+      if (mode === 'register') {
+        tabReg.classList.add('active');
+        tabLog.classList.remove('active');
+        submitBtn.textContent = 'Create account';
+      } else {
+        tabLog.classList.add('active');
+        tabReg.classList.remove('active');
+        submitBtn.textContent = 'Sign in';
+      }
+      errorBox.textContent = '';
+    }
+
+    document.getElementById('tabRegister').addEventListener('click', () => setMode('register'));
+    document.getElementById('tabLogin').addEventListener('click', () => setMode('login'));
+
+    document.getElementById('authForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+      const errorBox = document.getElementById('errorBox');
+
+      errorBox.textContent = '';
+
+      if (!username || !password) {
+        errorBox.textContent = 'Username and password are required.';
+        return;
+      }
+
+      const endpoint = mode === 'register' ? '/auth/register' : '/auth/login';
+
+      try {
+        const res = await fetch(API_BASE + endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ username, password }),
+        });
+
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok) {
+          errorBox.textContent = data.message || 'Sign in failed';
+          showToast(data.message || 'Sign in failed');
+          return;
+        }
+
+        const user = data.user;
+        if (user) {
+          localStorage.setItem('spotsureUser', JSON.stringify({
+            id: user.id,
+            username: user.username,
+          }));
+        }
+
+        showToast(mode === 'register' ? 'Account created' : 'Signed in');
+        window.location.href = '/services.html';
+      } catch (err) {
+        console.error(err);
+        errorBox.textContent = 'Server error. Please try again.';
+        showToast('Server error');
+      }
+    });
+  </script>
+</body>
+</html>
