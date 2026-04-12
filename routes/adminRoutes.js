@@ -2,6 +2,7 @@
 const express = require('express');
 const Service = require('../models/Service');
 const Report = require('../models/Report'); // unified report model
+const Review = require('../models/Review'); // NEW: for review deletion
 
 const router = express.Router();
 
@@ -71,7 +72,11 @@ router.delete('/services/:id', requireAdmin, async (req, res) => {
       return res.status(404).json({ message: 'Service not found' });
     }
 
-    // Optionally delete related reviews here
+    // Cascade delete related reviews
+    await Review.deleteMany({ service: serviceId });
+
+    // Optionally clear related reports
+    await Report.deleteMany({ service: serviceId });
 
     res.json({ message: 'Service deleted' });
   } catch (err) {
@@ -122,6 +127,25 @@ router.get('/reports/reviews', requireAdmin, async (req, res) => {
     res.json({ reports });
   } catch (err) {
     console.error('GET /admin/reports/reviews error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// NEW: Delete review – DELETE /api/admin/reviews/:id
+router.delete('/reviews/:id', requireAdmin, async (req, res) => {
+  try {
+    const reviewId = req.params.id;
+    const review = await Review.findByIdAndDelete(reviewId);
+    if (!review) {
+      return res.status(404).json({ message: 'Review not found' });
+    }
+
+    // Remove associated reports
+    await Report.deleteMany({ review: reviewId });
+
+    res.json({ message: 'Review deleted' });
+  } catch (err) {
+    console.error('DELETE /admin/reviews/:id error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });
