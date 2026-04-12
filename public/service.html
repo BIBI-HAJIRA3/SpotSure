@@ -142,6 +142,9 @@ body::before {
   overflow-x: auto;
   padding-bottom: 2px;
 }
+.provider-images-row::-webkit-scrollbar {
+  display: none;
+}
 .provider-thumb {
   width: 54px;
   height: 54px;
@@ -273,6 +276,12 @@ body::before {
   padding: 6px 8px;
 }
 
+/* Reviews loading placeholder */
+.reviews-loading {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
 /* Toast */
 #toast {
   position: fixed;
@@ -373,7 +382,9 @@ body::before {
 
   <div class="card">
     <h2 style="margin:0 0 8px; font-size:15px; color:#f9fafb;">Reviews</h2>
-    <div id="reviewsContainer"></div>
+    <div id="reviewsContainer">
+      <p class="reviews-loading">Loading reviews…</p>
+    </div>
   </div>
 
   <p id="loadingText" style="font-size:13px; color:#9ca3af;">Loading service...</p>
@@ -466,9 +477,14 @@ async function loadCurrentUser() {
     const res = await fetch(API_BASE + '/auth/me', {
       credentials: 'include',
     });
-    if (!res.ok) return;
+    if (!res.ok) {
+      currentUser = null;
+      return;
+    }
     const data = await res.json();
-    currentUser = data.user || null;
+    const u = data && data.user ? data.user : null;
+    currentUser = u || null;
+    // console.log('Current user:', currentUser);
   } catch (e) {
     currentUser = null;
   }
@@ -481,7 +497,9 @@ function updateCreatorActionsVisibility() {
     btn.style.display = 'none';
     return;
   }
-  if (String(currentService.createdBy) === String(currentUser.id)) {
+  const createdBy = String(currentService.createdBy);
+  const userId = currentUser.id || currentUser._id || null;
+  if (userId && String(userId) === createdBy) {
     btn.style.display = 'inline-flex';
   } else {
     btn.style.display = 'none';
@@ -548,13 +566,14 @@ async function loadService() {
 
 async function loadReviews() {
   const id = getServiceIdFromUrl();
-  if (!id) return;
+  const container = document.getElementById('reviewsContainer');
+  if (!id || !container) return;
+  container.innerHTML = '<p class="reviews-loading">Loading reviews…</p>';
   try {
     const res = await fetch(API_BASE + '/services/' + id + '/reviews');
     if (!res.ok) throw new Error();
     const data = await res.json();
     const reviews = data.reviews || data;
-    const container = document.getElementById('reviewsContainer');
     container.innerHTML = '';
 
     if (!reviews.length) {
@@ -620,7 +639,7 @@ async function loadReviews() {
       container.appendChild(item);
     });
   } catch (e) {
-    const container = document.getElementById('reviewsContainer');
+    console.error(e);
     container.innerHTML = '<p class="no-reviews">Error loading reviews.</p>';
   }
 }
