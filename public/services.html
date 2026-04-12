@@ -1,362 +1,541 @@
-<!-- SpotSure/public/service.html -->
+<!--SpotSure/public/services.html-->
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8" />
-  <title>SpotSure – Service</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <style>
-    * { box-sizing: border-box; }
+<meta charset="UTF-8" />
+<title>SpotSure – Services</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style>
+* { box-sizing: border-box; }
 
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background: radial-gradient(circle at top, #0f172a 0, #020617 55%, #000 100%);
-      color: #e5e7eb;
-    }
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background-image:
-        radial-gradient(2px 2px at 20% 30%, rgba(148,163,184,0.18) 0, transparent 55%),
-        radial-gradient(2px 2px at 80% 70%, rgba(148,163,184,0.14) 0, transparent 55%),
-        radial-gradient(1.5px 1.5px at 40% 80%, rgba(148,163,184,0.1) 0, transparent 60%);
-      opacity: 0.6;
-      z-index: -1;
-    }
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: radial-gradient(circle at top, #0f172a 0, #020617 55%, #000 100%);
+  color: #e5e7eb;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(2px 2px at 20% 30%, rgba(148,163,184,0.18) 0, transparent 55%),
+    radial-gradient(2px 2px at 80% 70%, rgba(148,163,184,0.14) 0, transparent 55%),
+    radial-gradient(1.5px 1.5px at 40% 80%, rgba(148,163,184,0.1) 0, transparent 60%);
+  opacity: 0.6;
+  z-index: -1;
+}
 
-    .shell {
-      max-width: 520px;
-      margin: 0 auto;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      padding: 20px 14px 28px;
-    }
+.app-shell {
+  max-width: 520px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 14px 28px;
+}
 
-    .top-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-    .top-title {
-      font-size: 18px;
-      font-weight: 700;
-      color: #f9fafb;
-    }
-    .top-sub {
-      font-size: 12px;
-      color: #9ca3af;
-    }
-    .back-btn {
-      border-radius: 999px;
-      border: 1px solid #4b5563;
-      background: #020617;
-      color: #e5e7eb;
-      font-size: 12px;
-      padding: 5px 10px;
-      cursor: pointer;
-    }
+.top-bar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.top-title-block {
+  display: flex;
+  flex-direction: column;
+}
+.top-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #f9fafb;
+}
+.top-sub {
+  font-size: 12px;
+  color: #9ca3af;
+}
 
-    .card {
-      background: #020617;
-      border-radius: 16px;
-      border: 1px solid #1f2937;
-      padding: 16px 14px 14px;
-      margin-bottom: 16px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
-    }
+.pill-btn {
+  border: 1px solid #2563eb;
+  background: #2563eb;
+  color: #ffffff;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.pill-btn.secondary {
+  background: #020617;
+  color: #93c5fd;
+}
+.pill-btn:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(15,23,42,0.7);
+}
 
-    .service-header {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-    .service-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      color: #f9fafb;
-      flex-shrink: 0;
-      background: radial-gradient(circle at 0 0, #6366f1 0, #4f46e5 35%, #312e81 65%, #0f172a 100%);
-      box-shadow: 0 4px 12px rgba(30,64,175,0.9);
-    }
-    .service-name {
-      font-size: 16px;
-      font-weight: 600;
-      color: #f9fafb;
-      margin-bottom: 4px;
-    }
-    .service-meta {
-      font-size: 12px;
-      color: #9ca3af;
-    }
+.search-section {
+  margin-bottom: 10px;
+}
+.search-input {
+  width: 100%;
+  padding: 8px 11px;
+  border-radius: 999px;
+  border: 1px solid #374151;
+  font-size: 13px;
+  outline: none;
+  background: #020617;
+  color: #e5e7eb;
+}
+.search-input::placeholder {
+  color: #6b7280;
+}
 
-    .rating-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 6px;
-      font-size: 12px;
-      color: #9ca3af;
-    }
-    .rating-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      border-radius: 999px;
-      padding: 3px 8px;
-      background: rgba(34,197,94,0.14);
-      color: #bbf7d0;
-      font-size: 11px;
-    }
-    .rating-badge .star {
-      color: #fbbf24;
-    }
+.helper-text {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-bottom: 4px;
+  margin-top: 4px;
+}
 
-    .section-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: #f9fafb;
-      margin-bottom: 6px;
-    }
-    .section-text {
-      font-size: 12px;
-      color: #9ca3af;
-      line-height: 1.4;
-    }
+.chip-row {
+  display: flex;
+  overflow-x: auto;
+  gap: 6px;
+  padding: 4px 0 10px;
+}
+.chip-row::-webkit-scrollbar { display: none; }
+.chip {
+  flex-shrink: 0;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid #374151;
+  font-size: 12px;
+  background: #020617;
+  color: #d1d5db;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.chip.active {
+  border-color: #2563eb;
+  background: #2563eb;
+  color: #ffffff;
+}
+.chip:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(15,23,42,0.7);
+}
 
-    /* Request removal button */
-    .remove-btn {
-      margin-top: 10px;
-      padding: 7px 10px;
-      border-radius: 999px;
-      border: 1px solid #f97316;
-      background: #111827;
-      color: #fed7aa;
-      font-size: 12px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
+/* sort dropdown */
+.sort-row {
+  margin: 4px 0 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+.sort-select {
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid #374151;
+  background: #020617;
+  color: #d1d5db;
+  font-size: 11px;
+}
 
-    .remove-btn span.icon {
-      font-size: 14px;
-    }
+.list-section-title {
+  margin: 8px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #e5e7eb;
+}
 
-    .reviews {
-      font-size: 12px;
-      color: #d1d5db;
-    }
-    .review-item {
-      border-top: 1px solid #1f2937;
-      padding-top: 6px;
-      margin-top: 6px;
-    }
-    .review-author {
-      font-weight: 600;
-      font-size: 12px;
-      margin-bottom: 2px;
-    }
-    .review-text {
-      font-size: 12px;
-      color: #9ca3af;
-    }
-  </style>
+.services-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.service-card {
+  display: flex;
+  gap: 12px;
+  background: #0b1120;
+  border-radius: 14px;
+  padding: 13px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+  cursor: pointer;
+  border: 1px solid #1f2937;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  backdrop-filter: blur(4px);
+}
+.service-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(15,23,42,0.9);
+}
+.service-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #f9fafb;
+  flex-shrink: 0;
+  background: radial-gradient(circle at 0 0, #6366f1 0, #4f46e5 35%, #312e81 65%, #0f172a 100%);
+  box-shadow: 0 4px 12px rgba(30,64,175,0.9);
+}
+.service-icon.hospital {
+  background: radial-gradient(circle at 0 0, #38bdf8 0, #0ea5e9 35%, #0369a1 65%, #0f172a 100%);
+}
+.service-icon.clinic {
+  background: radial-gradient(circle at 0 0, #22c55e 0, #16a34a 35%, #166534 65%, #0f172a 100%);
+}
+.service-icon.school {
+  background: radial-gradient(circle at 0 0, #a855f7 0, #7c3aed 35%, #5b21b6 65%, #0f172a 100%);
+}
+.service-icon.restaurant {
+  background: radial-gradient(circle at 0 0, #fb923c 0, #f97316 35%, #c2410c 65%, #0f172a 100%);
+}
+.service-icon.grocery {
+  background: radial-gradient(circle at 0 0, #22c55e 0, #16a34a 35%, #166534 65%, #0f172a 100%);
+}
+
+.service-info h3 {
+  margin: 0 0 4px 0;
+  font-size: 15px;
+  color: #f9fafb;
+}
+.service-info p {
+  margin: 0;
+  font-size: 12px;
+  color: #9ca3af;
+  line-height: 1.3;
+}
+.rating-row-mini {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: 11px;
+  color: #9ca3af;
+}
+.rating-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 999px;
+  padding: 3px 8px;
+  background: rgba(34,197,94,0.14);
+  color: #bbf7d0;
+  font-size: 11px;
+}
+.rating-badge span.star { color: #fbbf24; }
+
+.category-icon { font-size: 13px; }
+
+@media (min-width: 600px) {
+  .app-shell { padding: 22px 18px 30px; }
+}
+</style>
 </head>
 <body>
-  <div class="shell">
-    <header class="top-bar">
-      <div>
-        <div class="top-title" id="serviceNameTop">Service</div>
-        <div class="top-sub" id="serviceCityTop"></div>
-      </div>
-      <button class="back-btn" type="button" onclick="window.location.href='/services.html'">
-        ← Back
-      </button>
-    </header>
-
-    <section class="card">
-      <div class="service-header">
-        <div class="service-icon" id="serviceIcon">⭐</div>
-        <div>
-          <div class="service-name" id="serviceName"></div>
-          <div class="service-meta" id="serviceMeta"></div>
+<div class="app-shell">
+  <header class="top-bar">
+    <div class="top-title-block">
+      <div class="top-title">SpotSure</div>
+      <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
+        <div id="userAvatar" style="
+          width:28px; height:28px;
+          border-radius:999px;
+          border:1px solid #1f2937;
+          background:#020617;
+          display:flex; align-items:center; justify-content:center;
+          overflow:hidden;
+          cursor:pointer;
+        " title="View / edit profile" onclick="window.location.href='/auth.html'">
+          <img src="/images/default_icon.png" style="width:100%;height:100%;object-fit:cover;">
         </div>
+        <div class="top-sub" id="welcomeUserLine">Guest</div>
       </div>
+    </div>
 
-      <div class="rating-row">
-        <span class="rating-badge">
-          <span class="star">★</span>
-          <span id="ratingValue">New</span>
-        </span>
-        <span id="ratingCounts"></span>
-      </div>
-
-      <!-- Request removal button -->
-      <button id="requestRemovalBtn" class="remove-btn" type="button">
-        <span class="icon">⚠️</span>
-        <span>Request service removal</span>
+    <div style="display:flex; gap:8px; align-items:center;">
+      <!-- email icon (change email here) -->
+      <button
+        class="pill-btn secondary"
+        type="button"
+        title="Email admin"
+        style="padding:4px 8px; min-width:auto;"
+        onclick="window.location.href='mailto:bibihajira@example.com?subject=SpotSure%20support'"
+      >
+        ✉️
       </button>
-    </section>
 
-    <section class="card">
-      <div class="section-title">About this place</div>
-      <div class="section-text" id="serviceDescription">
-        Loading description…
-      </div>
-    </section>
+      <!-- admin shortcut -->
+      <button
+        class="pill-btn secondary"
+        type="button"
+        title="Admin"
+        style="padding:4px 8px; min-width:auto;"
+        onclick="window.location.href='/admin.html'"
+      >
+        🛡️
+      </button>
+    </div>
+  </header>
 
-    <section class="card">
-      <div class="section-title">Reviews</div>
-      <div class="reviews" id="reviewsContainer">
-        Loading reviews…
-      </div>
-    </section>
+  <section class="search-section">
+    <input
+      id="searchInput"
+      class="search-input"
+      type="text"
+      placeholder="Search by name, city, pincode, or category..."
+    />
+  </section>
+
+  <div class="helper-text">Filter by category</div>
+  <div class="chip-row">
+    <button class="chip active category-btn" data-category="All">
+      <span class="category-icon">⭐</span><span>All</span>
+    </button>
+    <button class="chip category-btn" data-category="Hospital">
+      <span class="category-icon">➕</span><span>Hospitals</span>
+    </button>
+    <button class="chip category-btn" data-category="Clinic">
+      <span class="category-icon">🩺</span><span>Clinics</span>
+    </button>
+    <button class="chip category-btn" data-category="School">
+      <span class="category-icon">🏫</span><span>Schools</span>
+    </button>
+    <button class="chip category-btn" data-category="Restaurant">
+      <span class="category-icon">🍽️</span><span>Restaurants</span>
+    </button>
+    <button class="chip category-btn" data-category="Grocery">
+      <span class="category-icon">🛒</span><span>Grocery</span>
+    </button>
   </div>
 
-  <script>
-    const API_BASE = window.location.origin + '/api';
+  <div class="sort-row">
+    <select id="sortSelect" class="sort-select">
+      <option value="none">Sort: none</option>
+      <option value="high">Highest rated</option>
+      <option value="low">Lowest rated</option>
+    </select>
+  </div>
 
-    function getCategoryIcon(category) {
-      const c = (category || '').toLowerCase();
-      if (c === 'hospital') return '➕';
-      if (c === 'clinic') return '🩺';
-      if (c === 'school') return '🏫';
-      if (c === 'restaurant') return '🍽️';
-      if (c === 'grocery') return '🛒';
-      return '⭐';
-    }
+  <div class="list-section-title"></div>
+  <div id="services" class="services-list"></div>
+</div>
 
-    function buildRatingPieces(s) {
-      const avg = Number(s.averageRating || 0);
-      const avgLabel = avg > 0 ? avg.toFixed(1) : 'New';
-      const ratingsCount = Number(s.ratingCount || 0);
-      const reviewsCount = Number(s.reviewCount || 0);
-      const ratingsLabel = ratingsCount === 1 ? '1 rating' : ratingsCount + ' ratings';
-      const reviewsLabel =
-        reviewsCount === 0
-          ? 'No reviews'
-          : reviewsCount === 1
-          ? '1 review'
-          : reviewsCount + ' reviews';
-      return { avgLabel, ratingsLabel, reviewsLabel };
-    }
+<script>
+const API_BASE = window.location.origin + '/api';
 
-    async function loadService() {
-      const params = new URLSearchParams(window.location.search);
-      const id = params.get('id');
-      if (!id) {
-        document.getElementById('serviceNameTop').textContent = 'Service not found';
-        return;
-      }
+let allServices = [];
+let currentCategory = 'All';
+let sortMode = 'none';
 
-      try {
-        const res = await fetch(API_BASE + '/services/' + encodeURIComponent(id));
-        if (!res.ok) throw new Error('Failed to load service');
-        const data = await res.json();
+function getStoredUser() {
+  try {
+    const raw = localStorage.getItem('spotsureUser');
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
 
-        const s = data.service || data;
-        const { avgLabel, ratingsLabel, reviewsLabel } = buildRatingPieces(s);
+function updateUserLine() {
+  const line = document.getElementById('welcomeUserLine');
+  const user = getStoredUser();
+  if (!line) return;
+  if (user && user.username) line.textContent = user.username;
+  else line.textContent = 'Guest';
+}
 
-        document.getElementById('serviceNameTop').textContent = s.name || 'Service';
-        document.getElementById('serviceCityTop').textContent = s.city || '';
-        document.getElementById('serviceName').textContent = s.name || 'Service';
-        document.getElementById('serviceMeta').textContent =
-          (s.category || 'Service') + (s.city ? ' • ' + s.city : '');
-        document.getElementById('serviceIcon').textContent = getCategoryIcon(s.category);
+function updateUserAvatar() {
+  const avatarEl = document.getElementById('userAvatar');
+  if (!avatarEl) return;
+  avatarEl.innerHTML =
+    '<img src="/images/default_icon.png" style="width:100%;height:100%;object-fit:cover;">';
+}
 
-        document.getElementById('ratingValue').textContent = avgLabel;
-        document.getElementById('ratingCounts').textContent =
-          ratingsLabel + ' • ' + reviewsLabel;
+function getCategoryIcon(category) {
+  const c = (category || '').toLowerCase();
+  if (c === 'hospital') return '➕';
+  if (c === 'clinic') return '🩺';
+  if (c === 'school') return '🏫';
+  if (c === 'restaurant') return '🍽️';
+  if (c === 'grocery') return '🛒';
+  return '⭐';
+}
 
-        document.getElementById('serviceDescription').textContent =
-          s.description || 'No description added yet.';
-      } catch (err) {
-        console.error(err);
-        document.getElementById('serviceDescription').textContent =
-          'Error loading service details.';
-      }
-    }
+function getCategoryClass(category) {
+  const c = (category || '').toLowerCase();
+  if (c === 'hospital') return 'hospital';
+  if (c === 'clinic') return 'clinic';
+  if (c === 'school') return 'school';
+  if (c === 'restaurant') return 'restaurant';
+  if (c === 'grocery') return 'grocery';
+  return '';
+}
 
-    async function loadReviews() {
-      const params = new URLSearchParams(window.location.search);
-      const id = params.get('id');
-      if (!id) return;
+function buildRatingPieces(s) {
+  const avg = Number(s.averageRating || 0);
+  const avgLabel = avg > 0 ? avg.toFixed(1) : 'New';
+  const ratingsCount = Number(s.ratingCount || 0);
+  const reviewsCount = Number(s.reviewCount || 0);
+  const ratingsLabel = ratingsCount === 1 ? '1 rating' : ratingsCount + ' ratings';
+  const reviewsLabel =
+    reviewsCount === 0
+      ? 'No reviews'
+      : reviewsCount === 1
+      ? '1 review'
+      : reviewsCount + ' reviews';
+  return { avgLabel, ratingsLabel, reviewsLabel };
+}
 
-      const container = document.getElementById('reviewsContainer');
-      container.textContent = 'Loading reviews…';
+function filterServices() {
+  const searchInput = document.getElementById('searchInput');
+  const searchText = searchInput ? searchInput.value.trim().toLowerCase() : '';
 
-      try {
-        const res = await fetch(API_BASE + '/services/' + encodeURIComponent(id) + '/reviews');
-        if (!res.ok) throw new Error('Failed to load reviews');
-        const data = await res.json();
-        const reviews = data.reviews || [];
+  let list = allServices.filter((s) => {
+    const matchesSidebarCategory =
+      currentCategory === 'All' ||
+      (s.category && s.category.toLowerCase() === currentCategory.toLowerCase());
 
-        if (!reviews.length) {
-          container.textContent = 'No reviews yet.';
-          return;
-        }
+    if (!searchText) return matchesSidebarCategory;
 
-        container.innerHTML = '';
-        reviews.forEach((r) => {
-          const div = document.createElement('div');
-          div.className = 'review-item';
-          div.innerHTML = `
-            <div class="review-author">${r.authorName || 'Anonymous'}</div>
-            <div class="review-text">${r.comment || ''}</div>
-          `;
-          container.appendChild(div);
-        });
-      } catch (err) {
-        console.error(err);
-        container.textContent = 'Error loading reviews.';
-      }
-    }
+    const fields = [s.name || '', s.city || '', s.pincode || '', s.category || ''].map((x) =>
+      String(x).toLowerCase()
+    );
 
-    async function requestRemoval() {
-      const params = new URLSearchParams(window.location.search);
-      const id = params.get('id');
-      if (!id) return;
+    const matchesSearch = fields.some((f) => f.includes(searchText));
 
-      if (!confirm('Request admin to remove this service?')) return;
+    return matchesSidebarCategory && matchesSearch;
+  });
 
-      try {
-        const res = await fetch(API_BASE + '/services/' + encodeURIComponent(id) + '/request-remove', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-        });
-        const data = await res.json().catch(() => ({}));
-        if (!res.ok) {
-          alert(data.message || 'Failed to send request');
-          return;
-        }
-        alert(data.message || 'Removal request sent to admin.');
-      } catch (err) {
-        console.error(err);
-        alert('Error sending removal request.');
-      }
-    }
+  if (sortMode === 'high') {
+    list = list
+      .slice()
+      .sort((a, b) => (b.averageRating || 0) - (a.averageRating || 0));
+  }
+  if (sortMode === 'low') {
+    list = list
+      .slice()
+      .sort((a, b) => (a.averageRating || 0) - (b.averageRating || 0));
+  }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      loadService();
-      loadReviews();
+  return list;
+}
 
-      const btn = document.getElementById('requestRemovalBtn');
-      if (btn) {
-        btn.addEventListener('click', requestRemoval);
-      }
+function openServicePage(serviceId) {
+  window.location.href = '/service.html?id=' + encodeURIComponent(serviceId);
+}
+
+function renderServices() {
+  const container = document.getElementById('services');
+  container.innerHTML = '';
+  const services = filterServices();
+  if (!services.length) {
+    container.innerHTML =
+      '<p style="font-size:13px; color:#9ca3af;">No services found.</p>';
+    return;
+  }
+  services.forEach((s) => {
+    const card = document.createElement('div');
+    card.className = 'service-card';
+    card.addEventListener('click', () => openServicePage(s._id));
+
+    const iconDiv = document.createElement('div');
+    iconDiv.className = 'service-icon ' + getCategoryClass(s.category);
+    iconDiv.textContent = getCategoryIcon(s.category);
+
+    const info = document.createElement('div');
+    info.className = 'service-info';
+
+    const { avgLabel, ratingsLabel, reviewsLabel } = buildRatingPieces(s);
+
+    info.innerHTML = `
+      <h3>${s.name}</h3>
+      <p>
+        <span class="category-icon">${getCategoryIcon(s.category)}</span>
+        <span>${s.category || 'Service'} • ${s.city || ''}</span>
+      </p>
+      <div class="rating-row-mini">
+        <span class="rating-badge">
+          <span class="star">★</span>
+          <span>${avgLabel}</span>
+        </span>
+        <span>${ratingsLabel} • ${reviewsLabel}</span>
+      </div>
+    `;
+
+    card.appendChild(iconDiv);
+    card.appendChild(info);
+    container.appendChild(card);
+  });
+}
+
+async function loadServices() {
+  const container = document.getElementById('services');
+  container.innerHTML =
+    '<p style="font-size:13px; color:#9ca3af;">⏳ Finding nearby places for you…</p>';
+  try {
+    const res = await fetch(API_BASE + '/services');
+    if (!res.ok) throw new Error('Failed to load services');
+    const data = await res.json();
+    allServices = data.services || data;
+    renderServices();
+  } catch (err) {
+    console.error(err);
+    container.innerHTML =
+      '<p style="font-size:13px; color:#f97316;">⚠️ Error loading services.</p>';
+  }
+}
+
+function setupCategoryFilters() {
+  const buttons = document.querySelectorAll('.category-btn');
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      buttons.forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentCategory = btn.getAttribute('data-category') || 'All';
+      renderServices();
     });
-  </script>
+  });
+}
+
+function setupSearch() {
+  const input = document.getElementById('searchInput');
+  if (input) {
+    input.addEventListener('input', () => renderServices());
+  }
+}
+
+function setupSortDropdown() {
+  const select = document.getElementById('sortSelect');
+  if (!select) return;
+  select.addEventListener('change', () => {
+    sortMode = select.value;
+    renderServices();
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  updateUserLine();
+  updateUserAvatar();
+  loadServices();
+  setupCategoryFilters();
+  setupSearch();
+  setupSortDropdown();
+});
+</script>
 </body>
 </html>
