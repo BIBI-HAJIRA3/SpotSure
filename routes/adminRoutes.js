@@ -1,8 +1,8 @@
 // SpotSure/routes/adminRoutes.js
 const express = require('express');
 const Service = require('../models/Service');
-const Report = require('../models/Report'); // unified report model
-const Review = require('../models/Review'); // for cascade delete and review deletion
+const Report = require('../models/Report');
+const Review = require('../models/Review');
 
 const router = express.Router();
 
