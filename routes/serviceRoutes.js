@@ -53,13 +53,12 @@ router.get('/services', async (req, res) => {
       filter.pincode = pincode;
     }
 
-    // PERFORMANCE: project only needed fields + lean + indexed sort
     const services = await Service.find(
       filter,
       'name category city pincode address averageRating ratingCount reviewCount imagePath providerImages'
     )
       .sort({ createdAt: -1 })
-      .lean();
+      .lean(); // speed up read [web:103]
 
     res.json({ services });
   } catch (err) {
@@ -71,12 +70,27 @@ router.get('/services', async (req, res) => {
 // CREATE service – POST /api/services
 router.post('/services', upload.array('images', 5), async (req, res) => {
   try {
-    const { name, category, city, pincode, address, lat, lng } = req.body;
+    const {
+      name,
+      category,
+      otherCategory,
+      city,
+      pincode,
+      address,
+      lat,
+      lng,
+    } = req.body;
 
     if (!name || !city || !pincode || !address) {
       return res
         .status(400)
         .json({ message: 'Name, city, pincode, and address are required.' });
+    }
+
+    // prefer user-typed category when "Other" is selected
+    let finalCategory = category || 'Service';
+    if (category === 'Other' && otherCategory && otherCategory.trim()) {
+      finalCategory = otherCategory.trim();
     }
 
     let location = undefined;
@@ -127,7 +141,7 @@ router.post('/services', upload.array('images', 5), async (req, res) => {
 
     const service = await Service.create({
       name,
-      category: category || 'Service',
+      category: finalCategory,
       city,
       pincode,
       address,
