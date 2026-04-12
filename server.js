@@ -105,6 +105,11 @@ app.get('/admin-dashboard.html', (req, res) => {
   res.sendFile(path.join(publicDir, 'admin-dashboard.html'));
 });
 
+// NEW: auth.html route so login page works
+app.get('/auth.html', (req, res) => {
+  res.sendFile(path.join(publicDir, 'auth.html'));
+});
+
 // IMPORTANT: listen on Render port or local
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
