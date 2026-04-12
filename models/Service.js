@@ -1,41 +1,39 @@
-//SpotSure/models/Service.js
-
+// SpotSure/models/Service.js
 const mongoose = require('mongoose');
 
 const ServiceSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true, trim: true },
-    category: { type: String, required: true, trim: true },
-    city: { type: String, required: true, trim: true },
-    pincode: { type: String, required: true, trim: true },
-    address: { type: String, required: true, trim: true },
-
+    name: { type: String, required: true },
+    category: { type: String, default: 'Service' },
+    city: { type: String, required: true },
+    pincode: { type: String, required: true },
+    address: { type: String, required: true },
     imagePath: { type: String, default: '' },
     providerImages: { type: [String], default: [] },
-
-    averageRating: { type: Number, default: 0 },
-    ratingCount: { type: Number, default: 0 },
-    reviewCount: { type: Number, default: 0 },
-
-    // Changed: default from true -> false
-    isApproved: { type: Boolean, default: false },
-
-    createdBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+    location: {
+      lat: { type: Number },
+      lng: { type: Number },
     },
+    isApproved: { type: Boolean, default: false },
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     removalRequested: { type: Boolean, default: false },
     removalRequestedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
     },
-
-    location: {
-      lat: Number,
-      lng: Number,
-    },
+    averageRating: { type: Number, default: 0 },
+    ratingCount: { type: Number, default: 0 },
+    reviewCount: { type: Number, default: 0 },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
+
+// PERFORMANCE INDEXES
+ServiceSchema.index({ createdAt: -1 });          // main listing / sort
+ServiceSchema.index({ name: 1 });                // admin search by name
+ServiceSchema.index({ category: 1, city: 1 });   // category + city filters
+ServiceSchema.index({ pincode: 1 });             // pincode filter
 
 module.exports = mongoose.model('Service', ServiceSchema);
