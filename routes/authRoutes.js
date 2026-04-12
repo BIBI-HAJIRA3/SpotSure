@@ -39,7 +39,9 @@ router.post('/register', async (req, res) => {
     });
   } catch (err) {
     console.error('POST /api/auth/register error:', err);
-    res.status(500).json({ message: 'Server error' });
+    res
+      .status(500)
+      .json({ message: 'Server error: ' + (err && err.message ? err.message : 'Unknown') });
   }
 });
 
@@ -76,7 +78,9 @@ router.post('/login', async (req, res) => {
     });
   } catch (err) {
     console.error('POST /api/auth/login error:', err);
-    res.status(500).json({ message: 'Server error' });
+    res
+      .status(500)
+      .json({ message: 'Server error: ' + (err && err.message ? err.message : 'Unknown') });
   }
 });
 
@@ -110,7 +114,9 @@ router.get('/me', async (req, res) => {
     });
   } catch (err) {
     console.error('GET /api/auth/me error:', err);
-    res.status(500).json({ message: 'Server error' });
+    res
+      .status(500)
+      .json({ message: 'Server error: ' + (err && err.message ? err.message : 'Unknown') });
   }
 });
 
