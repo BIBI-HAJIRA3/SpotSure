@@ -1,4 +1,4 @@
-<!--SpotSure/public/services.html-->
+<!-- SpotSure/public/services.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -456,7 +456,11 @@ function renderServices() {
   });
 }
 
+// UPDATED: fun loading and error messages
 async function loadServices() {
+  const container = document.getElementById('services');
+  container.innerHTML =
+    '<p style="font-size:13px; color:#9ca3af;">⏳ Finding nearby places for you…</p>';
   try {
     const res = await fetch(API_BASE + '/services');
     if (!res.ok) throw new Error('Failed to load services');
@@ -465,9 +469,8 @@ async function loadServices() {
     renderServices();
   } catch (err) {
     console.error(err);
-    const container = document.getElementById('services');
     container.innerHTML =
-      '<p style="font-size:13px; color:#f97316;">Error loading services.</p>';
+      '<p style="font-size:13px; color:#f97316;">⚠️ Error loading services.</p>';
   }
 }
 
