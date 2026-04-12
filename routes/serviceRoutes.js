@@ -58,7 +58,7 @@ router.get('/services', async (req, res) => {
       'name category city pincode address averageRating ratingCount reviewCount imagePath providerImages'
     )
       .sort({ createdAt: -1 })
-      .lean(); // faster read [web:118][web:120]
+      .lean();
 
     res.json({ services });
   } catch (err) {
@@ -81,7 +81,7 @@ router.get('/my-services', async (req, res) => {
       'name category city pincode address averageRating ratingCount reviewCount imagePath providerImages'
     )
       .sort({ createdAt: -1 })
-      .lean(); // reuse same projection [web:120]
+      .lean();
 
     res.json({ services });
   } catch (err) {
@@ -175,7 +175,7 @@ router.post('/services', upload.array('images', 5), async (req, res) => {
       imagePath,
       providerImages,
       location,
-      isApproved: false, // requires admin approval
+      isApproved: false,
       createdBy,
     });
 
