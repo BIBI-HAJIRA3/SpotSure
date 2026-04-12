@@ -383,11 +383,11 @@ body::before {
   <div class="card">
     <h2 style="margin:0 0 8px; font-size:15px; color:#f9fafb;">Reviews</h2>
     <div id="reviewsContainer">
-      <p class="reviews-loading">Loading reviews…</p>
+      <p class="reviews-loading">💬 Fetching recent reviews…</p>
     </div>
   </div>
 
-  <p id="loadingText" style="font-size:13px; color:#9ca3af;">Loading service...</p>
+  <p id="loadingText" style="font-size:13px; color:#9ca3af;">⏳ Getting service details…</p>
 </div>
 
 <div id="toast">
@@ -568,7 +568,8 @@ async function loadReviews() {
   const id = getServiceIdFromUrl();
   const container = document.getElementById('reviewsContainer');
   if (!id || !container) return;
-  container.innerHTML = '<p class="reviews-loading">Loading reviews…</p>';
+  container.innerHTML =
+    '<p class="reviews-loading">💬 Fetching recent reviews…</p>';
   try {
     const res = await fetch(API_BASE + '/services/' + id + '/reviews');
     if (!res.ok) throw new Error();
