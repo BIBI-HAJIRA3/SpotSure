@@ -282,6 +282,7 @@ body::before {
       <div class="top-sub" id="welcomeUserLine"></div>
     </div>
     <div style="display:flex; gap:6px; align-items:center;">
+      <!-- Admin icon kept, but NO request-service redirect button here -->
       <button
         class="pill-btn secondary"
         type="button"
@@ -290,10 +291,6 @@ body::before {
         onclick="window.location.href='/admin.html'"
       >
         🛡️
-      </button>
-
-      <button class="pill-btn" type="button" onclick="window.location.href='/add-service.html'">
-        + Request service
       </button>
     </div>
   </header>
@@ -436,6 +433,7 @@ function filterServices(baseList) {
 }
 
 function openServicePage(serviceId) {
+  // This is where the card click goes now
   window.location.href = '/service.html?id=' + encodeURIComponent(serviceId);
 }
 
