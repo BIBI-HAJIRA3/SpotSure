@@ -52,7 +52,6 @@ body::before {
   font-size: 20px;
   font-weight: 700;
   color: #f9fafb;
-  margin-bottom: 4px;
 }
 .top-sub {
   font-size: 12px;
@@ -110,9 +109,7 @@ body::before {
   gap: 6px;
   padding: 4px 0 10px;
 }
-.chip-row::-webkit-scrollbar {
-  display: none;
-}
+.chip-row::-webkit-scrollbar { display: none; }
 .chip {
   flex-shrink: 0;
   padding: 5px 10px;
@@ -239,18 +236,12 @@ body::before {
   color: #bbf7d0;
   font-size: 11px;
 }
-.rating-badge span.star {
-  color: #fbbf24;
-}
+.rating-badge span.star { color: #fbbf24; }
 
-.category-icon {
-  font-size: 13px;
-}
+.category-icon { font-size: 13px; }
 
 @media (min-width: 600px) {
-  .app-shell {
-    padding: 22px 18px 30px;
-  }
+  .app-shell { padding: 22px 18px 30px; }
 }
 </style>
 </head>
@@ -259,10 +250,24 @@ body::before {
   <header class="top-bar">
     <div class="top-title-block">
       <div class="top-title">SpotSure</div>
-      <div class="top-sub" id="welcomeUserLine"></div>
+      <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
+        <div id="userAvatar" style="
+          width:28px; height:28px;
+          border-radius:999px;
+          border:1px solid #1f2937;
+          background:#020617;
+          display:flex; align-items:center; justify-content:center;
+          overflow:hidden;
+          cursor:pointer;
+        " title="View / edit profile" onclick="window.location.href='/auth.html'">
+          <img src="/images/default_icon.png" style="width:100%;height:100%;object-fit:cover;">
+        </div>
+        <div class="top-sub" id="welcomeUserLine">Guest</div>
+      </div>
     </div>
+
     <div style="display:flex; gap:8px; align-items:center;">
-      <!-- email icon only (change email here) -->
+      <!-- email icon (change email here) -->
       <button
         class="pill-btn secondary"
         type="button"
@@ -283,19 +288,6 @@ body::before {
       >
         🛡️
       </button>
-
-      <!-- user avatar (click to edit profile / sign in) -->
-      <div id="userAvatar" style="
-        width:32px; height:32px;
-        border-radius:999px;
-        border:1px solid #1f2937;
-        background:#020617;
-        display:flex; align-items:center; justify-content:center;
-        overflow:hidden;
-        cursor:pointer;
-      " title="View / edit profile" onclick="window.location.href='/auth.html'">
-        <img src="/images/default_icon.png" style="width:100%;height:100%;object-fit:cover;">
-      </div>
     </div>
   </header>
 
@@ -363,26 +355,16 @@ function updateUserLine() {
   const line = document.getElementById('welcomeUserLine');
   const user = getStoredUser();
   if (!line) return;
-  if (user && user.name) line.textContent = 'Welcome back, ' + user.name;
-  else line.textContent = '';
+  if (user && user.username) line.textContent = user.username;
+  else line.textContent = 'Guest';
 }
 
 function updateUserAvatar() {
   const avatarEl = document.getElementById('userAvatar');
-  const user = getStoredUser();
   if (!avatarEl) return;
-  if (user && user.avatarUrl) {
-    avatarEl.innerHTML = '';
-    const img = document.createElement('img');
-    img.src = user.avatarUrl;
-    img.style.width = '100%';
-    img.style.height = '100%';
-    img.style.objectFit = 'cover';
-    avatarEl.appendChild(img);
-  } else {
-    avatarEl.innerHTML =
-      '<img src="/images/default_icon.png" style="width:100%;height:100%;object-fit:cover;">';
-  }
+  // No real avatar yet; always show default
+  avatarEl.innerHTML =
+    '<img src="/images/default_icon.png" style="width:100%;height:100%;object-fit:cover;">';
 }
 
 function getCategoryIcon(category) {
@@ -542,7 +524,7 @@ function setupSortDropdown() {
   const select = document.getElementById('sortSelect');
   if (!select) return;
   select.addEventListener('change', () => {
-    sortMode = select.value; // 'none' | 'high' | 'low'
+    sortMode = select.value;
     renderServices();
   });
 }
