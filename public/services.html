@@ -262,13 +262,13 @@ body::before {
       <div class="top-sub" id="welcomeUserLine"></div>
     </div>
     <div style="display:flex; gap:8px; align-items:center;">
-      <!-- admin email icon -->
+      <!-- email icon only (change email here) -->
       <button
         class="pill-btn secondary"
         type="button"
         title="Email admin"
         style="padding:4px 8px; min-width:auto;"
-        onclick="window.location.href='mailto:admin@spotsure.app?subject=SpotSure%20support%20request'"
+        onclick="window.location.href='mailto:bibihajira@example.com?subject=SpotSure%20support'"
       >
         ✉️
       </button>
@@ -291,11 +291,10 @@ body::before {
         border:1px solid #1f2937;
         background:#020617;
         display:flex; align-items:center; justify-content:center;
-        font-size:16px; color:#e5e7eb;
         overflow:hidden;
         cursor:pointer;
       " title="View / edit profile" onclick="window.location.href='/auth.html'">
-        👤
+        <img src="/images/default_icon.png" style="width:100%;height:100%;object-fit:cover;">
       </div>
     </div>
   </header>
@@ -381,7 +380,8 @@ function updateUserAvatar() {
     img.style.objectFit = 'cover';
     avatarEl.appendChild(img);
   } else {
-    avatarEl.textContent = '👤';
+    avatarEl.innerHTML =
+      '<img src="/images/default_icon.png" style="width:100%;height:100%;object-fit:cover;">';
   }
 }
 
