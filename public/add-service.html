@@ -34,7 +34,7 @@
     .top-bar {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-start;
       gap: 10px;
       margin-bottom: 16px;
       flex-wrap: wrap;
@@ -47,21 +47,6 @@
     .top-sub {
       font-size: 12px;
       color: #9ca3af;
-    }
-    .pill-btn {
-      border-radius: 999px;
-      border: 1px solid #374151;
-      background: #111827;
-      color: #e5e7eb;
-      padding: 6px 10px;
-      font-size: 12px;
-      cursor: pointer;
-      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
-    }
-    .pill-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 14px rgba(15,23,42,0.7);
-      background: #020617;
     }
     .card {
       background: #0b1120;
@@ -148,9 +133,7 @@
         <div class="top-title">Request a service</div>
         <div class="top-sub">Submit details, admin will review and approve.</div>
       </div>
-      <button class="pill-btn" type="button" onclick="window.location.href='/services.html'">
-        ⬅ Back
-      </button>
+      <!-- intentionally NO back/redirect buttons here -->
     </div>
 
     <div class="card">
@@ -175,7 +158,6 @@
           </select>
         </div>
 
-        <!-- NEW: other category field -->
         <div class="form-group" id="otherCategoryWrapper" style="display:none; margin-top:6px;">
           <label for="otherCategory">Specify category *</label>
           <input id="otherCategory" name="otherCategory" type="text" placeholder="Eg. Pharmacy, Diagnostic lab, NGO" />
@@ -250,12 +232,12 @@
       }, 2200);
     }
 
-    // NEW: toggle otherCategory field
+    // toggle "Other" category input
     const categorySelect = document.getElementById('category');
     const otherCategoryWrapper = document.getElementById('otherCategoryWrapper');
     const otherCategoryInput = document.getElementById('otherCategory');
 
-    if (categorySelect && otherCategoryWrapper) {
+    if (categorySelect && otherCategoryWrapper && otherCategoryInput) {
       categorySelect.addEventListener('change', () => {
         if (categorySelect.value === 'Other') {
           otherCategoryWrapper.style.display = 'block';
@@ -284,9 +266,7 @@
           return;
         }
         showToast('Service request submitted. Pending admin approval.');
-        setTimeout(() => {
-          window.location.href = '/services.html';
-        }, 1500);
+        // no redirect; user stays on this page as you requested
       } catch (err) {
         console.error(err);
         showToast('Error submitting service');
