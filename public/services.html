@@ -271,7 +271,10 @@ body::before {
       >
         🛡️
       </button>
-      <!-- Removed the + Request service button as requested -->
+
+      <button class="pill-btn" type="button" onclick="window.location.href='/add-service.html'">
+        + Request service
+      </button>
     </div>
   </header>
 
@@ -288,9 +291,6 @@ body::before {
   <div class="chip-row">
     <button class="chip active category-btn" data-category="All">
       <span class="category-icon">⭐</span><span>All</span>
-    </button>
-    <button class="chip category-btn" data-category="My">
-      <span class="category-icon">👤</span><span>My services</span>
     </button>
     <button class="chip category-btn" data-category="Hospital">
       <span class="category-icon">➕</span><span>Hospitals</span>
@@ -317,7 +317,7 @@ body::before {
     </select>
   </div>
 
-  <div class="list-section-title" id="listTitle"></div>
+  <div class="list-section-title"></div>
   <div id="services" class="services-list"></div>
 </div>
 
@@ -325,7 +325,6 @@ body::before {
 const API_BASE = window.location.origin + '/api';
 
 let allServices = [];
-let myServices = [];
 let currentCategory = 'All';
 let sortMode = 'none';
 
@@ -375,19 +374,16 @@ function buildRatingPieces(s) {
   return { avg, avgLabel, ratingsLabel, reviewsLabel };
 }
 
-function filterServices(baseList) {
+function filterServices() {
   const searchInput = document.getElementById('searchInput');
   const searchText = searchInput ? searchInput.value.trim().toLowerCase() : '';
 
-  let list = baseList.filter((s) => {
+  let list = allServices.filter((s) => {
     const matchesSidebarCategory =
       currentCategory === 'All' ||
-      currentCategory === 'My' ||
       (s.category && s.category.toLowerCase() === currentCategory.toLowerCase());
 
-    if (!matchesSidebarCategory) return false;
-
-    if (!searchText) return true;
+    if (!searchText) return matchesSidebarCategory;
 
     const fields = [s.name || '', s.city || '', s.pincode || '', s.category || ''].map((x) =>
       String(x).toLowerCase()
@@ -395,7 +391,7 @@ function filterServices(baseList) {
 
     const matchesSearch = fields.some((f) => f.includes(searchText));
 
-    return matchesSearch;
+    return matchesSidebarCategory && matchesSearch;
   });
 
   if (sortMode === 'high') {
@@ -413,26 +409,13 @@ function filterServices(baseList) {
 }
 
 function openServicePage(serviceId) {
-  // Clicking a card goes to service details page, not add-service
   window.location.href = '/service.html?id=' + encodeURIComponent(serviceId);
 }
 
 function renderServices() {
   const container = document.getElementById('services');
-  const titleEl = document.getElementById('listTitle');
   container.innerHTML = '';
-
-  const baseList = currentCategory === 'My' ? myServices : allServices;
-  const services = filterServices(baseList);
-
-  if (currentCategory === 'My') {
-    titleEl.textContent = 'My services';
-  } else if (currentCategory === 'All') {
-    titleEl.textContent = '';
-  } else {
-    titleEl.textContent = currentCategory + ' services';
-  }
-
+  const services = filterServices();
   if (!services.length) {
     container.innerHTML =
       '<p style="font-size:13px; color:#9ca3af;">No services found.</p>';
@@ -473,11 +456,7 @@ function renderServices() {
   });
 }
 
-// load all services
 async function loadServices() {
-  const container = document.getElementById('services');
-  container.innerHTML =
-    '<p style="font-size:13px; color:#9ca3af;">⏳ Finding nearby places for you…</p>';
   try {
     const res = await fetch(API_BASE + '/services');
     if (!res.ok) throw new Error('Failed to load services');
@@ -486,36 +465,9 @@ async function loadServices() {
     renderServices();
   } catch (err) {
     console.error(err);
+    const container = document.getElementById('services');
     container.innerHTML =
-      '<p style="font-size:13px; color:#f97316;">⚠️ Error loading services.</p>';
-  }
-}
-
-// load my services
-async function loadMyServices() {
-  const container = document.getElementById('services');
-  container.innerHTML =
-    '<p style="font-size:13px; color:#9ca3af;">⏳ Loading your services…</p>';
-  try {
-    const res = await fetch(API_BASE + '/my-services', {
-      credentials: 'include',
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      myServices = [];
-    } else {
-      myServices = data.services || [];
-    }
-    if (currentCategory === 'My') {
-      renderServices();
-    }
-  } catch (e) {
-    console.error(e);
-    myServices = [];
-    if (currentCategory === 'My') {
-      container.innerHTML =
-        '<p style="font-size:13px; color:#f97316;">⚠️ Error loading your services.</p>';
-    }
+      '<p style="font-size:13px; color:#f97316;">Error loading services.</p>';
   }
 }
 
@@ -525,13 +477,8 @@ function setupCategoryFilters() {
     btn.addEventListener('click', () => {
       buttons.forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
-      currentCategory = btn.getAttribute('data-category') || 'All';
-
-      if (currentCategory === 'My') {
-        loadMyServices();
-      } else {
-        renderServices();
-      }
+      currentCategory = btn.getAttribute('data-category');
+      renderServices();
     });
   });
 }
