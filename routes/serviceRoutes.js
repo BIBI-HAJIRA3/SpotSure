@@ -58,11 +58,34 @@ router.get('/services', async (req, res) => {
       'name category city pincode address averageRating ratingCount reviewCount imagePath providerImages'
     )
       .sort({ createdAt: -1 })
-      .lean(); // speed up read [web:103]
+      .lean(); // faster read [web:118][web:120]
 
     res.json({ services });
   } catch (err) {
     console.error('GET /api/services error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// MY services – GET /api/my-services (only approved, created by logged-in user)
+router.get('/my-services', async (req, res) => {
+  try {
+    if (!req.session || !req.session.userId) {
+      return res.status(401).json({ message: 'Login required' });
+    }
+
+    const userId = req.session.userId;
+
+    const services = await Service.find(
+      { isApproved: true, createdBy: userId },
+      'name category city pincode address averageRating ratingCount reviewCount imagePath providerImages'
+    )
+      .sort({ createdAt: -1 })
+      .lean(); // reuse same projection [web:120]
+
+    res.json({ services });
+  } catch (err) {
+    console.error('GET /api/my-services error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -87,7 +110,7 @@ router.post('/services', upload.array('images', 5), async (req, res) => {
         .json({ message: 'Name, city, pincode, and address are required.' });
     }
 
-    // prefer user-typed category when "Other" is selected
+    // Use free-text category when "Other" is chosen
     let finalCategory = category || 'Service';
     if (category === 'Other' && otherCategory && otherCategory.trim()) {
       finalCategory = otherCategory.trim();
@@ -108,7 +131,11 @@ router.post('/services', upload.array('images', 5), async (req, res) => {
     if (req.files && req.files.length > 0) {
       const cloudinary = req.cloudinary;
 
-      if (cloudinary && cloudinary.uploader && cloudinary.uploader.upload_stream) {
+      if (
+        cloudinary &&
+        cloudinary.uploader &&
+        cloudinary.uploader.upload_stream
+      ) {
         const uploads = await Promise.all(
           req.files.map(
             (file) =>
