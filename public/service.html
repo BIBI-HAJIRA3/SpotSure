@@ -1,1 +1,407 @@
-v
+<!-- SpotSure/public/service.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>SpotSure – Service details</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: radial-gradient(circle at top, #0f172a 0, #020617 55%, #000 100%);
+      color: #e5e7eb;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(2px 2px at 20% 30%, rgba(148,163,184,0.18) 0, transparent 55%),
+        radial-gradient(1px 1px at 80% 70%, rgba(148,163,184,0.14) 0, transparent 55%),
+        radial-gradient(1.5px 1.5px at 40% 80%, rgba(148,163,184,0.1) 0, transparent 60%);
+      opacity: 0.6;
+      z-index: -1;
+    }
+
+    .page {
+      max-width: 520px;
+      margin: 0 auto;
+      min-height: 100vh;
+      padding: 20px 14px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+    }
+    .top-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .back-btn {
+      border-radius: 999px;
+      border: 1px solid #374151;
+      background: #020617;
+      color: #e5e7eb;
+      padding: 4px 9px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .back-btn:hover {
+      background: #111827;
+    }
+    .top-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #f9fafb;
+    }
+    .top-sub {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    .card {
+      background: #0b1120;
+      border-radius: 14px;
+      border: 1px solid #1f2937;
+      padding: 14px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+    }
+
+    .service-header {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .service-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: #f9fafb;
+      flex-shrink: 0;
+      background: radial-gradient(circle at 0 0, #6366f1 0, #4f46e5 35%, #312e81 65%, #0f172a 100%);
+      box-shadow: 0 4px 12px rgba(30,64,175,0.9);
+    }
+    .service-icon.hospital {
+      background: radial-gradient(circle at 0 0, #38bdf8 0, #0ea5e9 35%, #0369a1 65%, #0f172a 100%);
+    }
+    .service-icon.clinic {
+      background: radial-gradient(circle at 0 0, #22c55e 0, #16a34a 35%, #166534 65%, #0f172a 100%);
+    }
+    .service-icon.school {
+      background: radial-gradient(circle at 0 0, #a855f7 0, #7c3aed 35%, #5b21b6 65%, #0f172a 100%);
+    }
+    .service-icon.restaurant {
+      background: radial-gradient(circle at 0 0, #fb923c 0, #f97316 35%, #c2410c 65%, #0f172a 100%);
+    }
+    .service-icon.grocery {
+      background: radial-gradient(circle at 0 0, #22c55e 0, #16a34a 35%, #166534 65%, #0f172a 100%);
+    }
+
+    .service-main h1 {
+      margin: 0 0 4px 0;
+      font-size: 18px;
+      color: #f9fafb;
+    }
+    .service-main .meta {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    .rating-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      font-size: 12px;
+      color: #9ca3af;
+    }
+    .rating-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border-radius: 999px;
+      padding: 3px 8px;
+      background: rgba(34,197,94,0.14);
+      color: #bbf7d0;
+      font-size: 12px;
+    }
+    .rating-badge .star {
+      color: #fbbf24;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #e5e7eb;
+      margin-bottom: 6px;
+    }
+    .text-sm {
+      font-size: 12px;
+      color: #9ca3af;
+      line-height: 1.4;
+    }
+
+    .reviews-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .review-item {
+      border-radius: 10px;
+      border: 1px solid #1f2937;
+      padding: 8px 10px;
+      background: #020617;
+    }
+    .review-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: #9ca3af;
+      margin-bottom: 4px;
+    }
+    .review-name {
+      font-weight: 600;
+      color: #e5e7eb;
+    }
+    .review-rating {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 11px;
+      color: #bbf7d0;
+    }
+    .review-text {
+      font-size: 12px;
+      color: #d1d5db;
+    }
+
+    .pill-btn {
+      border-radius: 999px;
+      border: 1px solid #374151;
+      background: #020617;
+      color: #e5e7eb;
+      padding: 6px 10px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .pill-btn:hover {
+      background: #111827;
+    }
+
+    @media (min-width: 600px) {
+      .page {
+        padding: 22px 18px 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="top-bar">
+      <div class="top-left">
+        <button class="back-btn" type="button" onclick="window.location.href='/services.html'">
+          ← Back
+        </button>
+        <div>
+          <div class="top-title">Service details</div>
+          <div class="top-sub" id="serviceSubtitle"></div>
+        </div>
+      </div>
+      <button
+        class="pill-btn"
+        type="button"
+        onclick="window.location.href='/add-service.html'"
+      >
+        + Request service
+      </button>
+    </header>
+
+    <div id="serviceCard" class="card">
+      <!-- Filled by JS -->
+      Loading service…
+    </div>
+
+    <div id="infoCard" class="card">
+      <!-- Address & extra details -->
+    </div>
+
+    <div id="reviewsCard" class="card">
+      <!-- Reviews -->
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = window.location.origin + '/api';
+
+    function getCategoryIcon(category) {
+      const c = (category || '').toLowerCase();
+      if (c === 'hospital') return '➕';
+      if (c === 'clinic') return '🩺';
+      if (c === 'school') return '🏫';
+      if (c === 'restaurant') return '🍽️';
+      if (c === 'grocery') return '🛒';
+      return '⭐';
+    }
+
+    function getCategoryClass(category) {
+      const c = (category || '').toLowerCase();
+      if (c === 'hospital') return 'hospital';
+      if (c === 'clinic') return 'clinic';
+      if (c === 'school') return 'school';
+      if (c === 'restaurant') return 'restaurant';
+      if (c === 'grocery') return 'grocery';
+      return '';
+    }
+
+    function buildRatingPieces(s) {
+      const avg = Number(s.averageRating || 0);
+      const avgLabel = avg > 0 ? avg.toFixed(1) : 'New';
+      const ratingsCount = Number(s.ratingCount || 0);
+      const reviewsCount = Number(s.reviewCount || 0);
+      const ratingsLabel = ratingsCount === 1 ? '1 rating' : ratingsCount + ' ratings';
+      const reviewsLabel =
+        reviewsCount === 0
+          ? 'No reviews'
+          : reviewsCount === 1
+          ? '1 review'
+          : reviewsCount + ' reviews';
+      return { avg, avgLabel, ratingsLabel, reviewsLabel };
+    }
+
+    function getServiceIdFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('id');
+    }
+
+    async function loadService() {
+      const serviceId = getServiceIdFromUrl();
+      const serviceCard = document.getElementById('serviceCard');
+      const infoCard = document.getElementById('infoCard');
+      const subtitle = document.getElementById('serviceSubtitle');
+
+      if (!serviceId) {
+        serviceCard.textContent = 'No service id provided.';
+        infoCard.textContent = '';
+        return;
+      }
+
+      try {
+        const res = await fetch(API_BASE + '/services/' + encodeURIComponent(serviceId));
+        if (!res.ok) throw new Error('Failed to load service');
+        const data = await res.json();
+        const s = data.service || data;
+
+        const { avgLabel, ratingsLabel, reviewsLabel } = buildRatingPieces(s);
+
+        subtitle.textContent = (s.city || '') + (s.city && s.pincode ? ' • ' : '') + (s.pincode || '');
+
+        serviceCard.innerHTML = `
+          <div class="service-header">
+            <div class="service-icon ${getCategoryClass(s.category)}">
+              ${getCategoryIcon(s.category)}
+            </div>
+            <div class="service-main">
+              <h1>${s.name || 'Service'}</h1>
+              <div class="meta">
+                ${(s.category || 'Service')} • ${(s.city || '')}
+              </div>
+              <div class="rating-row">
+                <span class="rating-badge">
+                  <span class="star">★</span>
+                  <span>${avgLabel}</span>
+                </span>
+                <span>${ratingsLabel} • ${reviewsLabel}</span>
+              </div>
+            </div>
+          </div>
+        `;
+
+        infoCard.innerHTML = `
+          <div class="section-title">Location & address</div>
+          <div class="text-sm">
+            ${s.address ? s.address + '<br>' : ''}
+            ${s.city || ''}${s.city && s.pincode ? ' - ' : ''}${s.pincode || ''}
+          </div>
+        `;
+      } catch (err) {
+        console.error(err);
+        serviceCard.textContent = 'Error loading service.';
+        infoCard.textContent = '';
+      }
+    }
+
+    async function loadReviews() {
+      const serviceId = getServiceIdFromUrl();
+      const reviewsCard = document.getElementById('reviewsCard');
+      if (!serviceId) {
+        reviewsCard.innerHTML = '<div class="section-title">Reviews</div><div class="text-sm">No service id.</div>';
+        return;
+      }
+
+      try {
+        const res = await fetch(API_BASE + '/services/' + encodeURIComponent(serviceId) + '/reviews');
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          reviewsCard.innerHTML = '<div class="section-title">Reviews</div><div class="text-sm">Could not load reviews.</div>';
+          return;
+        }
+        const reviews = data.reviews || [];
+        if (!reviews.length) {
+          reviewsCard.innerHTML = '<div class="section-title">Reviews</div><div class="text-sm">No reviews yet.</div>';
+          return;
+        }
+
+        const listHtml = reviews.map((r) => {
+          const created = r.createdAt ? new Date(r.createdAt).toLocaleDateString() : '';
+          return `
+            <div class="review-item">
+              <div class="review-head">
+                <span class="review-name">${r.userName || 'User'}</span>
+                <span class="review-rating">
+                  <span>★</span>
+                  <span>${(r.rating || 0).toFixed ? r.rating.toFixed(1) : r.rating}</span>
+                </span>
+              </div>
+              <div class="review-text">${r.comment || ''}</div>
+              ${created ? `<div class="text-sm" style="margin-top:4px; font-size:11px; color:#6b7280;">${created}</div>` : ''}
+            </div>
+          `;
+        }).join('');
+
+        reviewsCard.innerHTML = `
+          <div class="section-title">Reviews</div>
+          <div class="reviews-list">${listHtml}</div>
+        `;
+      } catch (err) {
+        console.error(err);
+        reviewsCard.innerHTML = '<div class="section-title">Reviews</div><div class="text-sm">Error loading reviews.</div>';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadService();
+      loadReviews();
+    });
+  </script>
+</body>
+</html>
