@@ -36,7 +36,6 @@
         color: #9ca3af;
       }
 
-      /* Slightly roomier cards */
       .card {
         background: #020617;
         border-radius: 16px;
@@ -132,12 +131,6 @@
         min-height: 16px;
       }
 
-      .hint-text {
-        font-size: 11px;
-        color: #6b7280;
-        margin-top: 8px;
-      }
-
       .top-bar {
         display: flex;
         justify-content: space-between;
@@ -153,7 +146,6 @@
         color: #f9fafb;
       }
 
-      /* Slightly larger inner padding & gap for items */
       .item {
         border-radius: 12px;
         border: 1px solid #1f2937;
@@ -212,6 +204,11 @@
         color: #e5e7eb;
       }
 
+      .small {
+        font-size: 11px;
+        color: #9ca3af;
+      }
+
       .search-bar {
         margin-bottom: 10px;
       }
@@ -224,11 +221,6 @@
         background: #020617;
         color: #e5e7eb;
         font-size: 13px;
-      }
-
-      .small {
-        font-size: 11px;
-        color: #9ca3af;
       }
 
       .confirm-row {
@@ -320,7 +312,7 @@
           </button>
         </header>
 
-        <!-- Find & delete service (kept on top) -->
+        <!-- Find & delete service -->
         <section class="card">
           <h2>Find & delete service</h2>
           <div class="small" style="margin-bottom:6px;">
@@ -381,7 +373,6 @@
       <span id="toastMessage"></span>
     </div>
 
-    <!-- Existing JS kept exactly the same -->
     <script>
       const API_BASE = window.location.origin + "/api";
       let toastTimer = null;
@@ -614,6 +605,7 @@
           loadPendingServices();
           loadRemovalRequests();
           searchServicesByName();
+          loadReportedServices();
         } catch (e) {
           showToast("Error deleting service");
         }
@@ -807,8 +799,8 @@
             method: "DELETE",
             credentials: "include",
           });
+          const data = await res.json().catch(() => ({}));
           if (!res.ok) {
-            const data = await res.json().catch(() => ({}));
             showToast(data.message || "Error deleting review");
             return;
           }
