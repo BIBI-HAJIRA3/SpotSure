@@ -247,6 +247,26 @@ body::before {
   font-size: 13px;
 }
 
+.my-service-actions {
+  margin-top: 6px;
+  display: flex;
+  gap: 6px;
+}
+
+.my-service-actions button {
+  border-radius: 999px;
+  border: 1px solid #374151;
+  background: #020617;
+  color: #e5e7eb;
+  padding: 3px 7px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.my-service-actions button:hover {
+  background: #111827;
+}
+
 @media (min-width: 600px) {
   .app-shell {
     padding: 22px 18px 30px;
@@ -288,9 +308,12 @@ body::before {
   </section>
 
   <div class="helper-text">Filter by category</div>
-  <div class="chip-row">
+  <div class="chip-row" id="categoryBar">
     <button class="chip active category-btn" data-category="All">
       <span class="category-icon">⭐</span><span>All</span>
+    </button>
+    <button class="chip category-btn" data-category="My">
+      <span class="category-icon">👤</span><span>My services</span>
     </button>
     <button class="chip category-btn" data-category="Hospital">
       <span class="category-icon">➕</span><span>Hospitals</span>
@@ -317,7 +340,7 @@ body::before {
     </select>
   </div>
 
-  <div class="list-section-title"></div>
+  <div class="list-section-title" id="listTitle"></div>
   <div id="services" class="services-list"></div>
 </div>
 
@@ -325,6 +348,7 @@ body::before {
 const API_BASE = window.location.origin + '/api';
 
 let allServices = [];
+let myServices = [];
 let currentCategory = 'All';
 let sortMode = 'none';
 
@@ -374,16 +398,19 @@ function buildRatingPieces(s) {
   return { avg, avgLabel, ratingsLabel, reviewsLabel };
 }
 
-function filterServices() {
+function filterServices(baseList) {
   const searchInput = document.getElementById('searchInput');
   const searchText = searchInput ? searchInput.value.trim().toLowerCase() : '';
 
-  let list = allServices.filter((s) => {
+  let list = baseList.filter((s) => {
     const matchesSidebarCategory =
       currentCategory === 'All' ||
+      currentCategory === 'My' ||
       (s.category && s.category.toLowerCase() === currentCategory.toLowerCase());
 
-    if (!searchText) return matchesSidebarCategory;
+    if (!matchesSidebarCategory) return false;
+
+    if (!searchText) return true;
 
     const fields = [s.name || '', s.city || '', s.pincode || '', s.category || ''].map((x) =>
       String(x).toLowerCase()
@@ -391,7 +418,7 @@ function filterServices() {
 
     const matchesSearch = fields.some((f) => f.includes(searchText));
 
-    return matchesSidebarCategory && matchesSearch;
+    return matchesSearch;
   });
 
   if (sortMode === 'high') {
@@ -412,10 +439,45 @@ function openServicePage(serviceId) {
   window.location.href = '/service.html?id=' + encodeURIComponent(serviceId);
 }
 
+async function requestServiceRemoval(serviceId, btn) {
+  btn.disabled = true;
+  btn.textContent = 'Requesting...';
+  try {
+    const res = await fetch(API_BASE + '/services/' + serviceId + '/request-remove', {
+      method: 'POST',
+      credentials: 'include',
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      alert(data.message || 'Could not request deletion');
+      btn.disabled = false;
+      btn.textContent = 'Request deletion';
+      return;
+    }
+    btn.textContent = 'Deletion requested';
+  } catch (e) {
+    alert('Could not request deletion');
+    btn.disabled = false;
+    btn.textContent = 'Request deletion';
+  }
+}
+
 function renderServices() {
   const container = document.getElementById('services');
+  const titleEl = document.getElementById('listTitle');
   container.innerHTML = '';
-  const services = filterServices();
+
+  const baseList = currentCategory === 'My' ? myServices : allServices;
+  const services = filterServices(baseList);
+
+  if (currentCategory === 'My') {
+    titleEl.textContent = 'My services';
+  } else if (currentCategory === 'All') {
+    titleEl.textContent = '';
+  } else {
+    titleEl.textContent = currentCategory + ' services';
+  }
+
   if (!services.length) {
     container.innerHTML =
       '<p style="font-size:13px; color:#9ca3af;">No services found.</p>';
@@ -424,7 +486,12 @@ function renderServices() {
   services.forEach((s) => {
     const card = document.createElement('div');
     card.className = 'service-card';
-    card.addEventListener('click', () => openServicePage(s._id));
+
+    card.addEventListener('click', (e) => {
+      // avoid click when tapping inner buttons
+      if (e.target.closest('button')) return;
+      openServicePage(s._id);
+    });
 
     const iconDiv = document.createElement('div');
     iconDiv.className = 'service-icon ' + getCategoryClass(s.category);
@@ -434,6 +501,17 @@ function renderServices() {
     info.className = 'service-info';
 
     const { avgLabel, ratingsLabel, reviewsLabel } = buildRatingPieces(s);
+
+    let extraActionsHtml = '';
+    if (currentCategory === 'My') {
+      extraActionsHtml = `
+        <div class="my-service-actions">
+          <button type="button" class="request-remove-btn" data-id="${s._id}">
+            Request deletion
+          </button>
+        </div>
+      `;
+    }
 
     info.innerHTML = `
       <h3>${s.name}</h3>
@@ -448,15 +526,26 @@ function renderServices() {
         </span>
         <span>${ratingsLabel} • ${reviewsLabel}</span>
       </div>
+      ${extraActionsHtml}
     `;
 
     card.appendChild(iconDiv);
     card.appendChild(info);
     container.appendChild(card);
   });
+
+  if (currentCategory === 'My') {
+    container.querySelectorAll('.request-remove-btn').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = btn.getAttribute('data-id');
+        requestServiceRemoval(id, btn);
+      });
+    });
+  }
 }
 
-// UPDATED: fun loading and error messages
+// load all services
 async function loadServices() {
   const container = document.getElementById('services');
   container.innerHTML =
@@ -466,11 +555,41 @@ async function loadServices() {
     if (!res.ok) throw new Error('Failed to load services');
     const data = await res.json();
     allServices = data.services || data;
-    renderServices();
+    if (currentCategory !== 'My') {
+      renderServices();
+    }
   } catch (err) {
     console.error(err);
     container.innerHTML =
       '<p style="font-size:13px; color:#f97316;">⚠️ Error loading services.</p>';
+  }
+}
+
+// load my services
+async function loadMyServices() {
+  const container = document.getElementById('services');
+  container.innerHTML =
+    '<p style="font-size:13px; color:#9ca3af;">⏳ Loading your services…</p>';
+  try {
+    const res = await fetch(API_BASE + '/my-services', {
+      credentials: 'include',
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      myServices = [];
+    } else {
+      myServices = data.services || [];
+    }
+    if (currentCategory === 'My') {
+      renderServices();
+    }
+  } catch (e) {
+    console.error(e);
+    myServices = [];
+    if (currentCategory === 'My') {
+      container.innerHTML =
+        '<p style="font-size:13px; color:#f97316;">⚠️ Error loading your services.</p>';
+    }
   }
 }
 
@@ -480,8 +599,13 @@ function setupCategoryFilters() {
     btn.addEventListener('click', () => {
       buttons.forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
-      currentCategory = btn.getAttribute('data-category');
-      renderServices();
+      currentCategory = btn.getAttribute('data-category') || 'All';
+
+      if (currentCategory === 'My') {
+        loadMyServices();
+      } else {
+        renderServices();
+      }
     });
   });
 }
