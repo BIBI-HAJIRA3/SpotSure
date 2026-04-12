@@ -83,36 +83,4 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(publicDir, 'auth.html'));
 });
 
-app.get('/auth.html', (req, res) => {
-  res.sendFile(path.join(publicDir, 'auth.html'));
-});
-
-app.get('/services.html', (req, res) => {
-  res.sendFile(path.join(publicDir, 'services.html'));
-});
-
-app.get('/service.html', (req, res) => {
-  res.sendFile(path.join(publicDir, 'service.html'));
-});
-
-app.get('/add-review.html', (req, res) => {
-  res.sendFile(path.join(publicDir, 'add-review.html'));
-});
-
-app.get('/add-service.html', (req, res) => {
-  res.sendFile(path.join(publicDir, 'add-service.html'));
-});
-
-app.get('/admin.html', (req, res) => {
-  res.sendFile(path.join(publicDir, 'admin.html'));
-});
-
-app.get('/admin-dashboard.html', (req, res) => {
-  res.sendFile(path.join(publicDir, 'admin-dashboard.html'));
-});
-
-// IMPORTANT: listen on Render port or local
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`SpotSure server running on http://localhost:${PORT}`);
-});
+app.get('/auth.ht
