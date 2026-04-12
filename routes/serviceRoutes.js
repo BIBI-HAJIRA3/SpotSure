@@ -1,3 +1,4 @@
+// SpotSure/routes/serviceRoutes.js
 const express = require('express');
 const Service = require('../models/Service');
 const Review = require('../models/Review');
@@ -52,7 +53,14 @@ router.get('/services', async (req, res) => {
       filter.pincode = pincode;
     }
 
-    const services = await Service.find(filter).sort({ createdAt: -1 });
+    // PERFORMANCE: project only needed fields + lean + indexed sort
+    const services = await Service.find(
+      filter,
+      'name category city pincode address averageRating ratingCount reviewCount imagePath providerImages'
+    )
+      .sort({ createdAt: -1 })
+      .lean();
+
     res.json({ services });
   } catch (err) {
     console.error('GET /api/services error:', err);
