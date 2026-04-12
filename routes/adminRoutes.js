@@ -2,7 +2,7 @@
 const express = require('express');
 const Service = require('../models/Service');
 const Report = require('../models/Report'); // unified report model
-const Review = require('../models/Review'); // NEW: for review deletion
+const Review = require('../models/Review'); // for review deletion
 
 const router = express.Router();
 
@@ -72,10 +72,8 @@ router.delete('/services/:id', requireAdmin, async (req, res) => {
       return res.status(404).json({ message: 'Service not found' });
     }
 
-    // Cascade delete related reviews
+    // Cascade delete related reviews and reports
     await Review.deleteMany({ service: serviceId });
-
-    // Optionally clear related reports
     await Report.deleteMany({ service: serviceId });
 
     res.json({ message: 'Service deleted' });
@@ -131,7 +129,7 @@ router.get('/reports/reviews', requireAdmin, async (req, res) => {
   }
 });
 
-// NEW: Delete review – DELETE /api/admin/reviews/:id
+// Delete review – DELETE /api/admin/reviews/:id
 router.delete('/reviews/:id', requireAdmin, async (req, res) => {
   try {
     const reviewId = req.params.id;
@@ -140,7 +138,6 @@ router.delete('/reviews/:id', requireAdmin, async (req, res) => {
       return res.status(404).json({ message: 'Review not found' });
     }
 
-    // Remove associated reports
     await Report.deleteMany({ review: reviewId });
 
     res.json({ message: 'Review deleted' });
