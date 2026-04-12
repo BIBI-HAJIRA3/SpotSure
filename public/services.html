@@ -1,4 +1,4 @@
-<!-- SpotSure/public/services.html -->
+<!--SpotSure/public/services.html-->
 <!DOCTYPE html>
 <html>
 <head>
@@ -247,26 +247,6 @@ body::before {
   font-size: 13px;
 }
 
-.my-service-actions {
-  margin-top: 6px;
-  display: flex;
-  gap: 6px;
-}
-
-.my-service-actions button {
-  border-radius: 999px;
-  border: 1px solid #374151;
-  background: #020617;
-  color: #e5e7eb;
-  padding: 3px 7px;
-  font-size: 11px;
-  cursor: pointer;
-}
-
-.my-service-actions button:hover {
-  background: #111827;
-}
-
 @media (min-width: 600px) {
   .app-shell {
     padding: 22px 18px 30px;
@@ -282,7 +262,6 @@ body::before {
       <div class="top-sub" id="welcomeUserLine"></div>
     </div>
     <div style="display:flex; gap:6px; align-items:center;">
-      <!-- ONLY admin shortcut; no + request button -->
       <button
         class="pill-btn secondary"
         type="button"
@@ -292,6 +271,7 @@ body::before {
       >
         🛡️
       </button>
+      <!-- Removed the + Request service button as requested -->
     </div>
   </header>
 
@@ -305,7 +285,7 @@ body::before {
   </section>
 
   <div class="helper-text">Filter by category</div>
-  <div class="chip-row" id="categoryBar">
+  <div class="chip-row">
     <button class="chip active category-btn" data-category="All">
       <span class="category-icon">⭐</span><span>All</span>
     </button>
@@ -433,31 +413,8 @@ function filterServices(baseList) {
 }
 
 function openServicePage(serviceId) {
-  // Card click goes to a details page, NOT to request form
+  // Clicking a card goes to service details page, not add-service
   window.location.href = '/service.html?id=' + encodeURIComponent(serviceId);
-}
-
-async function requestServiceRemoval(serviceId, btn) {
-  btn.disabled = true;
-  btn.textContent = 'Requesting...';
-  try {
-    const res = await fetch(API_BASE + '/services/' + serviceId + '/request-remove', {
-      method: 'POST',
-      credentials: 'include',
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      alert(data.message || 'Could not request deletion');
-      btn.disabled = false;
-      btn.textContent = 'Request deletion';
-      return;
-    }
-    btn.textContent = 'Deletion requested';
-  } catch (e) {
-    alert('Could not request deletion');
-    btn.disabled = false;
-    btn.textContent = 'Request deletion';
-  }
 }
 
 function renderServices() {
@@ -484,12 +441,7 @@ function renderServices() {
   services.forEach((s) => {
     const card = document.createElement('div');
     card.className = 'service-card';
-
-    card.addEventListener('click', (e) => {
-      // avoid click when tapping inner buttons
-      if (e.target.closest('button')) return;
-      openServicePage(s._id);
-    });
+    card.addEventListener('click', () => openServicePage(s._id));
 
     const iconDiv = document.createElement('div');
     iconDiv.className = 'service-icon ' + getCategoryClass(s.category);
@@ -499,17 +451,6 @@ function renderServices() {
     info.className = 'service-info';
 
     const { avgLabel, ratingsLabel, reviewsLabel } = buildRatingPieces(s);
-
-    let extraActionsHtml = '';
-    if (currentCategory === 'My') {
-      extraActionsHtml = `
-        <div class="my-service-actions">
-          <button type="button" class="request-remove-btn" data-id="${s._id}">
-            Request deletion
-          </button>
-        </div>
-      `;
-    }
 
     info.innerHTML = `
       <h3>${s.name}</h3>
@@ -524,23 +465,12 @@ function renderServices() {
         </span>
         <span>${ratingsLabel} • ${reviewsLabel}</span>
       </div>
-      ${extraActionsHtml}
     `;
 
     card.appendChild(iconDiv);
     card.appendChild(info);
     container.appendChild(card);
   });
-
-  if (currentCategory === 'My') {
-    container.querySelectorAll('.request-remove-btn').forEach((btn) => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const id = btn.getAttribute('data-id');
-        requestServiceRemoval(id, btn);
-      });
-    });
-  }
 }
 
 // load all services
@@ -553,9 +483,7 @@ async function loadServices() {
     if (!res.ok) throw new Error('Failed to load services');
     const data = await res.json();
     allServices = data.services || data;
-    if (currentCategory !== 'My') {
-      renderServices();
-    }
+    renderServices();
   } catch (err) {
     console.error(err);
     container.innerHTML =
