@@ -13,6 +13,34 @@ function requireAdmin(req, res, next) {
   next();
 }
 
+// helper: recompute ratings after admin deletes a review
+async function recomputeServiceRatings(serviceId) {
+  const allReviews = await Review.find({ service: serviceId });
+
+  if (!allReviews.length) {
+    await Service.findByIdAndUpdate(serviceId, {
+      averageRating: 0,
+      ratingCount: 0,
+      reviewCount: 0,
+    });
+    return;
+  }
+
+  const ratingSum = allReviews.reduce((sum, r) => sum + (r.rating || 0), 0);
+  const averageRating = ratingSum / allReviews.length;
+
+  const ratingCount = allReviews.length;
+  const reviewCount = allReviews.filter(
+    (r) => r.comment && r.comment.trim() !== ''
+  ).length;
+
+  await Service.findByIdAndUpdate(serviceId, {
+    averageRating,
+    ratingCount,
+    reviewCount,
+  });
+}
+
 // Pending services – GET /api/admin/services/pending
 router.get('/services/pending', requireAdmin, async (req, res) => {
   try {
@@ -133,13 +161,21 @@ router.get('/reports/reviews', requireAdmin, async (req, res) => {
 router.delete('/reviews/:id', requireAdmin, async (req, res) => {
   try {
     const reviewId = req.params.id;
-    const review = await Review.findByIdAndDelete(reviewId);
+
+    // find review first to know which service to recompute
+    const review = await Review.findById(reviewId);
     if (!review) {
       return res.status(404).json({ message: 'Review not found' });
     }
+    const serviceId = review.service;
+
+    await Review.findByIdAndDelete(reviewId);
 
     // remove any reports for this review as well
     await Report.deleteMany({ review: reviewId });
+
+    // recompute ratings after deletion
+    await recomputeServiceRatings(serviceId);
 
     res.json({ message: 'Review deleted' });
   } catch (err) {
