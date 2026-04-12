@@ -282,7 +282,7 @@ body::before {
       <div class="top-sub" id="welcomeUserLine"></div>
     </div>
     <div style="display:flex; gap:6px; align-items:center;">
-      <!-- Admin icon kept, but NO request-service redirect button here -->
+      <!-- ONLY admin shortcut; no + request button -->
       <button
         class="pill-btn secondary"
         type="button"
@@ -433,7 +433,7 @@ function filterServices(baseList) {
 }
 
 function openServicePage(serviceId) {
-  // This is where the card click goes now
+  // Card click goes to a details page, NOT to request form
   window.location.href = '/service.html?id=' + encodeURIComponent(serviceId);
 }
 
