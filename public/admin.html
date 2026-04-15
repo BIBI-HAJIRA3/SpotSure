@@ -1,4 +1,4 @@
-<!-- SpotSure/public/admin.html -->
+<!--SpotSure/public/admin.html-->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -38,10 +38,10 @@
 
       .card {
         background: #020617;
-        border-radius: 16px;
+        border-radius: 14px;
         border: 1px solid #1f2937;
-        padding: 18px 18px 16px;
-        margin-bottom: 18px;
+        padding: 16px;
+        margin-bottom: 16px;
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
       }
 
@@ -131,12 +131,18 @@
         min-height: 16px;
       }
 
+      .hint-text {
+        font-size: 11px;
+        color: #6b7280;
+        margin-top: 8px;
+      }
+
       .top-bar {
         display: flex;
         justify-content: space-between;
         align-items: center;
         gap: 10px;
-        margin-bottom: 18px;
+        margin-bottom: 16px;
         flex-wrap: wrap;
       }
 
@@ -147,10 +153,10 @@
       }
 
       .item {
-        border-radius: 12px;
+        border-radius: 10px;
         border: 1px solid #1f2937;
-        padding: 9px 11px;
-        margin-bottom: 10px;
+        padding: 8px 10px;
+        margin-bottom: 8px;
         background: #020617;
       }
 
@@ -169,8 +175,8 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 10px;
-        margin-top: 8px;
+        gap: 8px;
+        margin-top: 6px;
         font-size: 12px;
       }
 
@@ -204,11 +210,6 @@
         color: #e5e7eb;
       }
 
-      .small {
-        font-size: 11px;
-        color: #9ca3af;
-      }
-
       .search-bar {
         margin-bottom: 10px;
       }
@@ -223,9 +224,14 @@
         font-size: 13px;
       }
 
+      .small {
+        font-size: 11px;
+        color: #9ca3af;
+      }
+
       .confirm-row {
-        margin-top: 8px;
-        padding-top: 7px;
+        margin-top: 6px;
+        padding-top: 6px;
         border-top: 1px dashed #374151;
         font-size: 11px;
         color: #fecaca;
@@ -281,7 +287,7 @@
             placeholder="spotsureadmin"
           />
 
-          <label class="field-label" for="adminPassword" style="margin-top:10px"
+          <label class="field-label" for="adminPassword" style="margin-top:10px;"
             >Password</label
           >
           <input
@@ -297,6 +303,8 @@
           </button>
 
           <div id="adminLoginError" class="error-text"></div>
+
+          
         </div>
       </section>
 
@@ -312,12 +320,9 @@
           </button>
         </header>
 
-        <!-- Find & delete service -->
+        <!-- Search & delete service by name -->
         <section class="card">
           <h2>Find & delete service</h2>
-          <div class="small" style="margin-bottom:6px;">
-            Quickly search any service by name and remove it if needed.
-          </div>
           <div class="search-bar">
             <input
               id="serviceSearchInput"
@@ -334,27 +339,24 @@
         <!-- Pending services -->
         <section class="card">
           <h2>Pending service approvals</h2>
-          <div class="small" style="margin-bottom:6px;">
-            Review new submissions before they appear to users.
-          </div>
           <div id="pendingServices"></div>
         </section>
 
-        <!-- Reported services -->
+        <!-- Removal requests -->
+        <section class="card">
+          <h2>Removal requests</h2>
+          <div id="removalRequests"></div>
+        </section>
+
+        <!-- Service reports -->
         <section class="card">
           <h2>Reported services</h2>
-          <div class="small" style="margin-bottom:6px;">
-            Services flagged by users for incorrect or inappropriate details.
-          </div>
           <div id="reportedServices"></div>
         </section>
 
-        <!-- Reported reviews -->
+        <!-- Review reports -->
         <section class="card">
           <h2>Reported reviews</h2>
-          <div class="small" style="margin-bottom:6px;">
-            User reviews reported for abuse, spam, or incorrect information.
-          </div>
           <div id="reportedReviews"></div>
         </section>
       </section>
@@ -575,6 +577,7 @@
           }
           showToast("Service approved");
           loadPendingServices();
+          loadRemovalRequests();
         } catch (e) {
           showToast("Error approving service");
         }
@@ -593,10 +596,77 @@
           }
           showToast("Service deleted");
           loadPendingServices();
+          loadRemovalRequests();
           searchServicesByName();
-          loadReportedServices();
         } catch (e) {
           showToast("Error deleting service");
+        }
+      }
+
+      async function loadRemovalRequests() {
+        const container = document.getElementById("removalRequests");
+        container.textContent = "Loading...";
+        try {
+          const res = await fetch(
+            API_BASE + "/admin/services/removal-requests",
+            {
+              credentials: "include",
+            }
+          );
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) {
+            container.textContent = data.message || "Error loading.";
+            return;
+          }
+          const list = data.services || [];
+          if (!list.length) {
+            container.textContent = "No removal requests.";
+            return;
+          }
+          container.innerHTML = "";
+          list.forEach((s) => {
+            const div = document.createElement("div");
+            const confirmIdKeep = "confirm_keep_" + s._id;
+            const confirmIdDelete = "confirm_delete_service_removal_" + s._id;
+            div.className = "item";
+            div.innerHTML = `
+              <div class="item-title">${s.name}</div>
+              <div class="item-sub">${s.category || ""} • ${
+              s.city || ""
+            } • PIN ${s.pincode || ""}</div>
+              <div class="item-row">
+                <span class="small">Removal requested</span>
+                <div class="btn-row">
+                  <button class="btn primary" data-keep="${s._id}">Keep</button>
+                  <button class="btn danger" data-delete="${s._id}">Delete</button>
+                </div>
+              </div>
+              <div id="${confirmIdKeep}" class="confirm-row">
+                <span class="confirm-text">Keep this service and clear removal request?</span>
+                <button class="btn ghost" data-role="no">Cancel</button>
+                <button class="btn primary" data-role="yes">Yes</button>
+              </div>
+              <div id="${confirmIdDelete}" class="confirm-row">
+                <span class="confirm-text">Delete this service and its reviews?</span>
+                <button class="btn ghost" data-role="no">Cancel</button>
+                <button class="btn danger" data-role="yes">Yes</button>
+              </div>
+            `;
+            container.appendChild(div);
+
+            div.querySelector('[data-keep]').onclick = () => {
+              renderConfirmRow(confirmIdKeep, "", async () => {
+                await approveService(s._id);
+              });
+            };
+            div.querySelector('[data-delete]').onclick = () => {
+              renderConfirmRow(confirmIdDelete, "", async () => {
+                await deleteService(s._id);
+              });
+            };
+          });
+        } catch (e) {
+          container.textContent = "Error loading removal requests.";
         }
       }
 
@@ -684,7 +754,7 @@
                 review.rating || "-"
               } – ${review.username || "Anonymous"}</div>
               <div class="item-sub">
-                Comment: ${review.comment || ""}<br /><br>
+                Comment: ${review.comment || ""}<br />
                 Reason: ${r.reason || ""}
               </div>
               <div class="item-row">
@@ -721,8 +791,8 @@
             method: "DELETE",
             credentials: "include",
           });
-          const data = await res.json().catch(() => ({}));
           if (!res.ok) {
+            const data = await res.json().catch(() => ({}));
             showToast(data.message || "Error deleting review");
             return;
           }
@@ -808,6 +878,7 @@
         document.getElementById("logoutBtn").addEventListener("click", logout);
         setupSearch();
         loadPendingServices();
+        loadRemovalRequests();
         loadReportedServices();
         loadReportedReviews();
       }
