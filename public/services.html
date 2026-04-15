@@ -11,7 +11,10 @@
 body {
   font-family: Arial, sans-serif;
   margin: 0;
-  background: radial-gradient(circle at top, #020617 0, #020617 55%, #000 100%);
+  min-height: 100vh;
+  background: linear-gradient(135deg, #020617, #020617, #0b1120, #020617);
+  background-size: 260% 260%;
+  animation: bgShift 14s ease-in-out infinite;
   color: #e5e7eb;
 }
 body::before {
@@ -20,10 +23,11 @@ body::before {
   inset: 0;
   pointer-events: none;
   background-image:
-    radial-gradient(2px 2px at 20% 30%, rgba(75,85,99,0.25) 0, transparent 55%),
-    radial-gradient(1px 1px at 80% 70%, rgba(55,65,81,0.18) 0, transparent 55%),
-    radial-gradient(1.5px 1.5px at 40% 80%, rgba(31,41,55,0.18) 0, transparent 60%);
-  opacity: 0.7;
+    radial-gradient(2px 2px at 15% 25%, rgba(75,85,99,0.3) 0, transparent 55%),
+    radial-gradient(1px 1px at 80% 70%, rgba(55,65,81,0.24) 0, transparent 55%),
+    radial-gradient(1.5px 1.5px at 40% 82%, rgba(31,41,55,0.3) 0, transparent 60%);
+  opacity: 0.8;
+  mix-blend-mode: screen;
   z-index: -1;
 }
 
@@ -34,6 +38,8 @@ body::before {
   display: flex;
   flex-direction: column;
   padding: 20px 14px 28px;
+  position: relative;
+  z-index: 1;
 }
 
 /* top bar */
@@ -67,23 +73,18 @@ body::before {
   font-size: 12px;
   cursor: pointer;
   white-space: nowrap;
-  border: none;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
-}
-.pill-btn.primary {
   border: 1px solid #4b5563;
   background: #111827;
   color: #e5e7eb;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease;
 }
 .pill-btn.secondary {
-  border: 1px solid #4b5563;
   background: #020617;
-  color: #e5e7eb;
 }
 .pill-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgba(0,0,0,0.95);
-  background: #020617;
+  box-shadow: 0 8px 22px rgba(0,0,0,1);
+  border-color: #6b7280;
 }
 
 /* email icon button */
@@ -99,12 +100,13 @@ body::before {
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease;
 }
 .icon-btn:hover {
   background: #020617;
   transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgba(0,0,0,0.95);
+  box-shadow: 0 8px 22px rgba(0,0,0,1);
+  border-color: #6b7280;
 }
 
 /* search */
@@ -118,11 +120,15 @@ body::before {
   border: 1px solid #374151;
   font-size: 13px;
   outline: none;
-  background: #020617;
+  background: rgba(15,23,42,0.97);
   color: #e5e7eb;
 }
 .search-input::placeholder {
   color: #6b7280;
+}
+.search-input:focus {
+  border-color: #4b5563;
+  box-shadow: 0 0 0 1px rgba(55,65,81,0.8);
 }
 
 /* filters */
@@ -148,22 +154,22 @@ body::before {
   border-radius: 999px;
   border: 1px solid #374151;
   font-size: 12px;
-  background: #020617;
+  background: rgba(15,23,42,0.97);
   color: #d1d5db;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease;
 }
 .chip.active {
-  border-color: #4b5563;
+  border-color: #6b7280;
   background: #111827;
   color: #f9fafb;
 }
 .chip:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgba(0,0,0,0.95);
+  box-shadow: 0 8px 22px rgba(0,0,0,1);
 }
 .category-icon {
   font-size: 13px;
@@ -179,7 +185,7 @@ body::before {
   padding: 4px 8px;
   border-radius: 999px;
   border: 1px solid #374151;
-  background: #020617;
+  background: rgba(15,23,42,0.97);
   color: #d1d5db;
   font-size: 11px;
 }
@@ -197,29 +203,30 @@ body::before {
   flex-direction: column;
   gap: 12px;
   margin-bottom: 20px;
-  animation: listBreath 12s ease-in-out infinite;
 }
+
 .service-card {
   display: flex;
   gap: 12px;
-  background: rgba(15,23,42,0.96);
-  border-radius: 14px;
+  background: rgba(15,23,42,0.94);
+  border-radius: 18px;
   padding: 13px;
-  box-shadow: 0 10px 26px rgba(0,0,0,1);
+  box-shadow: 0 24px 55px rgba(0,0,0,1);
   cursor: pointer;
-  border: 1px solid #1f2937;
+  border: 1px solid rgba(55,65,81,0.9);
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(22px);
 }
 .service-card:hover {
   transform: translateY(-3px) scale(1.01);
-  box-shadow: 0 16px 34px rgba(0,0,0,1);
-  border-color: #4b5563;
+  box-shadow: 0 30px 60px rgba(0,0,0,1);
+  border-color: #9ca3af;
 }
+
 .service-icon {
   width: 54px;
   height: 54px;
-  border-radius: 14px;
+  border-radius: 16px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -227,7 +234,7 @@ body::before {
   color: #f9fafb;
   flex-shrink: 0;
   background: radial-gradient(circle at 0 0, #6366f1 0, #4f46e5 35%, #312e81 65%, #0f172a 100%);
-  box-shadow: 0 4px 12px rgba(30,64,175,0.9);
+  box-shadow: 0 4px 14px rgba(30,64,175,0.95);
 }
 .service-icon.hospital {
   background: radial-gradient(circle at 0 0, #38bdf8 0, #0ea5e9 35%, #0369a1 65%, #0f172a 100%);
@@ -289,10 +296,11 @@ body::before {
   margin-left: 6px;
 }
 
-@keyframes listBreath {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-2px); }
-  100% { transform: translateY(0); }
+/* background animation */
+@keyframes bgShift {
+  0% { background-position: 0% 40%; }
+  50% { background-position: 100% 60%; }
+  100% { background-position: 0% 40%; }
 }
 
 @media (min-width: 600px) {
@@ -328,7 +336,7 @@ body::before {
         🛡️
       </button>
 
-      <button class="pill-btn primary" type="button" onclick="window.location.href='/add-service.html'">
+      <button class="pill-btn" type="button" onclick="window.location.href='/add-service.html'">
         + Request service
       </button>
     </div>
