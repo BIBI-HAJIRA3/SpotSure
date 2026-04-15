@@ -77,30 +77,43 @@ const publicDir = path.join(__dirname, 'public');
 app.use(express.static(publicDir));
 
 // HTML routes
+
+// Root now shows the welcome page (index.html)
 app.get('/', (req, res) => {
-  res.sendFile(path.join(publicDir, 'services.html'));
+  res.sendFile(path.join(publicDir, 'index.html'));
 });
 
+// Login page (new)
+app.get('/login.html', (req, res) => {
+  res.sendFile(path.join(publicDir, 'login.html'));
+});
+
+// Services listing
 app.get('/services.html', (req, res) => {
   res.sendFile(path.join(publicDir, 'services.html'));
 });
 
+// Single service
 app.get('/service.html', (req, res) => {
   res.sendFile(path.join(publicDir, 'service.html'));
 });
 
+// Add review
 app.get('/add-review.html', (req, res) => {
   res.sendFile(path.join(publicDir, 'add-review.html'));
 });
 
+// Add service
 app.get('/add-service.html', (req, res) => {
   res.sendFile(path.join(publicDir, 'add-service.html'));
 });
 
+// Admin login + dashboard combined UI
 app.get('/admin.html', (req, res) => {
   res.sendFile(path.join(publicDir, 'admin.html'));
 });
 
+// Keep admin-dashboard.html route for backward compatibility (optional UI)
 app.get('/admin-dashboard.html', (req, res) => {
   res.sendFile(path.join(publicDir, 'admin-dashboard.html'));
 });
