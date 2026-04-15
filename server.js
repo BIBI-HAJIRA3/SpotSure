@@ -65,9 +65,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/image', imageRoutes);
 
-// Admin routes
-app.use('/api/admin', adminAuthRoutes);
-app.use('/api/admin', adminRoutes);
+// Admin routes (hard-coded admin login)
+app.use('/api/admin', adminAuthRoutes);  // /api/admin/login, /me, /logout
+app.use('/api/admin', adminRoutes);      // /api/admin/services/..., /api/admin/reports/...
 
 // Public report submission
 app.use('/api', reportRoutes);
@@ -77,14 +77,8 @@ const publicDir = path.join(__dirname, 'public');
 app.use(express.static(publicDir));
 
 // HTML routes
-
-// Root: always show login first
 app.get('/', (req, res) => {
-  res.sendFile(path.join(publicDir, 'auth.html'));
-});
-
-app.get('/auth.html', (req, res) => {
-  res.sendFile(path.join(publicDir, 'auth.html'));
+  res.sendFile(path.join(publicDir, 'services.html'));
 });
 
 app.get('/services.html', (req, res) => {
