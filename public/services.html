@@ -68,7 +68,7 @@ body::before {
   cursor: pointer;
   white-space: nowrap;
   border: none;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
 }
 .pill-btn.primary {
   border: 1px solid #4b5563;
@@ -81,8 +81,8 @@ body::before {
   color: #e5e7eb;
 }
 .pill-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(0,0,0,0.9);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.95);
   background: #020617;
 }
 
@@ -99,12 +99,12 @@ body::before {
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
 }
 .icon-btn:hover {
   background: #020617;
-  transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(0,0,0,0.9);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.95);
 }
 
 /* search */
@@ -154,7 +154,7 @@ body::before {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
 }
 .chip.active {
   border-color: #4b5563;
@@ -162,8 +162,8 @@ body::before {
   color: #f9fafb;
 }
 .chip:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(0,0,0,0.9);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.95);
 }
 .category-icon {
   font-size: 13px;
@@ -197,6 +197,7 @@ body::before {
   flex-direction: column;
   gap: 12px;
   margin-bottom: 20px;
+  animation: listBreath 12s ease-in-out infinite;
 }
 .service-card {
   display: flex;
@@ -204,15 +205,16 @@ body::before {
   background: rgba(15,23,42,0.96);
   border-radius: 14px;
   padding: 13px;
-  box-shadow: 0 10px 24px rgba(0,0,0,0.9);
+  box-shadow: 0 10px 26px rgba(0,0,0,1);
   cursor: pointer;
   border: 1px solid #1f2937;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   backdrop-filter: blur(10px);
 }
 .service-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 28px rgba(0,0,0,1);
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 16px 34px rgba(0,0,0,1);
+  border-color: #4b5563;
 }
 .service-icon {
   width: 54px;
@@ -276,7 +278,7 @@ body::before {
   color: #fbbf24;
 }
 
-/* loading state */
+/* loading */
 #services-loading {
   font-size: 13px;
   color: #9ca3af;
@@ -285,6 +287,12 @@ body::before {
 }
 #services-loading span {
   margin-left: 6px;
+}
+
+@keyframes listBreath {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+  100% { transform: translateY(0); }
 }
 
 @media (min-width: 600px) {
@@ -302,7 +310,6 @@ body::before {
       <div class="top-sub" id="welcomeUserLine"></div>
     </div>
     <div style="display:flex; gap:6px; align-items:center;">
-      <!-- Email icon -->
       <a
         href="mailto:your-email@example.com"
         class="icon-btn"
