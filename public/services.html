@@ -1,4 +1,4 @@
-<!--SpotSure/public/services.html-->
+<!-- SpotSure/public/services.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,7 +11,7 @@
 body {
   font-family: Arial, sans-serif;
   margin: 0;
-  background: radial-gradient(circle at top, #0f172a 0, #020617 55%, #000 100%);
+  background: radial-gradient(circle at top, #020617 0, #020617 55%, #000 100%);
   color: #e5e7eb;
 }
 body::before {
@@ -20,10 +20,10 @@ body::before {
   inset: 0;
   pointer-events: none;
   background-image:
-    radial-gradient(2px 2px at 20% 30%, rgba(148,163,184,0.18) 0, transparent 55%),
-    radial-gradient(1px 1px at 80% 70%, rgba(148,163,184,0.14) 0, transparent 55%),
-    radial-gradient(1.5px 1.5px at 40% 80%, rgba(148,163,184,0.1) 0, transparent 60%);
-  opacity: 0.6;
+    radial-gradient(2px 2px at 20% 30%, rgba(75,85,99,0.25) 0, transparent 55%),
+    radial-gradient(1px 1px at 80% 70%, rgba(55,65,81,0.18) 0, transparent 55%),
+    radial-gradient(1.5px 1.5px at 40% 80%, rgba(31,41,55,0.18) 0, transparent 60%);
+  opacity: 0.7;
   z-index: -1;
 }
 
@@ -36,6 +36,7 @@ body::before {
   padding: 20px 14px 28px;
 }
 
+/* top bar */
 .top-bar {
   display: flex;
   align-items: flex-start;
@@ -59,25 +60,30 @@ body::before {
   color: #9ca3af;
 }
 
+/* buttons */
 .pill-btn {
-  border: 1px solid #2563eb;
-  background: #2563eb;
-  color: #ffffff;
   border-radius: 999px;
   padding: 6px 10px;
   font-size: 12px;
   cursor: pointer;
   white-space: nowrap;
+  border: none;
   transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 }
+.pill-btn.primary {
+  border: 1px solid #4b5563;
+  background: #111827;
+  color: #e5e7eb;
+}
 .pill-btn.secondary {
+  border: 1px solid #4b5563;
   background: #020617;
-  color: #93c5fd;
+  color: #e5e7eb;
 }
 .pill-btn:hover {
-  background: #1d4ed8;
   transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(15,23,42,0.7);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.9);
+  background: #020617;
 }
 
 /* email icon button */
@@ -93,13 +99,15 @@ body::before {
   align-items: center;
   justify-content: center;
   text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 }
 .icon-btn:hover {
   background: #020617;
   transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(15,23,42,0.7);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.9);
 }
 
+/* search */
 .search-section {
   margin-bottom: 10px;
 }
@@ -117,6 +125,7 @@ body::before {
   color: #6b7280;
 }
 
+/* filters */
 .helper-text {
   font-size: 12px;
   color: #9ca3af;
@@ -148,16 +157,19 @@ body::before {
   transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 }
 .chip.active {
-  border-color: #2563eb;
-  background: #2563eb;
-  color: #ffffff;
+  border-color: #4b5563;
+  background: #111827;
+  color: #f9fafb;
 }
 .chip:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(15,23,42,0.7);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.9);
+}
+.category-icon {
+  font-size: 13px;
 }
 
-/* sort dropdown */
+/* sort */
 .sort-row {
   margin: 4px 0 10px;
   display: flex;
@@ -172,6 +184,7 @@ body::before {
   font-size: 11px;
 }
 
+/* list */
 .list-section-title {
   margin: 8px 0;
   font-size: 14px;
@@ -188,18 +201,18 @@ body::before {
 .service-card {
   display: flex;
   gap: 12px;
-  background: #0b1120;
+  background: rgba(15,23,42,0.96);
   border-radius: 14px;
   padding: 13px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.9);
   cursor: pointer;
   border: 1px solid #1f2937;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(10px);
 }
 .service-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(15,23,42,0.9);
+  box-shadow: 0 14px 28px rgba(0,0,0,1);
 }
 .service-icon {
   width: 54px;
@@ -263,10 +276,6 @@ body::before {
   color: #fbbf24;
 }
 
-.category-icon {
-  font-size: 13px;
-}
-
 /* loading state */
 #services-loading {
   font-size: 13px;
@@ -312,7 +321,7 @@ body::before {
         🛡️
       </button>
 
-      <button class="pill-btn" type="button" onclick="window.location.href='/add-service.html'">
+      <button class="pill-btn primary" type="button" onclick="window.location.href='/add-service.html'">
         + Request service
       </button>
     </div>
@@ -381,8 +390,7 @@ function updateUserLine() {
   const line = document.getElementById('welcomeUserLine');
   const name = getUsername();
   if (!line) return;
-  if (name) line.textContent = 'Welcome back, ' + name;
-  else line.textContent = '';
+  line.textContent = name ? 'Welcome back, ' + name : '';
 }
 
 function getCategoryIcon(category) {
@@ -410,6 +418,7 @@ function buildRatingPieces(s) {
   const avgLabel = avg > 0 ? avg.toFixed(1) : 'New';
   const ratingsCount = Number(s.ratingCount || 0);
   const reviewsCount = Number(s.reviewCount || 0);
+
   const ratingsLabel = ratingsCount === 1 ? '1 rating' : ratingsCount + ' ratings';
   const reviewsLabel =
     reviewsCount === 0
@@ -425,11 +434,11 @@ function filterServices() {
   const searchText = searchInput ? searchInput.value.trim().toLowerCase() : '';
 
   let list = allServices.filter((s) => {
-    const matchesSidebarCategory =
+    const matchesCategory =
       currentCategory === 'All' ||
       (s.category && s.category.toLowerCase() === currentCategory.toLowerCase());
 
-    if (!searchText) return matchesSidebarCategory;
+    if (!searchText) return matchesCategory;
 
     const fields = [s.name || '', s.city || '', s.pincode || '', s.category || ''].map((x) =>
       String(x).toLowerCase()
@@ -437,7 +446,7 @@ function filterServices() {
 
     const matchesSearch = fields.some((f) => f.includes(searchText));
 
-    return matchesSidebarCategory && matchesSearch;
+    return matchesCategory && matchesSearch;
   });
 
   if (sortMode === 'high') {
@@ -470,11 +479,13 @@ function renderServices() {
 
   container.innerHTML = '';
   const services = filterServices();
+
   if (!services.length && !loading) {
     container.innerHTML =
       '<p style="font-size:13px; color:#9ca3af;">No services found.</p>';
     return;
   }
+
   services.forEach((s) => {
     const card = document.createElement('div');
     card.className = 'service-card';
@@ -552,7 +563,7 @@ function setupSortDropdown() {
   const select = document.getElementById('sortSelect');
   if (!select) return;
   select.addEventListener('change', () => {
-    sortMode = select.value; // 'none' | 'high' | 'low'
+    sortMode = select.value;
     renderServices();
   });
 }
