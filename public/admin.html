@@ -303,8 +303,6 @@
           </button>
 
           <div id="adminLoginError" class="error-text"></div>
-
-          
         </div>
       </section>
 
@@ -340,12 +338,6 @@
         <section class="card">
           <h2>Pending service approvals</h2>
           <div id="pendingServices"></div>
-        </section>
-
-        <!-- Removal requests -->
-        <section class="card">
-          <h2>Removal requests</h2>
-          <div id="removalRequests"></div>
         </section>
 
         <!-- Service reports -->
@@ -577,7 +569,6 @@
           }
           showToast("Service approved");
           loadPendingServices();
-          loadRemovalRequests();
         } catch (e) {
           showToast("Error approving service");
         }
@@ -596,77 +587,9 @@
           }
           showToast("Service deleted");
           loadPendingServices();
-          loadRemovalRequests();
           searchServicesByName();
         } catch (e) {
           showToast("Error deleting service");
-        }
-      }
-
-      async function loadRemovalRequests() {
-        const container = document.getElementById("removalRequests");
-        container.textContent = "Loading...";
-        try {
-          const res = await fetch(
-            API_BASE + "/admin/services/removal-requests",
-            {
-              credentials: "include",
-            }
-          );
-          const data = await res.json().catch(() => ({}));
-          if (!res.ok) {
-            container.textContent = data.message || "Error loading.";
-            return;
-          }
-          const list = data.services || [];
-          if (!list.length) {
-            container.textContent = "No removal requests.";
-            return;
-          }
-          container.innerHTML = "";
-          list.forEach((s) => {
-            const div = document.createElement("div");
-            const confirmIdKeep = "confirm_keep_" + s._id;
-            const confirmIdDelete = "confirm_delete_service_removal_" + s._id;
-            div.className = "item";
-            div.innerHTML = `
-              <div class="item-title">${s.name}</div>
-              <div class="item-sub">${s.category || ""} • ${
-              s.city || ""
-            } • PIN ${s.pincode || ""}</div>
-              <div class="item-row">
-                <span class="small">Removal requested</span>
-                <div class="btn-row">
-                  <button class="btn primary" data-keep="${s._id}">Keep</button>
-                  <button class="btn danger" data-delete="${s._id}">Delete</button>
-                </div>
-              </div>
-              <div id="${confirmIdKeep}" class="confirm-row">
-                <span class="confirm-text">Keep this service and clear removal request?</span>
-                <button class="btn ghost" data-role="no">Cancel</button>
-                <button class="btn primary" data-role="yes">Yes</button>
-              </div>
-              <div id="${confirmIdDelete}" class="confirm-row">
-                <span class="confirm-text">Delete this service and its reviews?</span>
-                <button class="btn ghost" data-role="no">Cancel</button>
-                <button class="btn danger" data-role="yes">Yes</button>
-              </div>
-            `;
-            container.appendChild(div);
-
-            div.querySelector('[data-keep]').onclick = () => {
-              renderConfirmRow(confirmIdKeep, "", async () => {
-                await approveService(s._id);
-              });
-            };
-            div.querySelector('[data-delete]').onclick = () => {
-              renderConfirmRow(confirmIdDelete, "", async () => {
-                await deleteService(s._id);
-              });
-            };
-          });
-        } catch (e) {
-          container.textContent = "Error loading removal requests.";
         }
       }
 
@@ -878,7 +801,6 @@
         document.getElementById("logoutBtn").addEventListener("click", logout);
         setupSearch();
         loadPendingServices();
-        loadRemovalRequests();
         loadReportedServices();
         loadReportedReviews();
       }
