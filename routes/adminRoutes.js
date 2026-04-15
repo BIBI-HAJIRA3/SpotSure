@@ -1,8 +1,7 @@
 // SpotSure/routes/adminRoutes.js
 const express = require('express');
 const Service = require('../models/Service');
-const Report = require('../models/Report');
-const Review = require('../models/Review');
+const Report = require('../models/Report'); // unified report model
 
 const router = express.Router();
 
@@ -11,34 +10,6 @@ function requireAdmin(req, res, next) {
     return res.status(403).json({ message: 'Admin only' });
   }
   next();
-}
-
-// helper: recompute ratings after admin deletes a review
-async function recomputeServiceRatings(serviceId) {
-  const allReviews = await Review.find({ service: serviceId });
-
-  if (!allReviews.length) {
-    await Service.findByIdAndUpdate(serviceId, {
-      averageRating: 0,
-      ratingCount: 0,
-      reviewCount: 0,
-    });
-    return;
-  }
-
-  const ratingSum = allReviews.reduce((sum, r) => sum + (r.rating || 0), 0);
-  const averageRating = ratingSum / allReviews.length;
-
-  const ratingCount = allReviews.length;
-  const reviewCount = allReviews.filter(
-    (r) => r.comment && r.comment.trim() !== ''
-  ).length;
-
-  await Service.findByIdAndUpdate(serviceId, {
-    averageRating,
-    ratingCount,
-    reviewCount,
-  });
 }
 
 // Pending services – GET /api/admin/services/pending
@@ -100,9 +71,7 @@ router.delete('/services/:id', requireAdmin, async (req, res) => {
       return res.status(404).json({ message: 'Service not found' });
     }
 
-    // cascade delete related reviews and reports for this service
-    await Review.deleteMany({ service: serviceId });
-    await Report.deleteMany({ service: serviceId });
+    // Optionally delete related reviews here
 
     res.json({ message: 'Service deleted' });
   } catch (err) {
@@ -153,33 +122,6 @@ router.get('/reports/reviews', requireAdmin, async (req, res) => {
     res.json({ reports });
   } catch (err) {
     console.error('GET /admin/reports/reviews error:', err);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-// Delete review – DELETE /api/admin/reviews/:id
-router.delete('/reviews/:id', requireAdmin, async (req, res) => {
-  try {
-    const reviewId = req.params.id;
-
-    // find review first to know which service to recompute
-    const review = await Review.findById(reviewId);
-    if (!review) {
-      return res.status(404).json({ message: 'Review not found' });
-    }
-    const serviceId = review.service;
-
-    await Review.findByIdAndDelete(reviewId);
-
-    // remove any reports for this review as well
-    await Report.deleteMany({ review: reviewId });
-
-    // recompute ratings after deletion
-    await recomputeServiceRatings(serviceId);
-
-    res.json({ message: 'Review deleted' });
-  } catch (err) {
-    console.error('DELETE /admin/reviews/:id error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });
