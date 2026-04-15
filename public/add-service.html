@@ -60,7 +60,7 @@ body::before {
 }
 .pill-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(0,0,0,0.9);
+  box-shadow: 0 6px 14px rgba(15,23,42,0.9);
   background: #020617;
 }
 .card {
@@ -104,10 +104,10 @@ textarea {
   border: none;
   font-size: 13px;
   cursor: pointer;
-  background: linear-gradient(90deg, #020617, #111827);
+  background: linear-gradient(90deg, #111827, #1f2937);
   color: #ffffff;
   box-shadow: 0 10px 22px rgba(0,0,0,0.9);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 }
 .btn-primary:hover {
   transform: translateY(-1px);
@@ -150,7 +150,7 @@ textarea {
   <div class="top-bar">
     <div>
       <div class="top-title">Request a service</div>
-      <div class="top-sub">Submit details, admin will review and approve.</div>
+      <div class="top-sub">Submit details; admin will review and approve.</div>
     </div>
     <button class="pill-btn" type="button" onclick="window.location.href='/services.html'">
       ⬅ Back
@@ -254,7 +254,8 @@ document.getElementById('addServiceForm').addEventListener('submit', async (e) =
   const form = e.target;
   const data = new FormData(form);
 
-  const selectedCategory = document.getElementById('category').value;
+  const categorySelect = document.getElementById('category');
+  const selectedCategory = categorySelect.value;
   const custom = document.getElementById('customCategory').value.trim();
 
   if (selectedCategory === 'Other') {
@@ -262,6 +263,7 @@ document.getElementById('addServiceForm').addEventListener('submit', async (e) =
       showToast('Please enter a custom category name.');
       return;
     }
+    // override category key
     data.set('category', custom);
   }
 
