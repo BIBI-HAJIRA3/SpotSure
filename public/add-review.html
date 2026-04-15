@@ -9,159 +9,173 @@
 * { box-sizing: border-box; }
 
 body {
-font-family: Arial, sans-serif;
-margin: 0;
-background: #020617;
-color: #e5e7eb;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: radial-gradient(circle at top, #020617 0, #020617 55%, #000 100%);
+  color: #e5e7eb;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(2px 2px at 20% 30%, rgba(75,85,99,0.25) 0, transparent 55%),
+    radial-gradient(1px 1px at 80% 70%, rgba(55,65,81,0.18) 0, transparent 55%),
+    radial-gradient(1.5px 1.5px at 40% 80%, rgba(31,41,55,0.18) 0, transparent 60%);
+  opacity: 0.7;
+  z-index: -1;
 }
 
 .page {
-max-width: 520px;
-margin: 0 auto;
-padding: 20px 14px 28px;
-min-height: 100vh;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 20px 14px 28px;
+  min-height: 100vh;
 }
 
 .top-bar {
-display: flex;
-align-items: center;
-justify-content: flex-end;
-margin-bottom: 16px;
-gap: 10px;
-flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 #userLine {
-font-size: 12px;
-color: #9ca3af;
+  font-size: 12px;
+  color: #9ca3af;
 }
 
 .service-title {
-font-size: 16px;
-font-weight: 600;
-margin-bottom: 4px;
-color: #f9fafb;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #f9fafb;
 }
 .service-sub {
-font-size: 12px;
-color: #9ca3af;
-margin-bottom: 12px;
+  font-size: 12px;
+  color: #9ca3af;
+  margin-bottom: 12px;
 }
 
 .card {
-background: #111827;
-border-radius: 14px;
-border: 1px solid #1f2937;
-padding: 14px;
-box-shadow: 0 1px 4px rgba(0,0,0,0.6);
+  background: rgba(15,23,42,0.96);
+  border-radius: 14px;
+  border: 1px solid #1f2937;
+  padding: 14px;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.85);
+  backdrop-filter: blur(12px);
 }
 .card h2 {
-margin: 0 0 8px;
-font-size: 15px;
-color: #f9fafb;
+  margin: 0 0 8px;
+  font-size: 15px;
+  color: #f9fafb;
 }
 
 .label-small {
-display: block;
-font-size: 12px;
-margin-top: 8px;
-margin-bottom: 2px;
-color: #e5e7eb;
+  display: block;
+  font-size: 12px;
+  margin-top: 8px;
+  margin-bottom: 2px;
+  color: #e5e7eb;
 }
 .input-field {
-width: 100%;
-padding: 7px 8px;
-border-radius: 8px;
-border: 1px solid #374151;
-background: #020617;
-color: #e5e7eb;
-margin-bottom: 4px;
-font-size: 13px;
+  width: 100%;
+  padding: 7px 8px;
+  border-radius: 8px;
+  border: 1px solid #374151;
+  background: #020617;
+  color: #e5e7eb;
+  margin-bottom: 4px;
+  font-size: 13px;
 }
 .input-file {
-margin-top: 4px;
-font-size: 12px;
-color: #e5e7eb;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #e5e7eb;
 }
 .btn-primary {
-margin-top: 12px;
-padding: 9px 12px;
-border-radius: 999px;
-border: none;
-font-size: 14px;
-cursor: pointer;
-background: #16a34a;
-color: #ffffff;
-width: 100%;
+  margin-top: 12px;
+  padding: 9px 12px;
+  border-radius: 999px;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  background: linear-gradient(90deg, #111827, #14532d);
+  color: #ffffff;
+  width: 100%;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.9);
 }
 .btn-primary:hover {
-background: #15803d;
+  background: linear-gradient(90deg, #0f172a, #166534);
 }
 
 #starRating {
-display:flex;
-gap:6px;
-margin-bottom:4px;
-cursor:pointer;
-font-size:22px;
+  display:flex;
+  gap:6px;
+  margin-bottom:4px;
+  cursor:pointer;
+  font-size:22px;
 }
 
 /* Toast */
 #toast {
-position: fixed;
-left: 50%;
-bottom: 20px;
-transform: translateX(-50%);
-background: #111827;
-color: #e5e7eb;
-padding: 9px 14px;
-border-radius: 999px;
-font-size: 13px;
-box-shadow: 0 4px 10px rgba(0,0,0,0.6);
-opacity: 0;
-pointer-events: none;
-transition: opacity 0.2s ease, transform 0.2s ease;
-z-index: 60;
-max-width: 90%;
-text-align: center;
-white-space: pre-line;
+  position: fixed;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  background: #111827;
+  color: #e5e7eb;
+  padding: 9px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.8);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 60;
+  max-width: 90%;
+  text-align: center;
+  white-space: pre-line;
 }
 </style>
 </head>
 <body>
 <div class="page">
-<div class="top-bar">
-<span id="userLine"></span>
-</div>
+  <div class="top-bar">
+    <span id="userLine"></span>
+  </div>
 
-<div class="service-title" id="serviceTitle">Loading...</div>
-<div class="service-sub" id="serviceSub"></div>
+  <div class="service-title" id="serviceTitle">Loading...</div>
+  <div class="service-sub" id="serviceSub"></div>
 
-<div class="card">
-<h2>Add review</h2>
-<form id="reviewForm">
-<label class="label-small">Rating</label>
-<div id="starRating">
-<span data-value="1">☆</span>
-<span data-value="2">☆</span>
-<span data-value="3">☆</span>
-<span data-value="4">☆</span>
-<span data-value="5">☆</span>
-</div>
-<input id="ratingInput" type="hidden" />
+  <div class="card">
+    <h2>Add review</h2>
+    <form id="reviewForm">
+      <label class="label-small">Rating</label>
+      <div id="starRating">
+        <span data-value="1">☆</span>
+        <span data-value="2">☆</span>
+        <span data-value="3">☆</span>
+        <span data-value="4">☆</span>
+        <span data-value="5">☆</span>
+      </div>
+      <input id="ratingInput" type="hidden" />
 
-<label class="label-small">Comment (optional)</label>
-<input id="commentInput" type="text" class="input-field" />
+      <label class="label-small">Comment (optional)</label>
+      <input id="commentInput" type="text" class="input-field" />
 
-<label class="label-small">Images (optional)</label>
-<input id="imagesInput" type="file" class="input-file" multiple accept="image/*" />
+      <label class="label-small">Images (optional)</label>
+      <input id="imagesInput" type="file" class="input-file" multiple accept="image/*" />
 
-<button type="submit" class="btn-primary">Submit review</button>
-</form>
-</div>
+      <button type="submit" class="btn-primary">Submit review</button>
+    </form>
+  </div>
 </div>
 
 <div id="toast">
-<span id="toastMessage"></span>
+  <span id="toastMessage"></span>
 </div>
 
 <script>
@@ -169,141 +183,134 @@ const API_BASE = window.location.origin + '/api';
 let toastTimer = null;
 
 function showToast(message) {
-const t = document.getElementById('toast');
-const msg = document.getElementById('toastMessage');
-if (!t || !msg) return;
-msg.textContent = message;
-t.style.opacity = '1';
-t.style.pointerEvents = 'auto';
-t.style.transform = 'translateX(-50%) translateY(-4px)';
-if (toastTimer) clearTimeout(toastTimer);
-toastTimer = setTimeout(() => {
-t.style.opacity = '0';
-t.style.pointerEvents = 'none';
-t.style.transform = 'translateX(-50%) translateY(0)';
-}, 2000);
+  const t = document.getElementById('toast');
+  const msg = document.getElementById('toastMessage');
+  if (!t || !msg) return;
+  msg.textContent = message;
+  t.style.opacity = '1';
+  t.style.pointerEvents = 'auto';
+  t.style.transform = 'translateX(-50%) translateY(-4px)';
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    t.style.opacity = '0';
+    t.style.pointerEvents = 'none';
+    t.style.transform = 'translateX(-50%) translateY(0)';
+  }, 2000);
 }
 
 function getServiceIdFromUrl() {
-const params = new URLSearchParams(window.location.search);
-return params.get('id');
+  const params = new URLSearchParams(window.location.search);
+  return params.get('id');
 }
 
 function getUsername() {
-return localStorage.getItem('spotsureUsername') || null;
+  return localStorage.getItem('spotsureUsername') || null;
 }
 function updateUserLine() {
-const el = document.getElementById('userLine');
-const name = getUsername();
-if (!el) return;
-el.textContent = name ? 'Welcome, ' + name : '';
+  const el = document.getElementById('userLine');
+  const name = getUsername();
+  if (!el) return;
+  el.textContent = name ? 'Welcome, ' + name : '';
 }
 
 function setupStarRating() {
-const stars = document.querySelectorAll('#starRating span');
-const ratingInput = document.getElementById('ratingInput');
-if (!stars.length || !ratingInput) return;
+  const stars = document.querySelectorAll('#starRating span');
+  const ratingInput = document.getElementById('ratingInput');
+  if (!stars.length || !ratingInput) return;
 
-function setRating(val) {
-ratingInput.value = val;
-stars.forEach((star) => {
-const v = Number(star.dataset.value);
-star.textContent = v <= val ? '★' : '☆';
-});
-}
+  function setRating(val) {
+    ratingInput.value = val;
+    stars.forEach((star) => {
+      const v = Number(star.dataset.value);
+      star.textContent = v <= val ? '★' : '☆';
+    });
+  }
 
-stars.forEach((star) => {
-star.addEventListener('click', () => {
-const val = Number(star.dataset.value);
-setRating(val);
-});
-});
+  stars.forEach((star) => {
+    star.addEventListener('click', () => {
+      const val = Number(star.dataset.value);
+      setRating(val);
+    });
+  });
 }
 
 async function loadServiceHeader() {
-const id = getServiceIdFromUrl();
-if (!id) {
-document.getElementById('serviceTitle').textContent = 'Missing service id';
-return;
-}
-try {
-const res = await fetch(API_BASE + '/services/' + id);
-if (!res.ok) throw new Error();
-const s = await res.json();
-document.getElementById('serviceTitle').textContent = s.name || 'Service';
-document.getElementById('serviceSub').textContent =
-(s.category || 'Service') + ' • ' + (s.city || '') + (s.pincode ? ' (PIN: ' + s.pincode + ')' : '');
-} catch (e) {
-document.getElementById('serviceTitle').textContent = 'Error loading service';
-document.getElementById('serviceSub').textContent = '';
-}
+  const id = getServiceIdFromUrl();
+  if (!id) {
+    document.getElementById('serviceTitle').textContent = 'Missing service id';
+    return;
+  }
+  try {
+    const res = await fetch(API_BASE + '/services/' + id);
+    if (!res.ok) throw new Error();
+    const s = await res.json();
+    document.getElementById('serviceTitle').textContent = s.name || 'Service';
+    document.getElementById('serviceSub').textContent =
+      (s.category || 'Service') + ' • ' + (s.city || '') + (s.pincode ? ' (PIN: ' + s.pincode + ')' : '');
+  } catch (e) {
+    document.getElementById('serviceTitle').textContent = 'Error loading service';
+    document.getElementById('serviceSub').textContent = '';
+  }
 }
 
 async function handleReviewSubmit(e) {
-e.preventDefault();
-const serviceId = getServiceIdFromUrl();
-if (!serviceId) return;
+  e.preventDefault();
+  const serviceId = getServiceIdFromUrl();
+  if (!serviceId) return;
 
-const rating = Number(
-document.getElementById('ratingInput').value
-);
-const comment = document
-.getElementById('commentInput')
-.value.trim();
-const files = document.getElementById('imagesInput').files;
-const username = getUsername() || 'Anonymous';
+  const rating = Number(document.getElementById('ratingInput').value);
+  const comment = document.getElementById('commentInput').value.trim();
+  const files = document.getElementById('imagesInput').files;
+  const username = getUsername() || 'Anonymous';
 
-if (!rating || rating < 1 || rating > 5) {
-showToast('Please select a rating between 1 and 5.');
-return;
-}
+  if (!rating || rating < 1 || rating > 5) {
+    showToast('Please select a rating between 1 and 5.');
+    return;
+  }
 
-const formData = new FormData();
-formData.append('rating', rating);
-formData.append('username', username);
-if (comment) formData.append('comment', comment);
-if (files && files.length > 0) {
-for (let i = 0; i < files.length; i++) {
-formData.append('images', files[i]);
-}
-}
+  const formData = new FormData();
+  formData.append('rating', rating);
+  formData.append('username', username);
+  if (comment) formData.append('comment', comment);
+  if (files && files.length > 0) {
+    for (let i = 0; i < files.length; i++) {
+      formData.append('images', files[i]);
+    }
+  }
 
-try {
-const res = await fetch(
-API_BASE + '/services/' + serviceId + '/reviews',
-{
-method: 'POST',
-body: formData,
-}
-);
-if (!res.ok) {
-showToast('Failed to submit review');
-return;
-}
+  try {
+    const res = await fetch(API_BASE + '/services/' + serviceId + '/reviews', {
+      method: 'POST',
+      body: formData,
+    });
+    if (!res.ok) {
+      showToast('Failed to submit review');
+      return;
+    }
 
-document.getElementById('ratingInput').value = '';
-document.getElementById('commentInput').value = '';
-document.getElementById('imagesInput').value = '';
-const stars = document.querySelectorAll('#starRating span');
-stars.forEach((star) => { star.textContent = '☆'; });
+    document.getElementById('ratingInput').value = '';
+    document.getElementById('commentInput').value = '';
+    document.getElementById('imagesInput').value = '';
+    const stars = document.querySelectorAll('#starRating span');
+    stars.forEach((star) => { star.textContent = '☆'; });
 
-showToast('Review added');
+    showToast('Review added');
 
-setTimeout(() => {
-window.location.href = '/reviews.html?id=' + encodeURIComponent(serviceId);
-}, 2200);
-} catch (err) {
-console.error(err);
-showToast('Error submitting review');
-}
+    setTimeout(() => {
+      window.location.href = '/reviews.html?id=' + encodeURIComponent(serviceId);
+    }, 2200);
+  } catch (err) {
+    console.error(err);
+    showToast('Error submitting review');
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-updateUserLine();
-setupStarRating();
-loadServiceHeader();
-const form = document.getElementById('reviewForm');
-if (form) form.addEventListener('submit', handleReviewSubmit);
+  updateUserLine();
+  setupStarRating();
+  loadServiceHeader();
+  const form = document.getElementById('reviewForm');
+  if (form) form.addEventListener('submit', handleReviewSubmit);
 });
 </script>
 </body>
