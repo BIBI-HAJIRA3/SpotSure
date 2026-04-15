@@ -1,0 +1,125 @@
+<!-- SpotSure/public/login.html -->
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>SpotSure – Sign in</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: radial-gradient(circle at top, #0f172a 0, #020617 55%, #000 100%);
+  color: #e5e7eb;
+}
+.shell {
+  max-width: 520px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 14px;
+}
+.card {
+  width: 100%;
+  background: #020617;
+  border-radius: 16px;
+  border: 1px solid #1f2937;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+}
+.title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #f9fafb;
+  margin-bottom: 4px;
+}
+.sub {
+  font-size: 13px;
+  color: #9ca3af;
+  margin-bottom: 16px;
+}
+.label {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-bottom: 4px;
+  display: block;
+}
+.input {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid #374151;
+  background: #020617;
+  color: #e5e7eb;
+  font-size: 13px;
+  outline: none;
+  margin-bottom: 10px;
+}
+.input::placeholder {
+  color: #6b7280;
+}
+.btn-primary {
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  background: #2563eb;
+  color: #eff6ff;
+}
+.btn-primary:hover {
+  background: #1d4ed8;
+}
+.hint {
+  font-size: 11px;
+  color: #6b7280;
+  margin-top: 8px;
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="card">
+    <div class="title">Welcome to SpotSure</div>
+    <div class="sub">Tell us your name and email to personalise your experience.</div>
+
+    <label class="label" for="userName">Name</label>
+    <input id="userName" class="input" type="text" placeholder="Eg. Bibi Hajira" />
+
+    <label class="label" for="userEmail">Email</label>
+    <input id="userEmail" class="input" type="email" placeholder="Eg. you@example.com" />
+
+    <button class="btn-primary" type="button" onclick="saveProfileAndEnter()">
+      Continue
+    </button>
+
+    <div class="hint">We use this only within your device to show a friendly greeting.</div>
+  </div>
+</div>
+
+<script>
+function saveProfileAndEnter() {
+  const nameEl = document.getElementById('userName');
+  const emailEl = document.getElementById('userEmail');
+
+  const name = (nameEl.value || '').trim();
+  const email = (emailEl.value || '').trim();
+
+  if (!name || !email) {
+    alert('Please enter your name and email.');
+    return;
+  }
+
+  localStorage.setItem('spotsureUsername', name);
+  localStorage.setItem('spotsureUserEmail', email);
+
+  window.location.href = '/services.html';
+}
+</script>
+</body>
+</html>
