@@ -80,6 +80,26 @@ body::before {
   box-shadow: 0 6px 14px rgba(15,23,42,0.7);
 }
 
+/* email icon button */
+.icon-btn {
+  border-radius: 999px;
+  border: 1px solid #4b5563;
+  background: #111827;
+  color: #e5e7eb;
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+.icon-btn:hover {
+  background: #020617;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(15,23,42,0.7);
+}
+
 .search-section {
   margin-bottom: 10px;
 }
@@ -247,6 +267,17 @@ body::before {
   font-size: 13px;
 }
 
+/* loading state */
+#services-loading {
+  font-size: 13px;
+  color: #9ca3af;
+  display: none;
+  margin-bottom: 8px;
+}
+#services-loading span {
+  margin-left: 6px;
+}
+
 @media (min-width: 600px) {
   .app-shell {
     padding: 22px 18px 30px;
@@ -262,6 +293,15 @@ body::before {
       <div class="top-sub" id="welcomeUserLine"></div>
     </div>
     <div style="display:flex; gap:6px; align-items:center;">
+      <!-- Email icon -->
+      <a
+        href="mailto:your-email@example.com"
+        class="icon-btn"
+        title="Contact"
+      >
+        ✉️
+      </a>
+
       <button
         class="pill-btn secondary"
         type="button"
@@ -317,6 +357,11 @@ body::before {
     </select>
   </div>
 
+  <div id="services-loading">
+    <span>⏳</span>
+    <span>Services are being loaded...</span>
+  </div>
+
   <div class="list-section-title"></div>
   <div id="services" class="services-list"></div>
 </div>
@@ -327,6 +372,7 @@ const API_BASE = window.location.origin + '/api';
 let allServices = [];
 let currentCategory = 'All';
 let sortMode = 'none';
+let loading = false;
 
 function getUsername() {
   return localStorage.getItem('spotsureUsername') || null;
@@ -414,9 +460,17 @@ function openServicePage(serviceId) {
 
 function renderServices() {
   const container = document.getElementById('services');
+  const loadingEl = document.getElementById('services-loading');
+
+  if (loading) {
+    loadingEl.style.display = 'block';
+  } else {
+    loadingEl.style.display = 'none';
+  }
+
   container.innerHTML = '';
   const services = filterServices();
-  if (!services.length) {
+  if (!services.length && !loading) {
     container.innerHTML =
       '<p style="font-size:13px; color:#9ca3af;">No services found.</p>';
     return;
@@ -458,16 +512,20 @@ function renderServices() {
 
 async function loadServices() {
   try {
+    loading = true;
+    renderServices();
     const res = await fetch(API_BASE + '/services');
     if (!res.ok) throw new Error('Failed to load services');
     const data = await res.json();
     allServices = data.services || data;
-    renderServices();
   } catch (err) {
     console.error(err);
     const container = document.getElementById('services');
     container.innerHTML =
       '<p style="font-size:13px; color:#f97316;">Error loading services.</p>';
+  } finally {
+    loading = false;
+    renderServices();
   }
 }
 
