@@ -1,4 +1,3 @@
-<!-- SpotSure/public/services.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,13 +7,14 @@
 <style>
 * { box-sizing: border-box; }
 
+/* GLOBAL THEME (same as index) */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
   min-height: 100vh;
-  background: linear-gradient(135deg, #020617, #020617, #0b1120, #020617);
-  background-size: 260% 260%;
-  animation: bgShift 14s ease-in-out infinite;
+  background: linear-gradient(135deg, #020617, #020617, #020617, #020617);
+  background-size: 220% 220%;
+  animation: bgShift 16s ease-in-out infinite;
   color: #e5e7eb;
 }
 body::before {
@@ -23,12 +23,17 @@ body::before {
   inset: 0;
   pointer-events: none;
   background-image:
-    radial-gradient(2px 2px at 15% 25%, rgba(75,85,99,0.3) 0, transparent 55%),
-    radial-gradient(1px 1px at 80% 70%, rgba(55,65,81,0.24) 0, transparent 55%),
-    radial-gradient(1.5px 1.5px at 40% 82%, rgba(31,41,55,0.3) 0, transparent 60%);
-  opacity: 0.8;
+    radial-gradient(2px 2px at 20% 25%, rgba(30,64,175,0.3) 0, transparent 55%),
+    radial-gradient(1px 1px at 80% 70%, rgba(15,23,42,0.24) 0, transparent 55%),
+    radial-gradient(1.5px 1.5px at 40% 82%, rgba(30,64,175,0.18) 0, transparent 60%);
+  opacity: 0.7;
   mix-blend-mode: screen;
   z-index: -1;
+}
+@keyframes bgShift {
+  0% { background-position: 0% 40%; }
+  50% { background-position: 100% 60%; }
+  100% { background-position: 0% 40%; }
 }
 
 .app-shell {
@@ -40,6 +45,22 @@ body::before {
   padding: 20px 14px 28px;
   position: relative;
   z-index: 1;
+}
+
+/* GLASS CARD */
+.card {
+  background: rgba(15,23,42,0.94);
+  border-radius: 18px;
+  border: 1px solid rgba(55,65,81,0.9);
+  box-shadow: 0 24px 55px rgba(0,0,0,1);
+  backdrop-filter: blur(22px);
+  padding: 16px 14px 14px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 30px 60px rgba(0,0,0,1);
+  border-color: #9ca3af;
 }
 
 /* top bar */
@@ -69,17 +90,18 @@ body::before {
 /* buttons */
 .pill-btn {
   border-radius: 999px;
+  border: 1px solid #4b5563;
+  background: #020617;
+  color: #e5e7eb;
   padding: 6px 10px;
   font-size: 12px;
   cursor: pointer;
   white-space: nowrap;
-  border: 1px solid #4b5563;
-  background: #111827;
-  color: #e5e7eb;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
   transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease;
-}
-.pill-btn.secondary {
-  background: #020617;
 }
 .pill-btn:hover {
   transform: translateY(-2px);
@@ -91,7 +113,7 @@ body::before {
 .icon-btn {
   border-radius: 999px;
   border: 1px solid #4b5563;
-  background: #111827;
+  background: #020617;
   color: #e5e7eb;
   padding: 4px 8px;
   font-size: 12px;
@@ -138,16 +160,13 @@ body::before {
   margin-bottom: 4px;
   margin-top: 4px;
 }
-
 .chip-row {
   display: flex;
   overflow-x: auto;
   gap: 6px;
   padding: 4px 0 10px;
 }
-.chip-row::-webkit-scrollbar {
-  display: none;
-}
+.chip-row::-webkit-scrollbar { display: none; }
 .chip {
   flex-shrink: 0;
   padding: 5px 10px;
@@ -171,9 +190,7 @@ body::before {
   transform: translateY(-2px);
   box-shadow: 0 8px 22px rgba(0,0,0,1);
 }
-.category-icon {
-  font-size: 13px;
-}
+.category-icon { font-size: 13px; }
 
 /* sort */
 .sort-row {
@@ -191,36 +208,21 @@ body::before {
 }
 
 /* list */
-.list-section-title {
-  margin: 8px 0;
-  font-size: 14px;
-  font-weight: 600;
-  color: #e5e7eb;
-}
-
 .services-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
   margin-bottom: 20px;
 }
-
 .service-card {
   display: flex;
   gap: 12px;
-  background: rgba(15,23,42,0.94);
   border-radius: 18px;
   padding: 13px;
-  box-shadow: 0 24px 55px rgba(0,0,0,1);
   cursor: pointer;
-  border: 1px solid rgba(55,65,81,0.9);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-  backdrop-filter: blur(22px);
 }
-.service-card:hover {
-  transform: translateY(-3px) scale(1.01);
-  box-shadow: 0 30px 60px rgba(0,0,0,1);
-  border-color: #9ca3af;
+.service-card.card:hover {
+  /* hover handled by .card */
 }
 
 .service-icon {
@@ -233,23 +235,23 @@ body::before {
   font-size: 24px;
   color: #f9fafb;
   flex-shrink: 0;
-  background: radial-gradient(circle at 0 0, #6366f1 0, #4f46e5 35%, #312e81 65%, #0f172a 100%);
+  background: radial-gradient(circle at 0 0, #1d4ed8 0, #1e40af 40%, #020617 100%);
   box-shadow: 0 4px 14px rgba(30,64,175,0.95);
 }
 .service-icon.hospital {
-  background: radial-gradient(circle at 0 0, #38bdf8 0, #0ea5e9 35%, #0369a1 65%, #0f172a 100%);
+  background: radial-gradient(circle at 0 0, #38bdf8 0, #0ea5e9 35%, #020617 100%);
 }
 .service-icon.clinic {
-  background: radial-gradient(circle at 0 0, #22c55e 0, #16a34a 35%, #166534 65%, #0f172a 100%);
+  background: radial-gradient(circle at 0 0, #22c55e 0, #16a34a 35%, #020617 100%);
 }
 .service-icon.school {
-  background: radial-gradient(circle at 0 0, #a855f7 0, #7c3aed 35%, #5b21b6 65%, #0f172a 100%);
+  background: radial-gradient(circle at 0 0, #a855f7 0, #7c3aed 35%, #020617 100%);
 }
 .service-icon.restaurant {
-  background: radial-gradient(circle at 0 0, #fb923c 0, #f97316 35%, #c2410c 65%, #0f172a 100%);
+  background: radial-gradient(circle at 0 0, #fb923c 0, #f97316 35%, #020617 100%);
 }
 .service-icon.grocery {
-  background: radial-gradient(circle at 0 0, #22c55e 0, #16a34a 35%, #166534 65%, #0f172a 100%);
+  background: radial-gradient(circle at 0 0, #22c55e 0, #16a34a 35%, #020617 100%);
 }
 
 .service-info h3 {
@@ -281,9 +283,7 @@ body::before {
   color: #bbf7d0;
   font-size: 11px;
 }
-.rating-badge span.star {
-  color: #fbbf24;
-}
+.rating-badge span.star { color: #fbbf24; }
 
 /* loading */
 #services-loading {
@@ -292,22 +292,7 @@ body::before {
   display: none;
   margin-bottom: 8px;
 }
-#services-loading span {
-  margin-left: 6px;
-}
-
-/* background animation */
-@keyframes bgShift {
-  0% { background-position: 0% 40%; }
-  50% { background-position: 100% 60%; }
-  100% { background-position: 0% 40%; }
-}
-
-@media (min-width: 600px) {
-  .app-shell {
-    padding: 22px 18px 30px;
-  }
-}
+#services-loading span { margin-left: 6px; }
 </style>
 </head>
 <body>
@@ -318,16 +303,11 @@ body::before {
       <div class="top-sub" id="welcomeUserLine"></div>
     </div>
     <div style="display:flex; gap:6px; align-items:center;">
-      <a
-        href="mailto:your-email@example.com"
-        class="icon-btn"
-        title="Contact"
-      >
+      <a href="mailto:your-email@example.com" class="icon-btn" title="Contact">
         ✉️
       </a>
-
       <button
-        class="pill-btn secondary"
+        class="pill-btn"
         type="button"
         title="Admin"
         style="padding:4px 8px; min-width:auto;"
@@ -335,7 +315,6 @@ body::before {
       >
         🛡️
       </button>
-
       <button class="pill-btn" type="button" onclick="window.location.href='/add-service.html'">
         + Request service
       </button>
@@ -386,7 +365,6 @@ body::before {
     <span>Services are being loaded...</span>
   </div>
 
-  <div class="list-section-title"></div>
   <div id="services" class="services-list"></div>
 </div>
 
@@ -436,12 +414,10 @@ function buildRatingPieces(s) {
 
   const ratingsLabel = ratingsCount === 1 ? '1 rating' : ratingsCount + ' ratings';
   const reviewsLabel =
-    reviewsCount === 0
-      ? 'No reviews'
-      : reviewsCount === 1
-      ? '1 review'
-      : reviewsCount + ' reviews';
-  return { avg, avgLabel, ratingsLabel, reviewsLabel };
+    reviewsCount === 0 ? 'No reviews' :
+    reviewsCount === 1 ? '1 review' :
+    reviewsCount + ' reviews';
+  return { avgLabel, ratingsLabel, reviewsLabel };
 }
 
 function filterServices() {
@@ -455,9 +431,8 @@ function filterServices() {
 
     if (!searchText) return matchesCategory;
 
-    const fields = [s.name || '', s.city || '', s.pincode || '', s.category || ''].map((x) =>
-      String(x).toLowerCase()
-    );
+    const fields = [s.name || '', s.city || '', s.pincode || '', s.category || '']
+      .map((x) => String(x).toLowerCase());
 
     const matchesSearch = fields.some((f) => f.includes(searchText));
 
@@ -503,7 +478,7 @@ function renderServices() {
 
   services.forEach((s) => {
     const card = document.createElement('div');
-    card.className = 'service-card';
+    card.className = 'service-card card';
     card.addEventListener('click', () => openServicePage(s._id));
 
     const iconDiv = document.createElement('div');
@@ -569,9 +544,7 @@ function setupCategoryFilters() {
 
 function setupSearch() {
   const input = document.getElementById('searchInput');
-  if (input) {
-    input.addEventListener('input', () => renderServices());
-  }
+  if (input) input.addEventListener('input', () => renderServices());
 }
 
 function setupSortDropdown() {
