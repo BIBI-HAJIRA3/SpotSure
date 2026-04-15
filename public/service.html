@@ -272,7 +272,21 @@ body::before {
   font-size: 12px;
   padding: 6px 8px;
 }
-
+.card {
+  background: #0b1120;
+  border-radius: 14px;
+  border: 1px solid #1f2937;
+  padding: 14px;
+  box-shadow: 0 10px 26px rgba(0,0,0,1);
+  margin-bottom: 14px;
+  backdrop-filter: blur(6px);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.card:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 16px 34px rgba(0,0,0,1);
+  border-color: #4b5563;
+}
 /* Toast */
 #toast {
   position: fixed;
