@@ -1,4 +1,3 @@
-// SpotSure/routes/serviceRoutes.js
 const express = require('express');
 const Service = require('../models/Service');
 const Review = require('../models/Review');
@@ -53,13 +52,7 @@ router.get('/services', async (req, res) => {
       filter.pincode = pincode;
     }
 
-    const services = await Service.find(
-      filter,
-      'name category city pincode address averageRating ratingCount reviewCount imagePath providerImages'
-    )
-      .sort({ createdAt: -1 })
-      .lean();
-
+    const services = await Service.find(filter).sort({ createdAt: -1 });
     res.json({ services });
   } catch (err) {
     console.error('GET /api/services error:', err);
@@ -67,53 +60,15 @@ router.get('/services', async (req, res) => {
   }
 });
 
-// MY services – GET /api/my-services (only approved, created by logged-in user)
-router.get('/my-services', async (req, res) => {
-  try {
-    if (!req.session || !req.session.userId) {
-      return res.status(401).json({ message: 'Login required' });
-    }
-
-    const userId = req.session.userId;
-
-    const services = await Service.find(
-      { isApproved: true, createdBy: userId },
-      'name category city pincode address averageRating ratingCount reviewCount imagePath providerImages'
-    )
-      .sort({ createdAt: -1 })
-      .lean();
-
-    res.json({ services });
-  } catch (err) {
-    console.error('GET /api/my-services error:', err);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
 // CREATE service – POST /api/services
 router.post('/services', upload.array('images', 5), async (req, res) => {
   try {
-    const {
-      name,
-      category,
-      otherCategory,
-      city,
-      pincode,
-      address,
-      lat,
-      lng,
-    } = req.body;
+    const { name, category, city, pincode, address, lat, lng } = req.body;
 
     if (!name || !city || !pincode || !address) {
       return res
         .status(400)
         .json({ message: 'Name, city, pincode, and address are required.' });
-    }
-
-    // Use free-text category when "Other" is chosen
-    let finalCategory = category || 'Service';
-    if (category === 'Other' && otherCategory && otherCategory.trim()) {
-      finalCategory = otherCategory.trim();
     }
 
     let location = undefined;
@@ -131,11 +86,7 @@ router.post('/services', upload.array('images', 5), async (req, res) => {
     if (req.files && req.files.length > 0) {
       const cloudinary = req.cloudinary;
 
-      if (
-        cloudinary &&
-        cloudinary.uploader &&
-        cloudinary.uploader.upload_stream
-      ) {
+      if (cloudinary && cloudinary.uploader && cloudinary.uploader.upload_stream) {
         const uploads = await Promise.all(
           req.files.map(
             (file) =>
@@ -168,14 +119,14 @@ router.post('/services', upload.array('images', 5), async (req, res) => {
 
     const service = await Service.create({
       name,
-      category: finalCategory,
+      category: category || 'Service',
       city,
       pincode,
       address,
       imagePath,
       providerImages,
       location,
-      isApproved: false,
+      isApproved: false, // requires admin approval
       createdBy,
     });
 
