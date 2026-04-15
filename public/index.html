@@ -12,26 +12,26 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
   min-height: 100vh;
-  background: linear-gradient(-45deg, #020617, #020617, #020617, #0b1120);
-  background-size: 250% 250%;
-  animation: bgShift 22s ease-in-out infinite;
+  background: linear-gradient(135deg, #020617, #020617, #0b1120, #020617);
+  background-size: 260% 260%;
+  animation: bgShift 14s ease-in-out infinite;
   color: #f9fafb;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* subtle overlay particles */
+/* particles */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
   background-image:
-    radial-gradient(2px 2px at 15% 25%, rgba(75,85,99,0.25) 0, transparent 55%),
-    radial-gradient(1px 1px at 80% 70%, rgba(55,65,81,0.2) 0, transparent 55%),
-    radial-gradient(1.5px 1.5px at 40% 82%, rgba(31,41,55,0.22) 0, transparent 60%);
-  opacity: 0.7;
+    radial-gradient(2px 2px at 15% 25%, rgba(75,85,99,0.3) 0, transparent 55%),
+    radial-gradient(1px 1px at 80% 70%, rgba(55,65,81,0.24) 0, transparent 55%),
+    radial-gradient(1.5px 1.5px at 40% 82%, rgba(31,41,55,0.3) 0, transparent 60%);
+  opacity: 0.8;
   mix-blend-mode: screen;
   z-index: 0;
 }
@@ -44,12 +44,12 @@ body::before {
   z-index: 1;
 }
 
-/* shared glass card */
+/* shared card */
 .card {
   background: rgba(15,23,42,0.94);
   border-radius: 18px;
   border: 1px solid rgba(55,65,81,0.9);
-  box-shadow: 0 22px 50px rgba(0,0,0,0.9);
+  box-shadow: 0 24px 55px rgba(0,0,0,1);
   backdrop-filter: blur(22px);
   padding: 20px 18px 18px;
 }
@@ -61,27 +61,27 @@ body::before {
   align-items: center;
   text-align: center;
   gap: 14px;
-  animation: cardInWelcome 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: cardFloat 3.8s ease-in-out infinite;
 }
 .logo-orb {
-  width: 52px;
-  height: 52px;
+  width: 56px;
+  height: 56px;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(circle at 0 0, #16a34a 0, #15803d 40%, #0f172a 90%);
-  box-shadow: 0 12px 35px rgba(21,128,61,0.9);
-  font-size: 24px;
+  background: radial-gradient(circle at 0 0, #22c55e 0, #16a34a 40%, #0f172a 90%);
+  box-shadow: 0 14px 38px rgba(22,163,74,1);
+  font-size: 26px;
 }
 .welcome-title {
-  font-size: 22px;
+  font-size: 23px;
   font-weight: 700;
 }
 .welcome-sub {
   font-size: 13px;
   color: #9ca3af;
-  max-width: 340px;
+  max-width: 360px;
 }
 
 .pill-btn-main {
@@ -92,15 +92,15 @@ body::before {
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
-  background: linear-gradient(90deg, #111827, #1f2937);
+  background: linear-gradient(120deg, #16a34a, #15803d);
   color: #e5e7eb;
-  box-shadow: 0 12px 28px rgba(0,0,0,0.95);
-  transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
+  box-shadow: 0 14px 32px rgba(22,163,74,1);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
 }
 .pill-btn-main:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 16px 30px rgba(0,0,0,1);
-  filter: brightness(1.04);
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 18px 36px rgba(22,163,74,1);
+  filter: brightness(1.05);
 }
 .welcome-hint {
   font-size: 11px;
@@ -112,7 +112,6 @@ body::before {
   display: none;
   opacity: 0;
   transform: translateY(16px) scale(0.97);
-  animation: none;
 }
 
 .login-header {
@@ -184,14 +183,14 @@ body::before {
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
-  background: linear-gradient(90deg, #020617, #111827);
+  background: linear-gradient(120deg, #020617, #111827);
   color: #e5e7eb;
-  box-shadow: 0 12px 24px rgba(0,0,0,0.95);
+  box-shadow: 0 12px 26px rgba(0,0,0,1);
   transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
 }
 .btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 16px 30px rgba(0,0,0,1);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px rgba(0,0,0,1);
   filter: brightness(1.04);
 }
 
@@ -215,16 +214,17 @@ body::before {
 }
 
 @keyframes bgShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% { background-position: 0% 40%; }
+  50% { background-position: 100% 60%; }
+  100% { background-position: 0% 40%; }
 }
-@keyframes cardInWelcome {
-  0% { opacity: 0; transform: translateY(18px) scale(0.96); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
+@keyframes cardFloat {
+  0% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-4px) scale(1.01); }
+  100% { transform: translateY(0) scale(1); }
 }
 @keyframes cardInLogin {
-  0% { opacity: 0; transform: translateY(20px) scale(0.95); }
+  0% { opacity: 0; transform: translateY(22px) scale(0.95); }
   100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
@@ -246,7 +246,7 @@ body::before {
       Get started
     </button>
     <div class="welcome-hint">
-      We will only ask for your name and email once, to personalise your journey.
+      We only ask for your name and email once, to personalise your journey.
     </div>
   </div>
 
@@ -262,7 +262,7 @@ body::before {
     <div class="glow-line"></div>
 
     <div id="existingNotice" class="notice">
-      We found an existing profile. You can update it or just continue.
+      We found a saved profile in this browser. You can update it or just continue.
     </div>
 
     <label class="label" for="userName">Name</label>
@@ -288,14 +288,6 @@ body::before {
 </div>
 
 <script>
-(function autoSkipIfProfileExists() {
-  const name = localStorage.getItem('spotsureUsername');
-  const email = localStorage.getItem('spotsureUserEmail');
-  if (name && email) {
-    window.location.replace('/services.html');
-  }
-})();
-
 function showLogin() {
   const welcome = document.getElementById('welcomeView');
   const login = document.getElementById('loginView');
