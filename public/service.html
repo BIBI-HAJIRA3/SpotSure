@@ -13,43 +13,23 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   min-height: 100vh;
-  /* Base dark gradient */
-  background:
-    radial-gradient(circle at top, #020617 0, #020617 40%, #020617 100%);
+  background: radial-gradient(circle at top, #020617 0, #020617 40%, #020617 100%);
   background-color: #020617;
   background-size: 200% 200%;
   animation: bgShift 18s ease-in-out infinite;
   color: #e5e7eb;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
 }
-
-/* Layer 1: your image, very subtle */
 body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: url('/images/back.jpg') center center / cover no-repeat;
-  opacity: 0.18; /* make it subtle; tweak between 0.1–0.25 */
-  filter: blur(1px);
-  z-index: -2;
-}
-
-/* Layer 2: your speckle/glow overlay on top of the image */
-body::after {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
   background-image:
-    radial-gradient(3px 3px at 18% 24%, rgba(37,99,235,0.28) 0, transparent 55%),
-    radial-gradient(2px 2px at 82% 76%, rgba(56,189,248,0.18) 0, transparent 55%),
-    radial-gradient(1.5px 1.5px at 40% 82%, rgba(79,70,229,0.16) 0, transparent 60%);
-  opacity: 0.6;
-  mix-blend-mode: screen;
+    radial-gradient(2px 2px at 20% 25%, rgba(30,64,175,0.18) 0, transparent 55%),
+    radial-gradient(1px 1px at 80% 70%, rgba(15,23,42,0.18) 0, transparent 55%),
+    radial-gradient(1.5px 1.5px at 40% 82%, rgba(30,64,175,0.12) 0, transparent 60%);
+  opacity: 0.45;
+  mix-blend-mode: normal;
   z-index: -1;
 }
 @keyframes bgShift {
