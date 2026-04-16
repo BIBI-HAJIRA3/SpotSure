@@ -12,7 +12,6 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
   min-height: 100vh;
-  /* animated gradient background */
   background: linear-gradient(-45deg, #0f172a, #1d4ed8, #4f46e5, #020617);
   background-size: 300% 300%;
   animation: bgGradient 16s ease infinite;
@@ -21,7 +20,6 @@ body {
   justify-content: center;
 }
 
-/* slight floating particles overlay */
 body::before {
   content: "";
   position: fixed;
@@ -43,7 +41,6 @@ body::before {
   z-index: 1;
 }
 
-/* animated glass card */
 .card {
   width: 100%;
   background: rgba(15, 23, 42, 0.85);
@@ -150,14 +147,6 @@ body::before {
   box-shadow: 0 8px 18px rgba(37, 99, 235, 0.7);
 }
 
-.hint {
-  font-size: 11px;
-  color: #6b7280;
-  margin-top: 8px;
-  text-align: center;
-}
-
-/* small glow line under header */
 .glow-line {
   height: 1px;
   width: 100%;
@@ -166,14 +155,12 @@ body::before {
   opacity: 0.8;
 }
 
-/* auto-redirect notice */
 .notice {
   font-size: 11px;
   color: #9ca3af;
   margin-bottom: 12px;
 }
 
-/* animations */
 @keyframes bgGradient {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
@@ -191,7 +178,6 @@ body::before {
   }
 }
 
-/* small screen tweaks */
 @media (max-width: 380px) {
   .card {
     padding: 16px 14px 14px;
@@ -208,17 +194,15 @@ body::before {
     <div class="card-header">
       <div class="logo-pill">S</div>
       <div>
-        <!-- shorter, more direct -->
         <div class="title">Sign in to SpotSure</div>
-        <div class="sub">Save your details so we can greet you by name.</div>
+        <!-- If you want, you can drop this line completely or keep a very short one -->
+        <div class="sub">Enter your details to continue.</div>
       </div>
     </div>
 
     <div class="glow-line"></div>
 
-    <div class="notice" id="autoNotice" style="display:none;">
-      Your saved details are pre‑filled. You can update them or continue.
-    </div>
+    <!-- Pre‑fill notice removed as requested -->
 
     <label class="label" for="userName">Name</label>
     <div class="input-wrap">
@@ -236,9 +220,7 @@ body::before {
       Continue to services
     </button>
 
-    <div class="hint">
-      Stored only in this browser to personalise SpotSure for you.
-    </div>
+    <!-- Privacy / localStorage hint removed as requested -->
   </div>
 </div>
 
@@ -261,7 +243,6 @@ function saveProfileAndEnter() {
   window.location.href = '/services.html';
 }
 
-// If profile already exists, pre-fill and show a subtle notice
 (function prefillIfExists() {
   const storedName = localStorage.getItem('spotsureUsername');
   const storedEmail = localStorage.getItem('spotsureUserEmail');
@@ -270,8 +251,7 @@ function saveProfileAndEnter() {
     const emailEl = document.getElementById('userEmail');
     if (storedName) nameEl.value = storedName;
     if (storedEmail) emailEl.value = storedEmail;
-    const notice = document.getElementById('autoNotice');
-    if (notice) notice.style.display = 'block';
+    // no notice text shown anymore
   }
 })();
 </script>
