@@ -2,7 +2,8 @@
 const express = require('express');
 const Service = require('../models/Service');
 const Report = require('../models/Report'); // unified report model
-const Review = require('../models/Review'); // ADDED to handle review deletion
+const Review = require('../models/Review'); // handle review deletion
+const { recomputeSingleService } = require('../scripts/recomputeRatings');
 
 const router = express.Router();
 
@@ -77,10 +78,12 @@ router.delete('/services/:id', requireAdmin, async (req, res) => {
     await Review.deleteMany({ service: serviceId });
 
     // Delete related reports (both service + reviews tied to this service)
+    const reviewIds = await Review.find({ service: serviceId }).distinct('_id');
+
     await Report.deleteMany({
       $or: [
         { type: 'service', service: serviceId },
-        { type: 'review', review: { $in: await Review.find({ service: serviceId }).distinct('_id') } },
+        { type: 'review', review: { $in: reviewIds } },
       ],
     });
 
@@ -137,7 +140,7 @@ router.get('/reports/reviews', requireAdmin, async (req, res) => {
   }
 });
 
-// NEW: Delete a single review – DELETE /api/admin/reviews/:id
+// Delete a single review – DELETE /api/admin/reviews/:id
 router.delete('/reviews/:id', requireAdmin, async (req, res) => {
   try {
     const reviewId = req.params.id;
@@ -147,10 +150,13 @@ router.delete('/reviews/:id', requireAdmin, async (req, res) => {
       return res.status(404).json({ message: 'Review not found' });
     }
 
+    // Recompute ratings for the related service using existing script logic
+    await recomputeSingleService(review.service);
+
     // Remove reports against this review
     await Report.deleteMany({ type: 'review', review: reviewId });
 
-    res.json({ message: 'Review deleted' });
+    res.json({ message: 'Review deleted and service ratings updated' });
   } catch (err) {
     console.error('DELETE /api/admin/reviews/:id error:', err);
     res.status(500).json({ message: 'Server error' });
