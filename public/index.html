@@ -1,4 +1,4 @@
-<!--SpotSure/public/index.html-->
+<!-- SpotSure/public/index.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,7 +8,7 @@
 <style>
 * { box-sizing: border-box; }
 
-/* GLOBAL THEME */
+/* GLOBAL DARK GLASS THEME */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -44,7 +44,7 @@ body::before {
 .app-shell {
   max-width: 520px;
   width: 100%;
-  padding: 26px 18px 24px;
+  padding: 24px 18px 24px;
   position: relative;
   z-index: 1;
 }
@@ -53,13 +53,13 @@ body::before {
 .card {
   background:
     radial-gradient(circle at top right, rgba(59,130,246,0.18), transparent 55%),
-    rgba(15,23,42,0.94);
-  border-radius: 18px;
+    rgba(15,23,42,0.95);
+  border-radius: 20px;
   border: 1px solid rgba(55,65,81,0.9);
   box-shadow: 0 26px 80px rgba(0,0,0,0.96);
   backdrop-filter: blur(22px);
-  padding: 20px 18px 18px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  padding: 18px 18px 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
 .card:hover {
   transform: translateY(-2px);
@@ -67,23 +67,22 @@ body::before {
   border-color: #9ca3af;
 }
 
-/* welcome section */
-#welcomeView {
+/* HEADER LINE INSIDE CARD */
+.card-header-row {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  text-align: center;
-  gap: 14px;
-  animation: cardFloat 4s ease-in-out infinite;
+  gap: 10px;
+  margin-bottom: 12px;
 }
-@keyframes cardFloat {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-3px); }
-  100% { transform: translateY(0); }
+.brand-block {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 .logo-orb {
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
@@ -91,23 +90,66 @@ body::before {
   background:
     radial-gradient(circle at 0 0, #38bdf8 0, #2563eb 32%, #1e40af 55%, #020617 100%);
   box-shadow:
-    0 0 25px rgba(37,99,235,0.6),
-    0 18px 40px rgba(15,23,42,1);
-  font-size: 26px;
+    0 0 18px rgba(37,99,235,0.6),
+    0 12px 30px rgba(15,23,42,1);
+  font-size: 20px;
 }
-.welcome-title {
-  font-size: 24px;
+.brand-text-main {
+  font-size: 18px;
   font-weight: 700;
+  color: #f9fafb;
 }
-.welcome-sub {
-  font-size: 13px;
+.brand-text-sub {
+  font-size: 11px;
   color: #9ca3af;
-  max-width: 360px;
+}
+.header-pills {
+  display: flex;
+  gap: 6px;
+}
+.header-pill {
+  border-radius: 999px;
+  border: 1px solid #374151;
+  padding: 4px 8px;
+  font-size: 11px;
+  color: #9ca3af;
+  background: rgba(15,23,42,0.9);
 }
 
+/* HERO CONTENT */
+.hero-main {
+  text-align: left;
+  margin-top: 4px;
+}
+.hero-title {
+  font-size: 21px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.hero-sub {
+  font-size: 13px;
+  color: #9ca3af;
+  margin-bottom: 10px;
+}
+.hero-bullets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.hero-chip {
+  font-size: 11px;
+  color: #d1d5db;
+  background: rgba(15,23,42,0.96);
+  border-radius: 999px;
+  border: 1px solid #27272f;
+  padding: 4px 8px;
+}
+
+/* PRIMARY CTA BUTTON */
 .pill-btn-main {
-  margin-top: 8px;
-  padding: 9px 18px;
+  margin-top: 4px;
+  padding: 9px 16px;
   border-radius: 999px;
   border: 1px solid #4b5563;
   cursor: pointer;
@@ -117,6 +159,11 @@ body::before {
   color: #e5e7eb;
   box-shadow: 0 20px 44px rgba(0,0,0,0.95);
   transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, filter 0.18s ease;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 .pill-btn-main:hover {
   transform: translateY(-2px);
@@ -124,12 +171,26 @@ body::before {
   border-color: #818cf8;
   filter: brightness(1.05);
 }
-.welcome-hint {
+.pill-btn-main span.icon {
+  font-size: 16px;
+}
+.welcome-hint-row {
+  margin-top: 6px;
+  display: flex;
+  justify-content: space-between;
   font-size: 11px;
   color: #6b7280;
 }
+.link-quiet {
+  color: #9ca3af;
+  text-decoration: none;
+  cursor: pointer;
+}
+.link-quiet:hover {
+  text-decoration: underline;
+}
 
-/* login view */
+/* LOGIN VIEW */
 #loginView {
   display: none;
   opacity: 0;
@@ -139,23 +200,22 @@ body::before {
   margin-bottom: 10px;
 }
 .login-title {
-  font-size: 19px;
+  font-size: 18px;
   font-weight: 700;
 }
 .login-sub {
   font-size: 13px;
   color: #9ca3af;
 }
-
 .glow-line {
   height: 1px;
   width: 100%;
-  margin: 8px 0 18px;
+  margin: 8px 0 14px;
   background: linear-gradient(90deg, transparent, rgba(55,65,81,0.9), transparent);
   opacity: 0.9;
 }
 
-/* inputs */
+/* INPUTS */
 .input-wrap {
   position: relative;
   margin-bottom: 10px;
@@ -192,7 +252,7 @@ input:focus {
   display: block;
 }
 
-/* buttons */
+/* LOGIN BUTTON + FOOTER */
 .btn-primary {
   width: 100%;
   padding: 9px 12px;
@@ -218,13 +278,15 @@ input:focus {
   margin-bottom: 8px;
   display: none;
 }
-.login-hint {
+.login-footer-row {
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
   font-size: 11px;
   color: #6b7280;
-  margin-top: 8px;
-  text-align: center;
 }
 
+/* ANIMATIONS */
 .show-login {
   display: block !important;
   animation: cardInLogin 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -236,35 +298,73 @@ input:focus {
 
 @media (max-width: 380px) {
   .app-shell { padding: 22px 14px; }
+  .card-header-row { flex-direction: column; align-items: flex-start; }
+  .header-pills { margin-top: 6px; }
 }
 </style>
 </head>
 <body>
 <div class="app-shell">
-  <!-- Welcome card -->
+  <!-- Welcome / hero card -->
   <div id="welcomeView" class="card">
-    <div class="logo-orb">S</div>
-    <div class="welcome-title">SpotSure</div>
-    <div class="welcome-sub">
-      Discover trusted services near you, see real experiences, and make decisions with confidence.
+    <div class="card-header-row">
+      <div class="brand-block">
+        <div class="logo-orb">S</div>
+        <div>
+          <div class="brand-text-main">SpotSure</div>
+          <div class="brand-text-sub">Discover. Decide. Trust.</div>
+        </div>
+      </div>
+      <div class="header-pills">
+        <span class="header-pill">Hospitals • Clinics</span>
+        <span class="header-pill">Schools • Colleges • Food</span>
+      </div>
     </div>
-    <button class="pill-btn-main" type="button" onclick="showLogin()">
-      Get started
-    </button>
-    <div class="welcome-hint">
+
+    <div class="hero-main">
+      <div class="hero-title">Find services that people actually trust.</div>
+      <div class="hero-sub">
+        Search nearby hospitals, clinics, schools, colleges, restaurants and more – with real reviews from real visitors.
+      </div>
+      <div class="hero-bullets">
+        <span class="hero-chip">⭐ Crowd-sourced ratings</span>
+        <span class="hero-chip">📍 Works with Google Maps</span>
+        <span class="hero-chip">📝 Photo-rich reviews</span>
+      </div>
+
+      <button class="pill-btn-main" type="button" onclick="showLogin()">
+        <span class="icon">➜</span>
+        <span>Continue in browser</span>
+      </button>
+
+      <div class="welcome-hint-row">
+        <span>2 fields. No password.</span>
+        <a class="link-quiet" href="/admin.html">Admin login</a>
+      </div>
     </div>
   </div>
 
   <!-- Login card -->
   <div id="loginView" class="card">
+    <div class="card-header-row" style="margin-bottom:8px;">
+      <div class="brand-block">
+        <div class="logo-orb">S</div>
+        <div>
+          <div class="brand-text-main">SpotSure</div>
+          <div class="brand-text-sub">Create your quick profile</div>
+        </div>
+      </div>
+    </div>
+
     <div class="login-header">
-      <div class="login-title"></div>
-      <div class="login-sub">.</div>
+      <div class="login-title">Who’s using SpotSure?</div>
+      <div class="login-sub">We only use this to show your name on reviews and requests.</div>
     </div>
 
     <div class="glow-line"></div>
 
     <div id="existingNotice" class="notice">
+      We found your details on this device. Update anything if needed and continue.
     </div>
 
     <label class="label" for="userName">Name</label>
@@ -283,6 +383,10 @@ input:focus {
       Continue to services
     </button>
 
+    <div class="login-footer-row">
+      <span>We don’t send spam.</span>
+      <span style="cursor:pointer;" class="link-quiet" onclick="backToWelcome()">← Back</span>
+    </div>
   </div>
 </div>
 
@@ -301,6 +405,15 @@ function showLogin() {
     document.getElementById('userEmail').value = storedEmail || '';
     document.getElementById('existingNotice').style.display = 'block';
   }
+}
+
+function backToWelcome() {
+  const welcome = document.getElementById('welcomeView');
+  const login = document.getElementById('loginView');
+  if (!welcome || !login) return;
+  login.style.display = 'none';
+  login.classList.remove('show-login');
+  welcome.style.display = 'block';
 }
 
 function saveProfileAndEnter() {
