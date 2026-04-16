@@ -126,6 +126,9 @@ body::before {
 .service-thumb.grocery {
   background: radial-gradient(circle at 0 0, #064e3b 0, #020617 55%, #020617 100%);
 }
+.service-thumb.college {
+  background: radial-gradient(circle at 0 0, #1f2937 0, #020617 55%, #020617 100%);
+}
 .service-thumb.default {
   background: radial-gradient(circle at 0 0, #111827 0, #020617 55%, #020617 100%);
 }
@@ -436,6 +439,7 @@ function getCategoryIconInfo(category) {
   if (c === 'school') return { icon: '🏫', cls: 'school' };
   if (c === 'restaurant') return { icon: '🍽️', cls: 'restaurant' };
   if (c === 'grocery') return { icon: '🛒', cls: 'grocery' };
+  if (c === 'college') return { icon: '🎓', cls: 'college' };
   return { icon: '⭐', cls: 'default' };
 }
 
