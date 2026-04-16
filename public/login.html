@@ -208,27 +208,28 @@ body::before {
     <div class="card-header">
       <div class="logo-pill">S</div>
       <div>
-        <div class="title">Welcome to SpotSure</div>
-        <div class="sub">Set up a quick profile so we can greet you by name across the app.</div>
+        <!-- shorter, more direct -->
+        <div class="title">Sign in to SpotSure</div>
+        <div class="sub">Save your details so we can greet you by name.</div>
       </div>
     </div>
 
     <div class="glow-line"></div>
 
     <div class="notice" id="autoNotice" style="display:none;">
-      We found an existing profile. You can update it or just continue.
+      Your saved details are pre‑filled. You can update them or continue.
     </div>
 
     <label class="label" for="userName">Name</label>
     <div class="input-wrap">
       <span class="input-icon">👤</span>
-      <input id="userName" class="input" type="text" placeholder="Eg. Bibi Hajira" />
+      <input id="userName" class="input" type="text" placeholder="Your name" />
     </div>
 
     <label class="label" for="userEmail">Email</label>
     <div class="input-wrap">
       <span class="input-icon">✉️</span>
-      <input id="userEmail" class="input" type="email" placeholder="Eg. you@example.com" />
+      <input id="userEmail" class="input" type="email" placeholder="you@example.com" />
     </div>
 
     <button class="btn-primary" type="button" onclick="saveProfileAndEnter()">
@@ -236,7 +237,7 @@ body::before {
     </button>
 
     <div class="hint">
-      Your details stay in this browser only and are used just to personalise your experience.
+      Stored only in this browser to personalise SpotSure for you.
     </div>
   </div>
 </div>
