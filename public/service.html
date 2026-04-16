@@ -18,23 +18,8 @@ body {
   background-size: 200% 200%;
   animation: bgShift 18s ease-in-out infinite;
   color: #e5e7eb;
-  position: relative;          /* NEW: allow layering */
-  overflow-x: hidden;          /* NEW: keep vertical scroll, hide horizontal */
 }
-
-/* NEW: photo background layer under speckles */
 body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background: url("/images/image.jpg") center center / cover no-repeat;
-  opacity: 0.35;
-  z-index: -2;
-}
-
-/* Speckle layer (existing) – moved from ::before to ::after and z-index raised */
-body::after {
   content: "";
   position: fixed;
   inset: 0;
@@ -47,7 +32,6 @@ body::after {
   mix-blend-mode: normal;
   z-index: -1;
 }
-
 @keyframes bgShift {
   0% { background-position: 0% 40%; }
   50% { background-position: 100% 60%; }
@@ -438,12 +422,12 @@ function showToast(message) {
   if (!t || !msg) return;
   msg.textContent = message;
   t.style.opacity = '1';
-  t.style.pointer-events = 'auto';
+  t.style.pointerEvents = 'auto';
   t.style.transform = 'translateX(-50%) translateY(-4px)';
   if (toastTimer) clearTimeout(toastTimer);
   toastTimer = setTimeout(() => {
     t.style.opacity = '0';
-    t.style.pointer-events = 'none';
+    t.style.pointerEvents = 'none';
     t.style.transform = 'translateX(-50%) translateY(0)';
   }, 2000);
 }
