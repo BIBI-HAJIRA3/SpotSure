@@ -26,7 +26,7 @@ body::before {
   pointer-events: none;
   background-image:
     radial-gradient(2px 2px at 20% 25%, rgba(30,64,175,0.18) 0, transparent 55%),
-    radial-gradient(1px 1px at 80% 70%, rgba(15,23,42,0.18) 0, transparent 55%),
+    radial-gradient(2px 2px at 80% 70%, rgba(15,23,42,0.18) 0, transparent 55%),
     radial-gradient(1.5px 1.5px at 40% 82%, rgba(30,64,175,0.12) 0, transparent 60%);
   opacity: 0.45;
   mix-blend-mode: normal;
@@ -238,6 +238,9 @@ body::before {
 .service-icon.grocery {
   background: radial-gradient(circle at 0 0, #064e3b 0, #020617 55%, #020617 100%);
 }
+.service-icon.college {
+  background: radial-gradient(circle at 0 0, #1f2937 0, #020617 55%, #020617 100%);
+}
 
 .service-info h3 {
   margin: 0 0 4px 0;
@@ -340,6 +343,9 @@ body::before {
     <button class="chip category-btn" data-category="School">
       <span class="category-icon">🏫</span><span>Schools</span>
     </button>
+    <button class="chip category-btn" data-category="College">
+      <span class="category-icon">🎓</span><span>Colleges</span>
+    </button>
     <button class="chip category-btn" data-category="Restaurant">
       <span class="category-icon">🍽️</span><span>Restaurants</span>
     </button>
@@ -383,6 +389,7 @@ function getCategoryIcon(category) {
   if (c === 'hospital') return '➕';
   if (c === 'clinic') return '🩺';
   if (c === 'school') return '🏫';
+  if (c === 'college') return '🎓';
   if (c === 'restaurant') return '🍽️';
   if (c === 'grocery') return '🛒';
   return '⭐';
@@ -393,6 +400,7 @@ function getCategoryClass(category) {
   if (c === 'hospital') return 'hospital';
   if (c === 'clinic') return 'clinic';
   if (c === 'school') return 'school';
+  if (c === 'college') return 'college';
   if (c === 'restaurant') return 'restaurant';
   if (c === 'grocery') return 'grocery';
   return '';
