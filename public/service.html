@@ -13,9 +13,10 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   min-height: 100vh;
-  background: linear-gradient(135deg, #020617, #020617, #020617, #020617);
-  background-size: 220% 220%;
-  animation: bgShift 16s ease-in-out infinite;
+  background: radial-gradient(circle at top, #020617 0, #020617 40%, #020617 100%);
+  background-color: #020617;
+  background-size: 200% 200%;
+  animation: bgShift 18s ease-in-out infinite;
   color: #e5e7eb;
 }
 body::before {
@@ -24,11 +25,11 @@ body::before {
   inset: 0;
   pointer-events: none;
   background-image:
-    radial-gradient(2px 2px at 20% 25%, rgba(30,64,175,0.3) 0, transparent 55%),
-    radial-gradient(1px 1px at 80% 70%, rgba(15,23,42,0.24) 0, transparent 55%),
-    radial-gradient(1.5px 1.5px at 40% 82%, rgba(30,64,175,0.18) 0, transparent 60%);
-  opacity: 0.7;
-  mix-blend-mode: screen;
+    radial-gradient(2px 2px at 20% 25%, rgba(30,64,175,0.18) 0, transparent 55%),
+    radial-gradient(1px 1px at 80% 70%, rgba(15,23,42,0.18) 0, transparent 55%),
+    radial-gradient(1.5px 1.5px at 40% 82%, rgba(30,64,175,0.12) 0, transparent 60%);
+  opacity: 0.45;
+  mix-blend-mode: normal;
   z-index: -1;
 }
 @keyframes bgShift {
@@ -82,11 +83,11 @@ body::before {
 
 /* CARD */
 .card {
-  background: rgba(15,23,42,0.96);
+  background: rgba(15,23,42,0.94);
   border-radius: 18px;
-  border: 1px solid rgba(55,65,81,0.9);
+  border: 1px solid rgba(31,41,55,0.9);
   padding: 14px;
-  box-shadow: 0 24px 55px rgba(0,0,0,1);
+  box-shadow: 0 26px 80px rgba(0,0,0,0.96);
   margin-bottom: 14px;
   backdrop-filter: blur(18px);
 }
@@ -104,29 +105,29 @@ body::before {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 26px;
-  color: #f9fafb;
-  background: radial-gradient(circle at 0 0, #6366f1 0, #4f46e5 35%, #1d2438 85%);
-  box-shadow: 0 8px 24px rgba(30,64,175,1);
+  font-size: 24px;
+  color: #d1d5db;
+  background: radial-gradient(circle at 0 0, #111827 0, #020617 55%, #020617 100%);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.9);
   flex-shrink: 0;
 }
 .service-thumb.hospital {
-  background: radial-gradient(circle at 0 0, #38bdf8 0, #0ea5e9 35%, #0b1120 85%);
+  background: radial-gradient(circle at 0 0, #0f172a 0, #020617 55%, #020617 100%);
 }
 .service-thumb.clinic {
-  background: radial-gradient(circle at 0 0, #22c55e 0, #16a34a 35%, #0b1120 85%);
+  background: radial-gradient(circle at 0 0, #022c22 0, #020617 55%, #020617 100%);
 }
 .service-thumb.school {
-  background: radial-gradient(circle at 0 0, #a855f7 0, #7c3aed 35%, #0b1120 85%);
+  background: radial-gradient(circle at 0 0, #1e1b4b 0, #020617 55%, #020617 100%);
 }
 .service-thumb.restaurant {
-  background: radial-gradient(circle at 0 0, #fb923c 0, #f97316 35%, #0b1120 85%);
+  background: radial-gradient(circle at 0 0, #451a03 0, #020617 55%, #020617 100%);
 }
 .service-thumb.grocery {
-  background: radial-gradient(circle at 0 0, #22c55e 0, #16a34a 35%, #0b1120 85%);
+  background: radial-gradient(circle at 0 0, #064e3b 0, #020617 55%, #020617 100%);
 }
 .service-thumb.default {
-  background: radial-gradient(circle at 0 0, #6366f1 0, #4f46e5 35%, #1d2438 85%);
+  background: radial-gradient(circle at 0 0, #111827 0, #020617 55%, #020617 100%);
 }
 
 .service-main h1 {
@@ -176,7 +177,7 @@ body::before {
 .btn-primary {
   padding: 8px 12px;
   border-radius: 999px;
-  border: 1px solid #4b5563;
+  border: 1px solid #374151;
   font-size: 13px;
   cursor: pointer;
   background: #020617;
@@ -185,11 +186,11 @@ body::before {
   align-items: center;
   gap: 6px;
   transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
-  box-shadow: 0 12px 26px rgba(0,0,0,1);
+  box-shadow: 0 14px 32px rgba(0,0,0,0.95);
 }
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 18px 36px rgba(0,0,0,1);
+  transform: translateY(-1px);
+  box-shadow: 0 18px 44px rgba(0,0,0,0.98);
   border-color: #6b7280;
 }
 .btn-secondary {
