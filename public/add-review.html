@@ -13,8 +13,23 @@ body {
   margin: 0;
   background: radial-gradient(circle at top, #020617 0, #020617 55%, #000 100%);
   color: #e5e7eb;
+  position: relative;
+  overflow: hidden;
 }
+
+/* Background image layer */
 body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: url("/images/back.jpg") center center / cover no-repeat;
+  opacity: 0.18;
+  z-index: -2;
+}
+
+/* Existing speckle layer moved to ::after */
+body::after {
   content: "";
   position: fixed;
   inset: 0;
@@ -105,7 +120,7 @@ body::before {
   background: linear-gradient(90deg, #111827, #14532d);
   color: #ffffff;
   width: 100%;
-  box-shadow: 0 10px 22px rgba(0,0,0,0.9);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.9);
 }
 .btn-primary:hover {
   background: linear-gradient(90deg, #0f172a, #166534);
@@ -188,12 +203,12 @@ function showToast(message) {
   if (!t || !msg) return;
   msg.textContent = message;
   t.style.opacity = '1';
-  t.style.pointerEvents = 'auto';
+  t.style.pointer-events = 'auto';
   t.style.transform = 'translateX(-50%) translateY(-4px)';
   if (toastTimer) clearTimeout(toastTimer);
   toastTimer = setTimeout(() => {
     t.style.opacity = '0';
-    t.style.pointerEvents = 'none';
+    t.style.pointer-events = 'none';
     t.style.transform = 'translateX(-50%) translateY(0)';
   }, 2000);
 }
