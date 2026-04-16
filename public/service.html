@@ -18,11 +18,11 @@ body {
   background-size: 200% 200%;
   animation: bgShift 18s ease-in-out infinite;
   color: #e5e7eb;
-  position: relative;
-  overflow-x: hidden; /* allow vertical scroll */
+  position: relative;          /* NEW: allow layering */
+  overflow-x: hidden;          /* NEW: keep vertical scroll, hide horizontal */
 }
 
-/* Background image layer */
+/* NEW: photo background layer under speckles */
 body::before {
   content: "";
   position: fixed;
@@ -33,7 +33,7 @@ body::before {
   z-index: -2;
 }
 
-/* Speckle layer (unchanged) */
+/* Speckle layer (existing) – moved from ::before to ::after and z-index raised */
 body::after {
   content: "";
   position: fixed;
@@ -47,6 +47,7 @@ body::after {
   mix-blend-mode: normal;
   z-index: -1;
 }
+
 @keyframes bgShift {
   0% { background-position: 0% 40%; }
   50% { background-position: 100% 60%; }
@@ -174,9 +175,6 @@ body::after {
   flex-wrap: nowrap;
   overflow-x: auto;
   padding-bottom: 2px;
-}
-.provider-images-row::-webkit-scrollbar {
-  height: 4px;
 }
 .provider-thumb {
   width: 54px;
