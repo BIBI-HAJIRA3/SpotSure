@@ -1,4 +1,4 @@
-<!-- SpotSure/public/index.html -->
+<!--SpotSure/public/index.html-->
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,7 +8,7 @@
 <style>
 * { box-sizing: border-box; }
 
-/* GLOBAL DARK THEME */
+/* GLOBAL THEME */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -41,7 +41,6 @@ body::before {
   100% { background-position: 0% 40%; }
 }
 
-/* LAYOUT */
 .app-shell {
   max-width: 520px;
   width: 100%;
@@ -50,51 +49,41 @@ body::before {
   z-index: 1;
 }
 
-/* GLASS LOGIN CARD (inspired by reference) */
-.card-login {
-  margin: 0 auto;
-  max-width: 420px;
+/* SHARED GLASS CARD */
+.card {
   background:
     radial-gradient(circle at top right, rgba(59,130,246,0.18), transparent 55%),
-    rgba(15,23,42,0.9);
-  border-radius: 22px;
+    rgba(15,23,42,0.94);
+  border-radius: 18px;
   border: 1px solid rgba(55,65,81,0.9);
-  box-shadow:
-    0 30px 90px rgba(0,0,0,0.96),
-    0 0 0 1px rgba(15,23,42,0.8);
-  backdrop-filter: blur(26px);
-  padding: 22px 22px 20px;
-  position: relative;
+  box-shadow: 0 26px 80px rgba(0,0,0,0.96);
+  backdrop-filter: blur(22px);
+  padding: 20px 18px 18px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 32px 90px rgba(0,0,0,0.98);
+  border-color: #9ca3af;
 }
 
-/* subtle top highlight like the Dribbble shot */
-.card-login::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(145deg, rgba(148,163,184,0.12), transparent 55%);
-  opacity: 0.9;
-  mix-blend-mode: screen;
-  pointer-events: none;
-}
-
-/* TOP: brand + small label */
-.card-header {
+/* welcome section */
+#welcomeView {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 18px;
+  text-align: center;
+  gap: 14px;
+  animation: cardFloat 4s ease-in-out infinite;
 }
-.brand-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+@keyframes cardFloat {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+  100% { transform: translateY(0); }
 }
 .logo-orb {
-  width: 46px;
-  height: 46px;
+  width: 60px;
+  height: 60px;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
@@ -102,54 +91,91 @@ body::before {
   background:
     radial-gradient(circle at 0 0, #38bdf8 0, #2563eb 32%, #1e40af 55%, #020617 100%);
   box-shadow:
-    0 0 22px rgba(59,130,246,0.6),
-    0 16px 32px rgba(15,23,42,1);
-  font-size: 22px;
+    0 0 25px rgba(37,99,235,0.6),
+    0 18px 40px rgba(15,23,42,1);
+  font-size: 26px;
 }
-.brand-text-main {
-  font-size: 18px;
+.welcome-title {
+  font-size: 24px;
   font-weight: 700;
-  color: #f9fafb;
 }
-.brand-text-sub {
-  font-size: 11px;
+.welcome-sub {
+  font-size: 13px;
   color: #9ca3af;
-}
-.card-tag {
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 11px;
-  color: #e5e7eb;
-  border: 1px solid rgba(148,163,184,0.4);
-  background: rgba(15,23,42,0.9);
+  max-width: 360px;
 }
 
-/* TITLE + SUBTITLE (center-ish like reference) */
-.card-main-text {
-  margin-bottom: 16px;
+.pill-btn-main {
+  margin-top: 8px;
+  padding: 9px 18px;
+  border-radius: 999px;
+  border: 1px solid #4b5563;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  background: linear-gradient(90deg, #1d4ed8, #4338ca);
+  color: #e5e7eb;
+  box-shadow: 0 20px 44px rgba(0,0,0,0.95);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, filter 0.18s ease;
 }
-.card-title {
-  font-size: 20px;
+.pill-btn-main:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 26px 60px rgba(0,0,0,0.98);
+  border-color: #818cf8;
+  filter: brightness(1.05);
+}
+.welcome-hint {
+  font-size: 11px;
+  color: #6b7280;
+}
+
+/* login view */
+#loginView {
+  display: none;
+  opacity: 0;
+  transform: translateY(16px) scale(0.97);
+}
+.login-header {
+  margin-bottom: 10px;
+}
+.login-title {
+  font-size: 19px;
   font-weight: 700;
-  margin-bottom: 4px;
 }
-.card-subtitle {
+.login-sub {
   font-size: 13px;
   color: #9ca3af;
 }
 
-/* FORM */
-.form-row {
-  margin-bottom: 10px;
+.glow-line {
+  height: 1px;
+  width: 100%;
+  margin: 8px 0 18px;
+  background: linear-gradient(90deg, transparent, rgba(55,65,81,0.9), transparent);
+  opacity: 0.9;
 }
-.label {
-  font-size: 12px;
-  color: #9ca3af;
-  margin-bottom: 4px;
-  display: block;
-}
+
+/* inputs */
 .input-wrap {
   position: relative;
+  margin-bottom: 10px;
+}
+input {
+  width: 100%;
+  padding: 9px 12px 9px 32px;
+  border-radius: 999px;
+  border: 1px solid #374151;
+  font-size: 13px;
+  outline: none;
+  background: rgba(15,23,42,0.97);
+  color: #e5e7eb;
+}
+input::placeholder {
+  color: #6b7280;
+}
+input:focus {
+  border-color: #4b5563;
+  box-shadow: 0 0 0 1px rgba(55,65,81,0.8);
 }
 .input-icon {
   position: absolute;
@@ -159,139 +185,123 @@ body::before {
   font-size: 13px;
   color: #6b7280;
 }
-input {
-  width: 100%;
-  padding: 9px 12px 9px 32px;
-  border-radius: 999px;
-  border: 1px solid #374151;
-  font-size: 13px;
-  outline: none;
-  background: rgba(15,23,42,0.96);
-  color: #e5e7eb;
-}
-input::placeholder {
-  color: #6b7280;
-}
-input:focus {
-  border-color: #4b5563;
-  box-shadow: 0 0 0 1px rgba(55,65,81,0.85);
+.label {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-bottom: 4px;
+  display: block;
 }
 
-/* BUTTON + FOOTER TEXT */
+/* buttons */
 .btn-primary {
   width: 100%;
-  padding: 10px 12px;
+  padding: 9px 12px;
   border-radius: 999px;
   border: 1px solid #4b5563;
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
-  background: linear-gradient(90deg, #1d4ed8, #4338ca);
+  background: #020617;
   color: #e5e7eb;
-  box-shadow: 0 20px 44px rgba(0,0,0,0.95);
-  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, filter 0.16s ease;
-  margin-top: 4px;
+  box-shadow: 0 12px 26px rgba(0,0,0,1);
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
 }
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 26px 60px rgba(0,0,0,0.98);
-  border-color: #818cf8;
-  filter: brightness(1.05);
+  box-shadow: 0 18px 34px rgba(0,0,0,1);
+  border-color: #6b7280;
 }
 
 .notice {
   font-size: 11px;
   color: #9ca3af;
-  margin-top: 6px;
+  margin-bottom: 8px;
+  display: none;
 }
-
-.footer-row {
-  margin-top: 10px;
-  display: flex;
-  justify-content: space-between;
+.login-hint {
   font-size: 11px;
   color: #6b7280;
+  margin-top: 8px;
+  text-align: center;
 }
-.footer-link {
-  color: #9ca3af;
-  cursor: pointer;
-  text-decoration: none;
+
+.show-login {
+  display: block !important;
+  animation: cardInLogin 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
-.footer-link:hover {
-  text-decoration: underline;
+@keyframes cardInLogin {
+  0% { opacity: 0; transform: translateY(22px) scale(0.95); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 @media (max-width: 380px) {
   .app-shell { padding: 22px 14px; }
-  .card-login { padding: 18px 16px 18px; }
 }
 </style>
 </head>
 <body>
 <div class="app-shell">
-  <div class="card-login">
-    <div class="card-header">
-      <div class="brand-left">
-        <div class="logo-orb">S</div>
-        <div>
-          <div class="brand-text-main">SpotSure</div>
-          <div class="brand-text-sub">Discover. Decide. Trust.</div>
-        </div>
-      </div>
-      <div class="card-tag">Login</div>
+  <!-- Welcome card -->
+  <div id="welcomeView" class="card">
+    <div class="logo-orb">S</div>
+    <div class="welcome-title">SpotSure</div>
+    <div class="welcome-sub">
+      Discover trusted services near you, see real experiences, and make decisions with confidence.
+    </div>
+    <button class="pill-btn-main" type="button" onclick="showLogin()">
+      Get started
+    </button>
+    <div class="welcome-hint">
+    </div>
+  </div>
+
+  <!-- Login card -->
+  <div id="loginView" class="card">
+    <div class="login-header">
+      <div class="login-title"></div>
+      <div class="login-sub">.</div>
     </div>
 
-    <div class="card-main-text">
-      <div class="card-title">Welcome back</div>
-      <div class="card-subtitle">
-        Enter your details to continue to SpotSure and see trusted services near you.
-      </div>
+    <div class="glow-line"></div>
+
+    <div id="existingNotice" class="notice">
     </div>
 
-    <div class="form-row">
-      abel class="label" for="userName">Name</label>
-      <div class="input-wrap">
-        <span class="input-icon">👤</span>
-        <input id="userName" type="text" placeholder="Eg. Bibi Hajira" />
-      </div>
+    <label class="label" for="userName">Name</label>
+    <div class="input-wrap">
+      <span class="input-icon">👤</span>
+      <input id="userName" type="text" placeholder="Eg. Bibi Hajira" />
     </div>
 
-    <div class="form-row">
-      abel class="label" for="userEmail">Email</label>
-      <div class="input-wrap">
-        <span class="input-icon">✉️</span>
-        <input id="userEmail" type="email" placeholder="Eg. you@example.com" />
-      </div>
+    <label class="label" for="userEmail">Email</label>
+    <div class="input-wrap">
+      <span class="input-icon">✉️</span>
+      <input id="userEmail" type="email" placeholder="Eg. you@example.com" />
     </div>
 
     <button class="btn-primary" type="button" onclick="saveProfileAndEnter()">
-      Continue
+      Continue to services
     </button>
 
-    <div id="existingNotice" class="notice" style="display:none;">
-      We found your details on this device. Update anything if needed and continue.
-    </div>
-
-    <div class="footer-row">
-      <span>We only use this to show your name on reviews.</span>
-      <a class="footer-link" href="/admin.html">Admin</a>
-    </div>
   </div>
 </div>
 
 <script>
-(function initFromLocalStorage() {
+function showLogin() {
+  const welcome = document.getElementById('welcomeView');
+  const login = document.getElementById('loginView');
+  if (!welcome || !login) return;
+  welcome.style.display = 'none';
+  login.classList.add('show-login');
+
   const storedName = localStorage.getItem('spotsureUsername');
   const storedEmail = localStorage.getItem('spotsureUserEmail');
   if (storedName || storedEmail) {
-    const nameInput = document.getElementById('userName');
-    const emailInput = document.getElementById('userEmail');
-    if (nameInput) nameInput.value = storedName || '';
-    if (emailInput) emailInput.value = storedEmail || '';
-    const notice = document.getElementById('existingNotice');
-    if (notice) notice.style.display = 'block';
+    document.getElementById('userName').value = storedName || '';
+    document.getElementById('userEmail').value = storedEmail || '';
+    document.getElementById('existingNotice').style.display = 'block';
   }
-})();
+}
 
 function saveProfileAndEnter() {
   const nameEl = document.getElementById('userName');
