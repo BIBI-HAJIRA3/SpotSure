@@ -1,4 +1,4 @@
-<!--SpotSure/public/index.html-->
+<!-- SpotSure/public/index.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,7 +8,7 @@
 <style>
 * { box-sizing: border-box; }
 
-/* GLOBAL THEME */
+/* GLOBAL DARK THEME */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -41,49 +41,48 @@ body::before {
   100% { background-position: 0% 40%; }
 }
 
+/* LAYOUT */
 .app-shell {
-  max-width: 520px;
+  max-width: 840px;
   width: 100%;
-  padding: 26px 18px 24px;
+  padding: 22px 18px;
   position: relative;
   z-index: 1;
 }
 
-/* SHARED GLASS CARD */
-.card {
-  background:
-    radial-gradient(circle at top right, rgba(59,130,246,0.18), transparent 55%),
-    rgba(15,23,42,0.94);
-  border-radius: 18px;
-  border: 1px solid rgba(55,65,81,0.9);
-  box-shadow: 0 26px 80px rgba(0,0,0,0.96);
-  backdrop-filter: blur(22px);
-  padding: 20px 18px 18px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-}
-.card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 32px 90px rgba(0,0,0,0.98);
-  border-color: #9ca3af;
+/* GLASS WRAPPER (two-column card) */
+.card-shell {
+  display: flex;
+  gap: 0;
+  border-radius: 26px;
+  overflow: hidden;
+  box-shadow:
+    0 40px 120px rgba(0,0,0,0.98),
+    0 0 0 1px rgba(15,23,42,0.8);
+  backdrop-filter: blur(26px);
 }
 
-/* welcome section */
-#welcomeView {
+/* LEFT PANE – identity / hero */
+.card-left {
+  flex: 1.1;
+  padding: 22px 22px 20px;
+  background:
+    radial-gradient(circle at top right, rgba(59,130,246,0.25), transparent 60%),
+    rgba(15,23,42,0.96);
+  border-right: 1px solid rgba(55,65,81,0.75);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 14px;
-  animation: cardFloat 4s ease-in-out infinite;
+  justify-content: space-between;
 }
-@keyframes cardFloat {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-3px); }
-  100% { transform: translateY(0); }
+.brand-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 .logo-orb {
-  width: 60px;
-  height: 60px;
+  width: 46px;
+  height: 46px;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
@@ -91,74 +90,105 @@ body::before {
   background:
     radial-gradient(circle at 0 0, #38bdf8 0, #2563eb 32%, #1e40af 55%, #020617 100%);
   box-shadow:
-    0 0 25px rgba(37,99,235,0.6),
-    0 18px 40px rgba(15,23,42,1);
-  font-size: 26px;
+    0 0 22px rgba(59,130,246,0.65),
+    0 16px 32px rgba(15,23,42,1);
+  font-size: 22px;
 }
-.welcome-title {
-  font-size: 24px;
+.brand-name {
+  font-size: 18px;
   font-weight: 700;
+  color: #f9fafb;
 }
-.welcome-sub {
-  font-size: 13px;
+.brand-tagline {
+  font-size: 11px;
   color: #9ca3af;
-  max-width: 360px;
 }
 
-.pill-btn-main {
-  margin-top: 8px;
-  padding: 9px 18px;
+.hero-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.hero-text {
+  font-size: 13px;
+  color: #9ca3af;
+  margin-bottom: 12px;
+}
+.hero-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.hero-pill {
+  font-size: 11px;
+  color: #d1d5db;
+  background: rgba(15,23,42,0.96);
   border-radius: 999px;
-  border: 1px solid #4b5563;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  background: linear-gradient(90deg, #1d4ed8, #4338ca);
-  color: #e5e7eb;
-  box-shadow: 0 20px 44px rgba(0,0,0,0.95);
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, filter 0.18s ease;
+  border: 1px solid #27272f;
+  padding: 4px 9px;
 }
-.pill-btn-main:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 26px 60px rgba(0,0,0,0.98);
-  border-color: #818cf8;
-  filter: brightness(1.05);
-}
-.welcome-hint {
+
+/* subtle footer text */
+.hero-footer {
   font-size: 11px;
   color: #6b7280;
+  margin-top: 14px;
 }
 
-/* login view */
-#loginView {
-  display: none;
-  opacity: 0;
-  transform: translateY(16px) scale(0.97);
+/* RIGHT PANE – login form */
+.card-right {
+  flex: 0.9;
+  padding: 22px 20px 20px;
+  background:
+    radial-gradient(circle at top left, rgba(15,23,42,0.9), transparent 70%),
+    rgba(15,23,42,0.96);
 }
+
+/* "Login" label + small copy */
 .login-header {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+}
+.login-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  color: #e5e7eb;
+  border: 1px solid rgba(148,163,184,0.4);
+  background: rgba(17,24,39,0.9);
+  margin-bottom: 6px;
 }
 .login-title {
-  font-size: 19px;
+  font-size: 18px;
   font-weight: 700;
 }
-.login-sub {
-  font-size: 13px;
+.login-subtitle {
+  font-size: 12px;
   color: #9ca3af;
-}
-
-.glow-line {
-  height: 1px;
-  width: 100%;
-  margin: 8px 0 18px;
-  background: linear-gradient(90deg, transparent, rgba(55,65,81,0.9), transparent);
-  opacity: 0.9;
 }
 
 /* inputs */
+.form-row {
+  margin-top: 10px;
+}
+.label {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-bottom: 4px;
+  display: block;
+}
 .input-wrap {
   position: relative;
-  margin-bottom: 10px;
+}
+.input-icon {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px;
+  color: #6b7280;
 }
 input {
   width: 100%;
@@ -175,133 +205,159 @@ input::placeholder {
 }
 input:focus {
   border-color: #4b5563;
-  box-shadow: 0 0 0 1px rgba(55,65,81,0.8);
-}
-.input-icon {
-  position: absolute;
-  left: 11px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 13px;
-  color: #6b7280;
-}
-.label {
-  font-size: 12px;
-  color: #9ca3af;
-  margin-bottom: 4px;
-  display: block;
+  box-shadow: 0 0 0 1px rgba(55,65,81,0.85);
 }
 
-/* buttons */
+/* button */
 .btn-primary {
   width: 100%;
-  padding: 9px 12px;
+  margin-top: 14px;
+  padding: 10px 12px;
   border-radius: 999px;
   border: 1px solid #4b5563;
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
-  background: #020617;
+  background: linear-gradient(90deg, #1d4ed8, #4338ca);
   color: #e5e7eb;
-  box-shadow: 0 12px 26px rgba(0,0,0,1);
-  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+  box-shadow: 0 20px 44px rgba(0,0,0,0.95);
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, filter 0.16s ease;
 }
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 18px 34px rgba(0,0,0,1);
-  border-color: #6b7280;
+  box-shadow: 0 26px 60px rgba(0,0,0,0.98);
+  border-color: #818cf8;
+  filter: brightness(1.05);
 }
 
+/* extra info */
 .notice {
   font-size: 11px;
   color: #9ca3af;
-  margin-bottom: 8px;
+  margin-top: 6px;
   display: none;
 }
-.login-hint {
+.login-footer-row {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
   font-size: 11px;
   color: #6b7280;
-  margin-top: 8px;
-  text-align: center;
+}
+.footer-link {
+  color: #9ca3af;
+  cursor: pointer;
+  text-decoration: none;
+}
+.footer-link:hover {
+  text-decoration: underline;
 }
 
-.show-login {
-  display: block !important;
-  animation: cardInLogin 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+/* responsive: stack panes on small screens */
+@media (max-width: 680px) {
+  .card-shell {
+    flex-direction: column;
+    border-radius: 22px;
+  }
+  .card-left {
+    border-right: none;
+    border-bottom: 1px solid rgba(55,65,81,0.75);
+  }
 }
-@keyframes cardInLogin {
-  0% { opacity: 0; transform: translateY(22px) scale(0.95); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
-}
-
 @media (max-width: 380px) {
-  .app-shell { padding: 22px 14px; }
+  .app-shell { padding: 20px 14px; }
+  .card-left, .card-right { padding: 18px 16px 18px; }
 }
 </style>
 </head>
 <body>
 <div class="app-shell">
-  <!-- Welcome card -->
-  <div id="welcomeView" class="card">
-    <div class="logo-orb">S</div>
-    <div class="welcome-title">SpotSure</div>
-    <div class="welcome-sub">
-      Discover trusted services near you, see real experiences, and make decisions with confidence.
-    </div>
-    <button class="pill-btn-main" type="button" onclick="showLogin()">
-      Get started
-    </button>
-    <div class="welcome-hint">
-    </div>
-  </div>
+  <div class="card-shell">
+    <!-- LEFT: identity & value -->
+    <div class="card-left">
+      <div>
+        <div class="brand-header">
+          <div class="logo-orb">S</div>
+          <div>
+            <div class="brand-name">SpotSure</div>
+            <div class="brand-tagline">Discover. Decide. Trust.</div>
+          </div>
+        </div>
 
-  <!-- Login card -->
-  <div id="loginView" class="card">
-    <div class="login-header">
-      <div class="login-title"></div>
-      <div class="login-sub">.</div>
-    </div>
+        <div class="hero-title">Find services people actually recommend.</div>
+        <div class="hero-text">
+          Compare hospitals, clinics, schools, colleges, restaurants and more using real reviews and photos from people around you.
+        </div>
 
-    <div class="glow-line"></div>
+        <div class="hero-pills">
+          <span class="hero-pill">⭐ Crowd‑sourced ratings</span>
+          <span class="hero-pill">📍 Google Maps friendly</span>
+          <span class="hero-pill">📝 Photo‑rich reviews</span>
+        </div>
+      </div>
 
-    <div id="existingNotice" class="notice">
-    </div>
-
-    <label class="label" for="userName">Name</label>
-    <div class="input-wrap">
-      <span class="input-icon">👤</span>
-      <input id="userName" type="text" placeholder="Eg. Bibi Hajira" />
+      <div class="hero-footer">
+        Built for quick checks before you step out.
+      </div>
     </div>
 
-    <label class="label" for="userEmail">Email</label>
-    <div class="input-wrap">
-      <span class="input-icon">✉️</span>
-      <input id="userEmail" type="email" placeholder="Eg. you@example.com" />
+    <!-- RIGHT: login form -->
+    <div class="card-right">
+      <div class="login-header">
+        <div class="login-tag">
+          <span>●</span><span>Quick login</span>
+        </div>
+        <div class="login-title">Welcome</div>
+        <div class="login-subtitle">
+          Just your name and email to show on reviews and service requests.
+        </div>
+      </div>
+
+      <div class="form-row">
+        abel class="label" for="userName">Name</label>
+        <div class="input-wrap">
+          <span class="input-icon">👤</span>
+          <input id="userName" type="text" placeholder="Eg. Bibi Hajira" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        abel class="label" for="userEmail">Email</label>
+        <div class="input-wrap">
+          <span class="input-icon">✉️</span>
+          <input id="userEmail" type="email" placeholder="Eg. you@example.com" />
+        </div>
+      </div>
+
+      <button class="btn-primary" type="button" onclick="saveProfileAndEnter()">
+        Continue to SpotSure
+      </button>
+
+      <div id="existingNotice" class="notice">
+        We found your details on this device. Update anything if needed and continue.
+      </div>
+
+      <div class="login-footer-row">
+        <span>We don’t send spam.</span>
+        <a class="footer-link" href="/admin.html">Admin</a>
+      </div>
     </div>
-
-    <button class="btn-primary" type="button" onclick="saveProfileAndEnter()">
-      Continue to services
-    </button>
-
   </div>
 </div>
 
 <script>
-function showLogin() {
-  const welcome = document.getElementById('welcomeView');
-  const login = document.getElementById('loginView');
-  if (!welcome || !login) return;
-  welcome.style.display = 'none';
-  login.classList.add('show-login');
-
+(function initFromLocalStorage() {
   const storedName = localStorage.getItem('spotsureUsername');
   const storedEmail = localStorage.getItem('spotsureUserEmail');
   if (storedName || storedEmail) {
-    document.getElementById('userName').value = storedName || '';
-    document.getElementById('userEmail').value = storedEmail || '';
-    document.getElementById('existingNotice').style.display = 'block';
+    const nameInput = document.getElementById('userName');
+    const emailInput = document.getElementById('userEmail');
+    if (nameInput) nameInput.value = storedName || '';
+    if (emailInput) emailInput.value = storedEmail || '';
+    const notice = document.getElementById('existingNotice');
+    if (notice) notice.style.display = 'block';
   }
-}
+})();
 
 function saveProfileAndEnter() {
   const nameEl = document.getElementById('userName');
