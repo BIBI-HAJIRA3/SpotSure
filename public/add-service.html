@@ -12,8 +12,23 @@ body {
   margin: 0;
   background: radial-gradient(circle at top, #020617 0, #020617 55%, #000 100%);
   color: #e5e7eb;
+  position: relative;
+  overflow: hidden;
 }
+
+/* New: background image layer */
 body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: url("/images/back.jpg") center center / cover no-repeat;
+  opacity: 0.18;
+  z-index: -2;
+}
+
+/* Existing speckle layer moved to ::after */
+body::after {
   content: "";
   position: fixed;
   inset: 0;
