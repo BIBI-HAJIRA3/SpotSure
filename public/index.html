@@ -164,16 +164,18 @@ body::after {
   width: 100%;
   max-width: 260px;
 
-  /* vertical spacing only */
   padding-top: 35px;
   padding-bottom: 20px;
 
-  /* no horizontal padding so flex can center consistently on all widths */
+  /* key: no horizontal padding, instead use a tiny percentage translate */
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center; /* keeps header+form vertically centered within this box */
+  justify-content: center;
   gap: 16px;
+
+  /* small, resolution-independent nudge to visually center in the circle */
+  transform: translateX(4%);
 }
 
 /* Header inside circle */
@@ -230,7 +232,7 @@ body::after {
 }
 
 /* Input wrapper */
-.input-wrap {
+.input-wrap is {
   position: relative;
 }
 
