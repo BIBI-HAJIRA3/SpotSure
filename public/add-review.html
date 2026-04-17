@@ -312,7 +312,7 @@ async function handleReviewSubmit(e) {
     showToast('Review added');
 
     setTimeout(() => {
-      window.location.href = '/reviews.html?id=' + encodeURIComponent(serviceId);
+      window.location.href = '/service.html?id=' + encodeURIComponent(serviceId);
     }, 2200);
   } catch (err) {
     console.error(err);
