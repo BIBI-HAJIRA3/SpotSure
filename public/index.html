@@ -31,14 +31,14 @@ body {
   overflow-x: hidden;
 }
 
-/* Background image layer */
+/* Background image layer – made more subtle */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
   background: url("/images/bg1.jpg") center center / cover no-repeat;
-  opacity: 0.35;
+  opacity: 0.22;              /* was 0.35 – softer background */
   z-index: -2;
 }
 
@@ -140,7 +140,7 @@ body::after {
   opacity: 0;
 }
 
-/* Outer circle container for login */
+/* Outer circle container for login – a bit more transparent/soft */
 .circle-login {
   width: 380px;
   height: 380px;
@@ -148,11 +148,11 @@ body::after {
   max-height: 90vw;          /* keep it circular on small screens */
   border-radius: 50%;
   background:
-    radial-gradient(circle at top right, rgba(59,130,246,0.16), transparent 55%),
-    rgba(15,23,42,0.96);
-  border: 1px solid rgba(55,65,81,0.9);
-  box-shadow: 0 24px 70px rgba(0,0,0,0.96);
-  backdrop-filter: blur(22px);
+    radial-gradient(circle at top right, rgba(59,130,246,0.12), transparent 55%),
+    rgba(15,23,42,0.90);     /* was 0.96 – slightly more transparent */
+  border: 1px solid rgba(55,65,81,0.75); /* softer border */
+  box-shadow: 0 20px 60px rgba(0,0,0,0.9); /* slightly softer shadow */
+  backdrop-filter: blur(20px);
   margin: 0 auto;
   display: flex;
   align-items: center;    /* centers inner content vertically */
@@ -226,11 +226,13 @@ body::after {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  align-items: center;      /* center button now that it's auto-width */
 }
 
 /* Input wrapper */
 .input-wrap {
   position: relative;
+  width: 100%;              /* keep inputs full width inside form */
 }
 
 /* Text inputs */
@@ -266,44 +268,47 @@ input:focus {
   color: #6b7280;
 }
 
-/* buttons */
+/* buttons – subtle, auto-width, centered */
 .btn-primary {
-  width: 100%;
-  padding: 10px 14px;
+  /* removed width: 100%; so button shrinks to text */
+  padding: 9px 22px;
   border-radius: 999px;
   border: 1px solid #4b5563;
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
-  background: #020617;
+  background: rgba(2,6,23,0.98);
   color: #e5e7eb;
-  box-shadow: 0 12px 26px rgba(0,0,0,1);
-  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.95);
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+  display: inline-flex;       /* auto width based on text */
+  align-items: center;
+  justify-content: center;
 }
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 18px 34px rgba(0,0,0,1);
+  transform: translateY(-1px);
+  box-shadow: 0 14px 26px rgba(0,0,0,1);
   border-color: #6b7280;
 }
 
-/* More appealing CTA styling */
+/* More appealing CTA styling but kept subtle */
 .btn-primary.accent {
   background: radial-gradient(circle at 0 0, #38bdf8 0, #2563eb 40%, #1d4ed8 70%, #020617 100%);
   box-shadow:
-    0 0 22px rgba(37,99,235,0.75),
-    0 14px 30px rgba(0,0,0,1);
+    0 0 18px rgba(37,99,235,0.65),
+    0 12px 24px rgba(0,0,0,1);
 }
 .btn-primary.accent:hover {
-  transform: translateY(-2px) scale(1.01);
+  transform: translateY(-1px) scale(1.01);
   box-shadow:
-    0 0 30px rgba(59,130,246,0.9),
-    0 18px 38px rgba(0,0,0,1);
+    0 0 24px rgba(59,130,246,0.85),
+    0 16px 30px rgba(0,0,0,1);
   border-color: #6b7280;
 }
 .btn-primary.accent:active {
   transform: translateY(1px) scale(0.99);
   box-shadow:
-    0 0 18px rgba(37,99,235,0.6),
+    0 0 16px rgba(37,99,235,0.6),
     0 10px 20px rgba(0,0,0,1);
 }
 
