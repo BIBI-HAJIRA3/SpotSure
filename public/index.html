@@ -217,3 +217,142 @@ input:focus {
 }
 
 /* buttons */
+.btn-primary {
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: 999px;
+  border: 1px solid #4b5563;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  background: #020617;
+  color: #e5e7eb;
+  box-shadow: 0 12px 26px rgba(0,0,0,1);
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 34px rgba(0,0,0,1);
+  border-color: #6b7280;
+}
+
+.notice {
+  font-size: 11px;
+  color: #9ca3af;
+  margin-bottom: 8px;
+  display: none;
+}
+
+.show-login {
+  display: block !important;
+  animation: cardInLogin 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes cardInLogin {
+  0% { opacity: 0; transform: translateY(22px) scale(0.95); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (max-width: 380px) {
+  .app-shell { padding: 22px 14px; }
+}
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- Splash: circular animation with overlay text -->
+  <div id="splashView">
+    <div class="splash-circle">
+      <dotlottie-wc
+        src="https://lottie.host/c740163e-18f4-4ec5-8da9-aa6bfd4ac5d3/jmImDUCtrs.lottie"
+        autoplay
+        loop
+      ></dotlottie-wc>
+      <div class="splash-text-overlay">
+        <span>DISCOVER. DECIDE. TRUST.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Login card -->
+  <div id="loginView" class="login-card">
+    <div class="login-header">
+      <div class="login-title">Welcome back</div>
+      <div class="login-sub">Tell us who you are before we show you services.</div>
+    </div>
+
+    <div class="glow-line"></div>
+
+    <div id="existingNotice" class="notice">
+      We’ve filled in your details from last time. You can change them before continuing.
+    </div>
+
+    <label class="label" for="userName">Name</label>
+    <div class="input-wrap">
+      <span class="input-icon">👤</span>
+      <input id="userName" type="text" placeholder="Eg. Bibi Hajira" />
+    </div>
+
+    <label class="label" for="userEmail">Email</label>
+    <div class="input-wrap">
+      <span class="input-icon">✉️</span>
+      <input id="userEmail" type="email" placeholder="Eg. you@example.com" />
+    </div>
+
+    <button class="btn-primary" type="button" onclick="saveProfileAndEnter()">
+      Continue to services
+    </button>
+  </div>
+
+</div>
+
+<script>
+function showLogin() {
+  const splash = document.getElementById('splashView');
+  const login = document.getElementById('loginView');
+  if (!splash || !login) return;
+
+  splash.style.display = 'none';
+  login.classList.add('show-login');
+
+  const storedName = localStorage.getItem('spotsureUsername');
+  const storedEmail = localStorage.getItem('spotsureUserEmail');
+  if (storedName || storedEmail) {
+    document.getElementById('userName').value = storedName || '';
+    document.getElementById('userEmail').value = storedEmail || '';
+    document.getElementById('existingNotice').style.display = 'block';
+  }
+}
+
+function saveProfileAndEnter() {
+  const nameEl = document.getElementById('userName');
+  const emailEl = document.getElementById('userEmail');
+  const name = (nameEl.value || '').trim();
+  const email = (emailEl.value || '').trim();
+
+  if (!name || !email) {
+    alert('Please enter your name and email.');
+    return;
+  }
+
+  localStorage.setItem('spotsureUsername', name);
+  localStorage.setItem('spotsureUserEmail', email);
+
+  window.location.href = '/services.html';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const lottieEl = document.querySelector('.splash-circle dotlottie-wc');
+  if (lottieEl) {
+    // dotlottie-wc fires 'ready' when loaded; if not, we could also add a small timeout
+    lottieEl.addEventListener('ready', () => {
+      lottieEl.classList.add('ready');
+    });
+  }
+
+  // Auto transition from splash to login after ~3 seconds
+  setTimeout(showLogin, 3000);
+});
+</script>
+</body>
+</html>
