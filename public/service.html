@@ -333,6 +333,7 @@ body::after {
 .review-date {
   font-size: 11px;
   color: #6b7280;
+  margin-bottom: 4px; /* added spacing */
 }
 
 /* no stars row inside review card */
@@ -763,6 +764,8 @@ async function loadReviews() {
         .slice(0, 2)
         .toUpperCase() || 'U';
 
+      const hasComment = !!(r.comment && r.comment.trim());
+
       item.innerHTML = `
         <div class="review-top">
           <div class="review-avatar">${initials}</div>
@@ -775,7 +778,11 @@ async function loadReviews() {
               ${buildRatingTag(r.rating)}
             </div>
             <div class="review-comment">${r.comment || ''}</div>
+            ${imagesHtml}
             <div class="review-meta-row">
+              ${
+                hasComment
+                  ? `
               <button
                 type="button"
                 class="btn-primary btn-danger-ghost review-report-button"
@@ -784,8 +791,10 @@ async function loadReviews() {
               >
                 <span class="icon">🚩</span>
               </button>
+              `
+                  : ''
+              }
             </div>
-            ${imagesHtml}
             <div id="review-report-${reviewId}" class="review-report-form" style="display:none;">
               <label style="font-size:11px; color:#9ca3af;">Why are you reporting this review?</label>
               <textarea
