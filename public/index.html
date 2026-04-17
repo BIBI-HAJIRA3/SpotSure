@@ -162,22 +162,20 @@ body::after {
 /* Inner column that holds header + form */
 .circle-inner {
   width: 100%;
-  max-width: 260px;
+  max-width: 240px;      /* narrowed a bit so content sits more central */
 
-  /* purely vertical spacing */
-  padding-top: 35px;
+  padding-top: 35px;     /* vertical spacing only */
   padding-bottom: 20px;
 
   display: flex;
   flex-direction: column;
-  align-items: center;   /* center header + form horizontally */
+  align-items: center;   /* horizontal centering */
   justify-content: center;
   gap: 16px;
 
-  /* IMPORTANT: no padding-left, no translateX */
-  /* padding-left: 75px;  <-- remove this */
-  /* transform: translateX(...);  <-- remove if present */
+  /* no padding-left, no translateX: rely on flex + widths */
 }
+
 /* Header inside circle */
 .circle-header {
   display: flex;
@@ -224,15 +222,15 @@ body::after {
 /* Form layout */
 .form {
   width: 100%;
-  max-width: 220px;   /* narrower so inputs sit closer to visual center */
-  margin: 0 auto;     /* center inside circle-inner */
+  max-width: 210px;      /* narrow form centered inside circle-inner */
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
 /* Input wrapper */
-.input-wrap is {
+.input-wrap {
   position: relative;
 }
 
