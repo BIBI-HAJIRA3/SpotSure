@@ -9,7 +9,7 @@
 <style>
 * { box-sizing: border-box; }
 
-/* Background consistent with index splash */
+/* Dark background, matching splash */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -23,17 +23,17 @@ body {
   align-items: center;
   justify-content: center;
   position: relative;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
-/* Background speckles, similar to index */
+/* Subtle speckles */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
   background-image:
-    radial-gradient(2px 2px at 20% 30%, rgba(148,163,184,0.22) 0, transparent 55%),
+    radial-gradient(2px 2px at 20% 30%, rgba(148,163,184,0.2) 0, transparent 55%),
     radial-gradient(1px 1px at 80% 70%, rgba(96,165,250,0.18) 0, transparent 55%),
     radial-gradient(1.5px 1.5px at 40% 80%, rgba(129,140,248,0.18) 0, transparent 60%);
   opacity: 0.7;
@@ -47,39 +47,50 @@ body::before {
   100% { background-position: 0% 40%; }
 }
 
+/* Center container */
 .shell {
-  max-width: 520px;
   width: 100%;
-  padding: 24px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
   z-index: 1;
 }
 
-/* Glass card aligned with index login card */
-.card {
-  width: 100%;
+/* Circular card */
+.circle-card {
+  width: 340px;
+  height: 340px;
+  border-radius: 50%;
   background:
     radial-gradient(circle at top right, rgba(59,130,246,0.18), transparent 55%),
-    rgba(15,23,42,0.94);
-  border-radius: 18px;
+    rgba(15,23,42,0.96);
   border: 1px solid rgba(55,65,81,0.9);
-  padding: 20px 18px 18px;
   box-shadow: 0 26px 80px rgba(0,0,0,0.96);
   backdrop-filter: blur(22px);
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
   transform: translateY(12px) scale(0.98);
   opacity: 0;
   animation: cardIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.card-header {
+/* Logo + title row */
+.circle-header {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
+  gap: 6px;
+  text-align: center;
 }
 
 .logo-pill {
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
@@ -91,39 +102,42 @@ body::before {
 }
 
 .title {
-  font-size: 19px;
+  font-size: 18px;
   font-weight: 700;
   color: #f9fafb;
 }
-.sub {
-  font-size: 13px;
-  color: #9ca3af;
-  margin-bottom: 18px;
-}
 
-/* Divider line similar to index */
+/* Tiny line to separate header and form */
 .glow-line {
   height: 1px;
-  width: 100%;
-  margin: 10px 0 16px;
+  width: 70%;
   background: linear-gradient(90deg, transparent, rgba(96,165,250,0.8), transparent);
   opacity: 0.8;
 }
 
-/* Form inputs – match index style */
-.label {
-  font-size: 12px;
-  color: #9ca3af;
-  margin-bottom: 4px;
-  display: block;
+/* Form area */
+.form {
+  width: 100%;
+  max-width: 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
+
+/* Minimal labels (small and subtle) */
+.label {
+  font-size: 11px;
+  color: #9ca3af;
+  margin-bottom: 2px;
+}
+
+/* Inputs */
 .input-wrap {
   position: relative;
-  margin-bottom: 12px;
 }
 .input {
   width: 100%;
-  padding: 9px 11px 9px 32px;
+  padding: 8px 11px 8px 30px;
   border-radius: 999px;
   border: 1px solid #374151;
   background: rgba(15,23,42,0.97);
@@ -143,14 +157,14 @@ body::before {
 
 .input-icon {
   position: absolute;
-  left: 11px;
+  left: 9px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 13px;
+  font-size: 12px;
   color: #6b7280;
 }
 
-/* Primary button styled like index */
+/* Primary button */
 .btn-primary {
   width: 100%;
   padding: 9px 12px;
@@ -162,7 +176,6 @@ body::before {
   background: #020617;
   color: #e5e7eb;
   box-shadow: 0 12px 26px rgba(0,0,0,1);
-  transform: translateY(0);
   transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
 }
 .btn-primary:hover {
@@ -175,67 +188,56 @@ body::before {
   box-shadow: 0 8px 18px rgba(0,0,0,1);
 }
 
-/* Optional small notice text */
-.notice {
-  font-size: 11px;
-  color: #9ca3af;
-  margin-bottom: 10px;
-}
-
-/* Animations */
+/* Entrance animation */
 @keyframes cardIn {
-  0% {
-    opacity: 0;
-    transform: translateY(18px) scale(0.96);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  0% { opacity: 0; transform: translateY(18px) scale(0.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+/* Slightly tighter on very small screens */
 @media (max-width: 380px) {
-  .card {
-    padding: 16px 14px 14px;
+  .circle-card {
+    width: 300px;
+    height: 300px;
+    padding: 18px 18px;
   }
   .title {
-    font-size: 18px;
+    font-size: 17px;
   }
 }
 </style>
 </head>
 <body>
 <div class="shell">
-  <div class="card">
-    <div class="card-header">
+  <div class="circle-card">
+    <div class="circle-header">
       <div class="logo-pill">S</div>
-      <div>
-        <div class="title">Sign in to SpotSure</div>
-        <div class="sub">Enter your details to continue.</div>
-      </div>
+      <div class="title">Sign in</div>
     </div>
 
     <div class="glow-line"></div>
 
-    <div class="notice" id="prefillNotice" style="display:none;">
-      We filled in what we remember. You can change it before continuing.
-    </div>
+    <div class="form">
+      <div>
+        <div class="label">Name</div>
+        <div class="input-wrap">
+          <span class="input-icon">👤</span>
+          <input id="userName" class="input" type="text" placeholder="Your name" />
+        </div>
+      </div>
 
-    abel class="label" for="userName">Name</label>
-    <div class="input-wrap">
-      <span class="input-icon">👤</span>
-      <input id="userName" class="input" type="text" placeholder="Your name" />
-    </div>
+      <div>
+        <div class="label">Email</div>
+        <div class="input-wrap">
+          <span class="input-icon">✉️</span>
+          <input id="userEmail" class="input" type="email" placeholder="you@example.com" />
+        </div>
+      </div>
 
-    abel class="label" for="userEmail">Email</label>
-    <div class="input-wrap">
-      <span class="input-icon">✉️</span>
-      <input id="userEmail" class="input" type="email" placeholder="you@example.com" />
+      <button class="btn-primary" type="button" onclick="saveProfileAndEnter()">
+        Continue
+      </button>
     </div>
-
-    <button class="btn-primary" type="button" onclick="saveProfileAndEnter()">
-      Continue to services
-    </button>
   </div>
 </div>
 
@@ -258,6 +260,7 @@ function saveProfileAndEnter() {
   window.location.href = '/services.html';
 }
 
+// Prefill from splash
 (function prefillIfExists() {
   const storedName = localStorage.getItem('spotsureUsername');
   const storedEmail = localStorage.getItem('spotsureUserEmail');
@@ -266,7 +269,6 @@ function saveProfileAndEnter() {
     const emailEl = document.getElementById('userEmail');
     if (storedName) nameEl.value = storedName;
     if (storedEmail) emailEl.value = storedEmail;
-    document.getElementById('prefillNotice').style.display = 'block';
   }
 })();
 </script>
