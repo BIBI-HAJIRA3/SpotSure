@@ -28,7 +28,7 @@ body {
   align-items: center;
   justify-content: center;
   position: relative;
-  overflow-x: hidden; /* allow vertical scroll */
+  overflow-x: hidden;
 }
 
 /* Background image layer */
@@ -70,31 +70,14 @@ body::after {
   z-index: 1;
 }
 
-/* SHARED GLASS CARD */
-.card {
-  background:
-    radial-gradient(circle at top right, rgba(59,130,246,0.18), transparent 55%),
-    rgba(15,23,42,0.94);
-  border-radius: 18px;
-  border: 1px solid rgba(55,65,81,0.9);
-  box-shadow: 0 26px 80px rgba(0,0,0,0.96);
-  backdrop-filter: blur(22px);
-  padding: 20px 18px 18px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-}
-.card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 32px 90px rgba(0,0,0,0.98);
-  border-color: #9ca3af;
-}
+/* === SPLASH: circular layout === */
 
-/* splash / intro section */
 #splashView {
   display: flex;
   flex-direction: column;
   align-items: center;
-  text-align: center;
-  gap: 14px;
+  justify-content: center;
+  gap: 18px;
   animation: cardFloat 4s ease-in-out infinite;
 }
 @keyframes cardFloat {
@@ -103,49 +86,54 @@ body::after {
   100% { transform: translateY(0); }
 }
 
-/* area where animation/video will sit */
-.splash-media {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  border-radius: 18px;
+/* Circle container */
+.splash-circle {
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  position: relative;
   overflow: hidden;
-  margin-bottom: 14px;
   background:
     radial-gradient(circle at 0 0, #38bdf8 0, #2563eb 32%, #1e40af 55%, #020617 100%);
+  box-shadow:
+    0 0 40px rgba(37,99,235,0.45),
+    0 18px 40px rgba(0,0,0,0.95);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* simple animated logo text as placeholder (not used now but kept if needed) */
-.logo-text {
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  animation: pulse 1.6s ease-in-out infinite;
-}
-@keyframes pulse {
-  0% { opacity: 0.4; transform: scale(0.96); }
-  50% { opacity: 1; transform: scale(1); }
-  100% { opacity: 0.4; transform: scale(0.96); }
+/* Lottie inside the circle */
+.splash-circle dotlottie-wc {
+  width: 100%;
+  height: 100%;
 }
 
-.splash-title {
+/* Text overlaid on the circle */
+.splash-text-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 26px;
+  text-align: center;
+  pointer-events: none; /* clicks go through if needed */
+}
+
+.splash-text-overlay span {
   font-size: 18px;
   font-weight: 600;
-}
-.splash-sub {
-  font-size: 13px;
-  color: #9ca3af;
-  max-width: 360px;
-}
-.splash-hint {
-  font-size: 11px;
-  color: #6b7280;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #e5e7eb;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.9);
 }
 
-/* login view */
+/* we no longer use the old card title/sub for splash */
+
+/* === LOGIN VIEW (unchanged) === */
+
 #loginView {
   display: none;
   opacity: 0;
@@ -169,6 +157,18 @@ body::after {
   margin: 8px 0 18px;
   background: linear-gradient(90deg, transparent, rgba(55,65,81,0.9), transparent);
   opacity: 0.9;
+}
+
+/* For login card we can still reuse a simple glass card */
+.login-card {
+  background:
+    radial-gradient(circle at top right, rgba(59,130,246,0.18), transparent 55%),
+    rgba(15,23,42,0.94);
+  border-radius: 18px;
+  border: 1px solid rgba(55,65,81,0.9);
+  box-shadow: 0 26px 80px rgba(0,0,0,0.96);
+  backdrop-filter: blur(22px);
+  padding: 20px 18px 18px;
 }
 
 /* inputs */
@@ -234,12 +234,6 @@ input:focus {
   margin-bottom: 8px;
   display: none;
 }
-.login-hint {
-  font-size: 11px;
-  color: #6b7280;
-  margin-top: 8px;
-  text-align: center;
-}
 
 .show-login {
   display: block !important;
@@ -257,27 +251,23 @@ input:focus {
 </head>
 <body>
 <div class="app-shell">
-  <!-- Splash / intro card -->
-  <div id="splashView" class="card">
-    <div class="splash-media">
+
+  <!-- Splash: circular animation with overlay text -->
+  <div id="splashView">
+    <div class="splash-circle">
       <dotlottie-wc
         src="https://lottie.host/c740163e-18f4-4ec5-8da9-aa6bfd4ac5d3/jmImDUCtrs.lottie"
         autoplay
         loop
-        style="width: 100%; height: 100%;"
       ></dotlottie-wc>
-    </div>
-    <div class="splash-title">Discover. Decide. Trust.</div>
-    <div class="splash-sub">
-      Hygiene & safety reviews from real people around you, so you can choose the right spot every time.
-    </div>
-    <div class="splash-hint">
-      Loading your experience…
+      <div class="splash-text-overlay">
+        <span>DISCOVER. DECIDE. TRUST.</span>
+      </div>
     </div>
   </div>
 
-  <!-- Login card -->
-  <div id="loginView" class="card">
+  <!-- Login card (unchanged logic, just wrapped in .login-card) -->
+  <div id="loginView" class="login-card">
     <div class="login-header">
       <div class="login-title">Welcome back</div>
       <div class="login-sub">Tell us who you are before we show you services.</div>
@@ -289,13 +279,13 @@ input:focus {
       We’ve filled in your details from last time. You can change them before continuing.
     </div>
 
-    <label class="label" for="userName">Name</label>
+    abel class="label" for="userName">Name</label>
     <div class="input-wrap">
       <span class="input-icon">👤</span>
       <input id="userName" type="text" placeholder="Eg. Bibi Hajira" />
     </div>
 
-    <label class="label" for="userEmail">Email</label>
+    abel class="label" for="userEmail">Email</label>
     <div class="input-wrap">
       <span class="input-icon">✉️</span>
       <input id="userEmail" type="email" placeholder="Eg. you@example.com" />
@@ -304,8 +294,8 @@ input:focus {
     <button class="btn-primary" type="button" onclick="saveProfileAndEnter()">
       Continue to services
     </button>
-
   </div>
+
 </div>
 
 <script>
