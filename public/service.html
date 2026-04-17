@@ -18,7 +18,7 @@ body {
   background-size: 200% 200%;
   animation: bgShift 18s ease-in-out infinite;
   color: #e5e7eb;
-  position: relative;        /* allow layered pseudo-elements */
+  position: relative;
 }
 
 /* full-screen image layer behind everything */
@@ -257,61 +257,55 @@ body::after {
   font-size: 11px;
   font-weight: 500;
 }
-
 .rating-tag span.emoji {
   font-size: 13px;
 }
-
 .rating-tag.excellent {
   background: rgba(22,163,74,0.16);
   color: #bbf7d0;
 }
-
 .rating-tag.good {
   background: rgba(37,99,235,0.16);
   color: #bfdbfe;
 }
-
 .rating-tag.average {
   background: rgba(245,158,11,0.16);
   color: #fed7aa;
 }
-
 .rating-tag.poor {
   background: rgba(249,115,22,0.18);
   color: #fed7aa;
 }
-
 .rating-tag.terrible {
   background: rgba(248,113,113,0.22);
   color: #fee2e2;
 }
 
-/* Reviews – new card layout */
+/* Reviews – card layout */
 .review-item {
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   font-size: 13px;
-  padding: 10px;
+  padding: 9px;
   border-radius: 12px;
   border: 1px solid #111827;
   background: radial-gradient(circle at top left, rgba(15,23,42,0.96), rgba(15,23,42,0.9));
-  box-shadow: 0 14px 30px rgba(0,0,0,0.9);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.9);
 }
 
 .review-top {
   display: flex;
-  gap: 10px;
+  gap: 8px;
 }
 
 .review-avatar {
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
   border-radius: 999px;
   background: radial-gradient(circle at 0 0, #22c55e 0, #15803d 40%, #020617 90%);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   color: #ecfdf5;
   flex-shrink: 0;
@@ -341,27 +335,19 @@ body::after {
   color: #6b7280;
 }
 
-.review-rating-row {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 4px;
-  font-size: 12px;
-  color: #e5e7eb;
-}
+/* no stars row inside review card */
 
 .review-comment {
-  margin-top: 6px;
+  margin-top: 4px;
   font-size: 13px;
   color: #d1d5db;
-  line-height: 1.5;
+  line-height: 1.4;
 }
 
 .review-meta-row {
   margin-top: 6px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   gap: 8px;
 }
@@ -387,7 +373,7 @@ body::after {
   color: #6b7280;
 }
 
-/* Stars */
+/* Stars (used for header rating text if needed) */
 .stars {
   color: #fbbf24;
   font-size: 14px;
@@ -788,12 +774,8 @@ async function loadReviews() {
               </div>
               ${buildRatingTag(r.rating)}
             </div>
-            <div class="review-rating-row">
-              ${buildStars(r.rating)} <span>${r.rating || '-'}</span>
-            </div>
             <div class="review-comment">${r.comment || ''}</div>
             <div class="review-meta-row">
-              <div></div>
               <button
                 type="button"
                 class="btn-primary btn-danger-ghost review-report-button"
