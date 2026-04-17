@@ -1,3 +1,4 @@
+<!--SpotSure/public/index.html-->
 <!DOCTYPE html>
 <html>
 <head>
@@ -81,8 +82,8 @@ body::after {
   border-color: #9ca3af;
 }
 
-/* welcome section */
-#welcomeView {
+/* splash / intro section */
+#splashView {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -95,50 +96,45 @@ body::after {
   50% { transform: translateY(-3px); }
   100% { transform: translateY(0); }
 }
-.logo-orb {
-  width: 60px;
-  height: 60px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+
+/* area where animation/video will sit */
+.splash-media {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 18px;
+  overflow: hidden;
+  margin-bottom: 14px;
   background:
     radial-gradient(circle at 0 0, #38bdf8 0, #2563eb 32%, #1e40af 55%, #020617 100%);
-  box-shadow:
-    0 0 25px rgba(37,99,235,0.6),
-    0 18px 40px rgba(15,23,42,1);
-  font-size: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.welcome-title {
+
+/* simple animated logo text as placeholder */
+.logo-text {
   font-size: 24px;
   font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  animation: pulse 1.6s ease-in-out infinite;
 }
-.welcome-sub {
+@keyframes pulse {
+  0% { opacity: 0.4; transform: scale(0.96); }
+  50% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0.4; transform: scale(0.96); }
+}
+
+.splash-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+.splash-sub {
   font-size: 13px;
   color: #9ca3af;
   max-width: 360px;
 }
-
-.pill-btn-main {
-  margin-top: 8px;
-  padding: 9px 18px;
-  border-radius: 999px;
-  border: 1px solid #4b5563;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  background: linear-gradient(90deg, #1d4ed8, #4338ca);
-  color: #e5e7eb;
-  box-shadow: 0 20px 44px rgba(0,0,0,0.95);
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, filter 0.18s ease;
-}
-.pill-btn-main:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 26px 60px rgba(0,0,0,0.98);
-  border-color: #818cf8;
-  filter: brightness(1.05);
-}
-.welcome-hint {
+.splash-hint {
   font-size: 11px;
   color: #6b7280;
 }
@@ -255,30 +251,33 @@ input:focus {
 </head>
 <body>
 <div class="app-shell">
-  <!-- Welcome card -->
-  <div id="welcomeView" class="card">
-    <div class="logo-orb">S</div>
-    <div class="welcome-title">SpotSure</div>
-    <div class="welcome-sub">
-      Discover trusted services near you, see real experiences, and make decisions with confidence.
+  <!-- Splash / intro card -->
+  <div id="splashView" class="card">
+    <div class="splash-media">
+      <!-- Replace this with a real animation/video if you want -->
+      <!-- Example: <video src="/videos/spotsure-intro.mp4" autoplay muted playsinline></video> -->
+      <div class="logo-text">SPOTSURE</div>
     </div>
-    <button class="pill-btn-main" type="button" onclick="showLogin()">
-      Get started
-    </button>
-    <div class="welcome-hint">
+    <div class="splash-title">Discover. Decide. Trust.</div>
+    <div class="splash-sub">
+      Hygiene & safety reviews from real people around you, so you can choose the right spot every time.
+    </div>
+    <div class="splash-hint">
+      Loading your experience…
     </div>
   </div>
 
   <!-- Login card -->
   <div id="loginView" class="card">
     <div class="login-header">
-      <div class="login-title"></div>
-      <div class="login-sub">.</div>
+      <div class="login-title">Welcome back</div>
+      <div class="login-sub">Tell us who you are before we show you services.</div>
     </div>
 
     <div class="glow-line"></div>
 
     <div id="existingNotice" class="notice">
+      We’ve filled in your details from last time. You can change them before continuing.
     </div>
 
     <label class="label" for="userName">Name</label>
@@ -302,10 +301,11 @@ input:focus {
 
 <script>
 function showLogin() {
-  const welcome = document.getElementById('welcomeView');
+  const splash = document.getElementById('splashView');
   const login = document.getElementById('loginView');
-  if (!welcome || !login) return;
-  welcome.style.display = 'none';
+  if (!splash || !login) return;
+
+  splash.style.display = 'none';
   login.classList.add('show-login');
 
   const storedName = localStorage.getItem('spotsureUsername');
@@ -333,6 +333,11 @@ function saveProfileAndEnter() {
 
   window.location.href = '/services.html';
 }
+
+// Auto transition from splash to login after ~3 seconds
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(showLogin, 3000);
+});
 </script>
 </body>
 </html>
