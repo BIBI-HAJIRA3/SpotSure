@@ -132,7 +132,7 @@ body::after {
   text-shadow: 0 2px 10px rgba(0,0,0,0.9);
 }
 
-/* === LOGIN VIEW (rewritten circular login) === */
+/* === LOGIN VIEW (circular login, responsive) === */
 
 /* Hidden by default; animation handled via .show-login */
 #loginView {
@@ -145,7 +145,7 @@ body::after {
   width: 380px;
   height: 380px;
   max-width: 90vw;           /* never exceed viewport width */
-  max-height: 90vw;  
+  max-height: 90vw;          /* keep it circular on small screens */
   border-radius: 50%;
   background:
     radial-gradient(circle at top right, rgba(59,130,246,0.16), transparent 55%),
@@ -157,9 +157,6 @@ body::after {
   display: flex;
   align-items: center;    /* centers inner content vertically */
   justify-content: center;/* centers inner content horizontally */
-
-  /* If you ever want to nudge the WHOLE circle:
-     transform: translateX(4px) translateY(6px); */
 }
 
 /* Inner column that holds header + form */
@@ -170,17 +167,20 @@ body::after {
   /* TOP PADDING:
      - Increase padding-top to push content DOWN
      - Decrease padding-top to pull content UP */
-  padding-top: 40px;   /* <--- main control for vertical offset from top */
+  padding-top: 40px;        /* vertical offset */
 
   /* You can also tweak bottom padding if needed */
   padding-bottom: 20px;
-   padding-left: 55px;
+
+  /* LEFT PADDING:
+     - This shifts header + fields to the RIGHT inside the circle */
+  padding-left: 40px;
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center; /* keeps header+form vertically centered within this box */
   gap: 16px;
- 
 }
 
 /* Header inside circle */
@@ -223,12 +223,13 @@ body::after {
 /* Form layout */
 .form {
   width: 100%;
-  max-width: 260px;     /* added: make form narrower */
-  margin: 0 auto;       /* added: center the form horizontally */
+  max-width: 260px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
+
 /* Input wrapper */
 .input-wrap {
   position: relative;
@@ -237,12 +238,8 @@ body::after {
 /* Text inputs */
 input {
   width: 100%;
-
-  /* LEFT PADDING:
-     order is: padding-top, padding-right, padding-bottom, padding-left
-     - Increase padding-left to push text further right
-     - Decrease padding-left to pull text closer to the left edge */
-  padding: 10px 14px 10px 36px; /* <--- left padding is the last value */
+  /* padding: top right bottom left */
+  padding: 10px 14px 10px 36px;
 
   border-radius: 999px;
   border: 1px solid #374151;
@@ -264,12 +261,7 @@ input:focus {
 /* Left icon inside input */
 .input-icon {
   position: absolute;
-
-  /* LEFT OFFSET:
-     - Increase 'left' to move icon RIGHT
-     - Decrease 'left' to move icon closer to the edge (LEFT) */
-  left: 12px;  /* <--- main control for icon's left offset */
-
+  left: 12px;
   top: 50%;
   transform: translateY(-50%);
   font-size: 14px;
@@ -332,6 +324,8 @@ input:focus {
   .circle-login {
     width: 320px;
     height: 320px;
+    max-width: 90vw;
+    max-height: 90vw;
   }
 }
 </style>
