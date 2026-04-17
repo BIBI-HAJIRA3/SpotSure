@@ -162,18 +162,16 @@ body::after {
 /* Inner column that holds header + form */
 .circle-inner {
   width: 100%;
-  max-width: 240px;      /* narrowed a bit so content sits more central */
+  max-width: 230px;        /* narrowed to bring content closer to visual center */
 
-  padding-top: 35px;     /* vertical spacing only */
+  padding-top: 35px;       /* vertical spacing */
   padding-bottom: 20px;
 
   display: flex;
   flex-direction: column;
-  align-items: center;   /* horizontal centering */
+  align-items: center;     /* horizontal centering */
   justify-content: center;
   gap: 16px;
-
-  /* no padding-left, no translateX: rely on flex + widths */
 }
 
 /* Header inside circle */
@@ -222,7 +220,7 @@ body::after {
 /* Form layout */
 .form {
   width: 100%;
-  max-width: 210px;      /* narrow form centered inside circle-inner */
+  max-width: 200px;        /* slightly narrower form to center fields visually */
   margin: 0 auto;
   display: flex;
   flex-direction: column;
