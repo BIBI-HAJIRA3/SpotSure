@@ -21,7 +21,7 @@ body {
   position: relative;        /* allow layered pseudo-elements */
 }
 
-/* NEW: full-screen image layer behind everything */
+/* full-screen image layer behind everything */
 body::before {
   content: "";
   position: fixed;
@@ -32,7 +32,7 @@ body::before {
   z-index: -2;
 }
 
-/* Existing speckle layer – moved to ::after, kept exactly the same visuals */
+/* speckle layer */
 body::after {
   content: "";
   position: fixed;
@@ -247,37 +247,147 @@ body::after {
   padding: 6px 8px;
 }
 
-/* Reviews */
-.review-item {
-  margin-bottom: 10px;
+/* Rating face pill for each review */
+.rating-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.rating-tag span.emoji {
   font-size: 13px;
 }
-.review-meta {
+
+.rating-tag.excellent {
+  background: rgba(22,163,74,0.16);
+  color: #bbf7d0;
+}
+
+.rating-tag.good {
+  background: rgba(37,99,235,0.16);
+  color: #bfdbfe;
+}
+
+.rating-tag.average {
+  background: rgba(245,158,11,0.16);
+  color: #fed7aa;
+}
+
+.rating-tag.poor {
+  background: rgba(249,115,22,0.18);
+  color: #fed7aa;
+}
+
+.rating-tag.terrible {
+  background: rgba(248,113,113,0.22);
+  color: #fee2e2;
+}
+
+/* Reviews – new card layout */
+.review-item {
+  margin-bottom: 12px;
+  font-size: 13px;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid #111827;
+  background: radial-gradient(circle at top left, rgba(15,23,42,0.96), rgba(15,23,42,0.9));
+  box-shadow: 0 14px 30px rgba(0,0,0,0.9);
+}
+
+.review-top {
+  display: flex;
+  gap: 10px;
+}
+
+.review-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 0 0, #22c55e 0, #15803d 40%, #020617 90%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ecfdf5;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+.review-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.review-header-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.review-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #e5e7eb;
+}
+
+.review-date {
   font-size: 11px;
-  color: #9ca3af;
+  color: #6b7280;
+}
+
+.review-rating-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #e5e7eb;
+}
+
+.review-comment {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #d1d5db;
+  line-height: 1.5;
+}
+
+.review-meta-row {
+  margin-top: 6px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
+
 .review-images {
-  margin-top: 4px;
+  margin-top: 6px;
   display: flex;
   gap: 4px;
   flex-wrap: wrap;
 }
+
 .review-thumb {
   width: 40px;
   height: 40px;
-  border-radius: 4px;
+  border-radius: 6px;
   object-fit: cover;
   cursor: pointer;
   border: 1px solid #4b5563;
 }
+
 .no-reviews {
   font-size: 13px;
   color: #6b7280;
 }
+
+/* Stars */
 .stars {
   color: #fbbf24;
   font-size: 14px;
@@ -302,6 +412,12 @@ body::after {
   color: #e5e7eb;
   font-size: 12px;
   padding: 6px 8px;
+}
+
+/* Compact report button inside card */
+.review-report-button {
+  padding: 3px 8px;
+  font-size: 11px;
 }
 
 /* Toast */
@@ -415,7 +531,6 @@ body::after {
 </div>
 
 <script>
-/* JS unchanged */
 const API_BASE = window.location.origin + '/api';
 let toastTimer = null;
 let currentService = null;
@@ -579,6 +694,43 @@ async function loadService() {
   }
 }
 
+/* Rating face pill builder */
+function buildRatingTag(rating) {
+  const r = Number(rating || 0);
+  let label = 'Not rated';
+  let emoji = '😐';
+  let cls = 'average';
+
+  if (r >= 4.5) {
+    label = 'Excellent';
+    emoji = '😍';
+    cls = 'excellent';
+  } else if (r >= 3.5) {
+    label = 'Good';
+    emoji = '🙂';
+    cls = 'good';
+  } else if (r >= 2.5) {
+    label = 'Average';
+    emoji = '😐';
+    cls = 'average';
+  } else if (r >= 1.5) {
+    label = 'Poor';
+    emoji = '🙁';
+    cls = 'poor';
+  } else if (r > 0) {
+    label = 'Terrible';
+    emoji = '😖';
+    cls = 'terrible';
+  }
+
+  return `
+    <span class="rating-tag ${cls}">
+      <span class="emoji">${emoji}</span>
+      <span>${label}</span>
+    </span>
+  `;
+}
+
 async function loadReviews() {
   const id = getServiceIdFromUrl();
   if (!id) return;
@@ -615,38 +767,62 @@ async function loadReviews() {
       }
 
       const reviewId = r._id || '';
+      const createdAt = r.createdAt ? new Date(r.createdAt).toLocaleDateString() : '';
+      const username = r.username || 'Anonymous';
+      const initials = username
+        .split(' ')
+        .filter(Boolean)
+        .map(part => part.charAt(0))
+        .join('')
+        .slice(0, 2)
+        .toUpperCase() || 'U';
 
       item.innerHTML = `
-        <div>${buildStars(r.rating)} <span>${r.rating}</span> – ${r.comment || ''}</div>
-        <div class="review-meta">
-          <span>${r.username || 'Anonymous'}</span>
-          <button
-            type="button"
-            class="btn-primary btn-danger-ghost"
-            style="padding:3px 8px; font-size:11px;"
-            onclick="toggleReviewReport('${reviewId}')"
-            title="Report review"
-          >
-            <span class="icon">🚩</span>
-          </button>
-        </div>
-        ${imagesHtml}
-        <div id="review-report-${reviewId}" class="review-report-form" style="display:none;">
-          <label style="font-size:11px; color:#9ca3af;">Why are you reporting this review?</label>
-          <textarea
-            class="review-report-textarea"
-            id="review-report-text-${reviewId}"
-            placeholder="Describe the issue..."
-          ></textarea>
-          <div style="margin-top:6px; display:flex; justify-content:flex-end; gap:6px;">
-            <button
-              type="button"
-              class="btn-primary btn-danger-ghost"
-              style="padding:4px 10px; font-size:12px;"
-              onclick="submitReviewReport('${reviewId}')"
-            >
-              Submit
-            </button>
+        <div class="review-top">
+          <div class="review-avatar">${initials}</div>
+          <div class="review-main">
+            <div class="review-header-line">
+              <div>
+                <div class="review-name">${username}</div>
+                <div class="review-date">${createdAt}</div>
+              </div>
+              ${buildRatingTag(r.rating)}
+            </div>
+            <div class="review-rating-row">
+              ${buildStars(r.rating)} <span>${r.rating || '-'}</span>
+            </div>
+            <div class="review-comment">${r.comment || ''}</div>
+            <div class="review-meta-row">
+              <div></div>
+              <button
+                type="button"
+                class="btn-primary btn-danger-ghost review-report-button"
+                onclick="toggleReviewReport('${reviewId}')"
+                title="Report review"
+              >
+                <span class="icon">🚩</span>
+                <span>Report</span>
+              </button>
+            </div>
+            ${imagesHtml}
+            <div id="review-report-${reviewId}" class="review-report-form" style="display:none;">
+              <label style="font-size:11px; color:#9ca3af;">Why are you reporting this review?</label>
+              <textarea
+                class="review-report-textarea"
+                id="review-report-text-${reviewId}"
+                placeholder="Describe the issue..."
+              ></textarea>
+              <div style="margin-top:6px; display:flex; justify-content:flex-end; gap:6px;">
+                <button
+                  type="button"
+                  class="btn-primary btn-danger-ghost"
+                  style="padding:4px 10px; font-size:12px;"
+                  onclick="submitReviewReport('${reviewId}')"
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       `;
