@@ -22,14 +22,14 @@ body {
   overflow-x: hidden; /* allow vertical scroll */
 }
 
-/* Background image layer */
+/* Background image layer – softened to sync with index */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
   background: url("/images/bg1.jpg") center center / cover no-repeat;
-  opacity: 0.35;
+  opacity: 0.25;           /* was 0.35 – more subtle over same bg1 */
   z-index: -2;
 }
 
@@ -213,14 +213,14 @@ body::after {
 .service-card {
   display: flex;
   gap: 12px;
-  background: rgba(15,23,42,0.94);
+  background: rgba(15,23,42,0.90);              /* was 0.94 – slightly more glassy */
   border-radius: 18px;
   padding: 13px;
-  box-shadow: 0 26px 80px rgba(0,0,0,0.96);
+  box-shadow: 0 24px 70px rgba(0,0,0,0.95);      /* softened to match login vibe */
   cursor: pointer;
-  border: 1px solid rgba(31,41,55,0.9);
+  border: 1px solid rgba(31,41,55,0.88);
   transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
-  backdrop-filter: blur(18px);
+  backdrop-filter: blur(20px);                   /* was 18px – tiny bump in blur */
 }
 .service-card:hover {
   transform: translateY(-1px);
