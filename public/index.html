@@ -5,6 +5,10 @@
 <meta charset="UTF-8" />
 <title>SpotSure – Discover. Decide. Trust.</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<!-- Lottie player for Reviews animation -->
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
 <style>
 * { box-sizing: border-box; }
 
@@ -111,7 +115,7 @@ body::after {
   justify-content: center;
 }
 
-/* simple animated logo text as placeholder */
+/* simple animated logo text as placeholder (not used now but kept if needed) */
 .logo-text {
   font-size: 24px;
   font-weight: 700;
@@ -254,9 +258,15 @@ input:focus {
   <!-- Splash / intro card -->
   <div id="splashView" class="card">
     <div class="splash-media">
-      <!-- Replace this with a real animation/video if you want -->
-      <!-- Example: <video src="/videos/spotsure-intro.mp4" autoplay muted playsinline></video> -->
-      <div class="logo-text">SPOTSURE</div>
+      <!-- Lottie Reviews animation -->
+      <lottie-player
+        src="https://assets-v2.lottiefiles.com/a/2bc96fb0-5f87-11ee-a3cd-f38ec78c4cff/69n2sSDUSg.lottie"
+        background="transparent"
+        speed="1"
+        style="width: 100%; height: 100%;"
+        loop
+        autoplay
+      ></lottie-player>
     </div>
     <div class="splash-title">Discover. Decide. Trust.</div>
     <div class="splash-sub">
