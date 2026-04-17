@@ -132,7 +132,7 @@ body::after {
   text-shadow: 0 2px 10px rgba(0,0,0,0.9);
 }
 
-/* === LOGIN VIEW (now circular & minimal) === */
+/* === LOGIN VIEW (circular & minimal, more spacious) === */
 
 #loginView {
   display: none;
@@ -142,8 +142,8 @@ body::after {
 
 /* Circular login inside index */
 .circle-login {
-  width: 340px;
-  height: 340px;
+  width: 400px;          /* was 340px */
+  height: 400px;         /* was 340px */
   border-radius: 50%;
   background:
     radial-gradient(circle at top right, rgba(59,130,246,0.18), transparent 55%),
@@ -151,13 +151,13 @@ body::after {
   border: 1px solid rgba(55,65,81,0.9);
   box-shadow: 0 26px 80px rgba(0,0,0,0.96);
   backdrop-filter: blur(22px);
-  padding: 22px 26px;
+  padding: 32px 32px;    /* was 22px 26px */
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 14px;
+  gap: 20px;             /* was 14px */
 }
 
 /* Header inside circle */
@@ -165,13 +165,13 @@ body::after {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 8px;              /* was 6px */
   text-align: center;
 }
 
 .logo-pill {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
@@ -183,7 +183,7 @@ body::after {
 }
 
 .login-title {
-  font-size: 18px;
+  font-size: 19px;       /* was 18px */
   font-weight: 700;
   color: #f9fafb;
 }
@@ -192,7 +192,7 @@ body::after {
 .glow-line {
   height: 1px;
   width: 70%;
-  margin: 4px 0 8px;
+  margin: 10px 0 12px;   /* was 4px 0 8px */
   background: linear-gradient(90deg, transparent, rgba(96,165,250,0.8), transparent);
   opacity: 0.8;
 }
@@ -200,23 +200,23 @@ body::after {
 /* Form layout inside the circle */
 .form {
   width: 100%;
-  max-width: 260px;
+  max-width: 280px;      /* was 260px */
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;             /* was 10px */
 }
 
 /* inputs */
 .input-wrap {
   position: relative;
-  margin-bottom: 0; /* gap handled by .form */
+  margin-bottom: 0;
 }
 input {
   width: 100%;
-  padding: 9px 12px 9px 32px;
+  padding: 11px 14px 11px 36px; /* was 9px 12px 9px 32px */
   border-radius: 999px;
   border: 1px solid #374151;
-  font-size: 13px;
+  font-size: 14px;              /* was 13px */
   outline: none;
   background: rgba(15,23,42,0.97);
   color: #e5e7eb;
@@ -230,10 +230,10 @@ input:focus {
 }
 .input-icon {
   position: absolute;
-  left: 11px;
+  left: 12px;                   /* was 11px */
   top: 50%;
   transform: translateY(-50%);
-  font-size: 13px;
+  font-size: 14px;              /* was 13px */
   color: #6b7280;
 }
 
@@ -259,7 +259,8 @@ input:focus {
 
 /* More appealing CTA styling */
 .btn-primary.accent {
-  padding: 10px 14px;
+  padding: 12px 16px;           /* was 10px 14px */
+  font-size: 15px;              /* slightly larger */
   background: radial-gradient(circle at 0 0, #38bdf8 0, #2563eb 40%, #1d4ed8 70%, #020617 100%);
   box-shadow:
     0 0 24px rgba(37,99,235,0.7),
@@ -291,9 +292,9 @@ input:focus {
 @media (max-width: 380px) {
   .app-shell { padding: 22px 14px; }
   .circle-login {
-    width: 300px;
-    height: 300px;
-    padding: 18px 18px;
+    width: 320px;
+    height: 320px;
+    padding: 24px 22px;
   }
 }
 </style>
