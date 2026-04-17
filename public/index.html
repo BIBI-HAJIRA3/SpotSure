@@ -148,14 +148,14 @@ body::after {
   max-height: 90vw;
   border-radius: 50%;
 
-  /* Strong glass / transparency: background clearly visible */
+  /* ~75% transparent glass circle */
   background:
-    radial-gradient(circle at top right, rgba(59,130,246,0.14), transparent 55%),
-    rgba(15,23,42,0.35);   /* VERY transparent, lets bg1.jpg show through */
+    radial-gradient(circle at top right, rgba(59,130,246,0.12), transparent 55%),
+    rgba(15,23,42,0.25);   /* 0.25 ≈ 25% opaque, 75% transparent */
 
-  border: 1px solid rgba(148,163,184,0.75);   /* lighter, glassy border */
-  box-shadow: 0 18px 40px rgba(0,0,0,0.7);    /* not too heavy */
-  backdrop-filter: blur(26px);                /* blur background so text stays readable */
+  border: none;                              /* no white/visible outline */
+  box-shadow: 0 18px 40px rgba(0,0,0,0.65);  /* soft shadow so it still reads as a card */
+  backdrop-filter: blur(26px);               /* blur background for legibility */
 
   margin: 0 auto;
   display: flex;
