@@ -132,7 +132,7 @@ body::after {
   text-shadow: 0 2px 10px rgba(0,0,0,0.9);
 }
 
-/* === LOGIN VIEW === */
+/* === LOGIN VIEW (now circular & minimal) === */
 
 #loginView {
   display: none;
@@ -140,42 +140,76 @@ body::after {
   transform: translateY(16px) scale(0.97);
 }
 
-/* glass card for login */
-.login-card {
+/* Circular login inside index */
+.circle-login {
+  width: 340px;
+  height: 340px;
+  border-radius: 50%;
   background:
     radial-gradient(circle at top right, rgba(59,130,246,0.18), transparent 55%),
-    rgba(15,23,42,0.94);
-  border-radius: 18px;
+    rgba(15,23,42,0.96);
   border: 1px solid rgba(55,65,81,0.9);
   box-shadow: 0 26px 80px rgba(0,0,0,0.96);
   backdrop-filter: blur(22px);
-  padding: 20px 18px 18px;
+  padding: 22px 26px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
 }
 
-.login-header {
-  margin-bottom: 10px;
+/* Header inside circle */
+.circle-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
 }
+
+.logo-pill {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 0 0, #38bdf8 0, #2563eb 40%, #1d4ed8 65%, #020617 100%);
+  box-shadow: 0 8px 20px rgba(37,99,235,0.75);
+  font-size: 18px;
+  color: #eff6ff;
+}
+
 .login-title {
-  font-size: 19px;
+  font-size: 18px;
   font-weight: 700;
-}
-.login-sub {
-  font-size: 13px;
-  color: #9ca3af;
+  color: #f9fafb;
 }
 
+/* Line between header and form */
 .glow-line {
   height: 1px;
+  width: 70%;
+  margin: 4px 0 8px;
+  background: linear-gradient(90deg, transparent, rgba(96,165,250,0.8), transparent);
+  opacity: 0.8;
+}
+
+/* Form layout inside the circle */
+.form {
   width: 100%;
-  margin: 8px 0 18px;
-  background: linear-gradient(90deg, transparent, rgba(55,65,81,0.9), transparent);
-  opacity: 0.9;
+  max-width: 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 /* inputs */
 .input-wrap {
   position: relative;
-  margin-bottom: 10px;
+  margin-bottom: 0; /* gap handled by .form */
 }
 input {
   width: 100%;
@@ -202,12 +236,6 @@ input:focus {
   font-size: 13px;
   color: #6b7280;
 }
-.label {
-  font-size: 12px;
-  color: #9ca3af;
-  margin-bottom: 4px;
-  display: block;
-}
 
 /* buttons */
 .btn-primary {
@@ -229,11 +257,26 @@ input:focus {
   border-color: #6b7280;
 }
 
-.notice {
-  font-size: 11px;
-  color: #9ca3af;
-  margin-bottom: 8px;
-  display: none;
+/* More appealing CTA styling */
+.btn-primary.accent {
+  padding: 10px 14px;
+  background: radial-gradient(circle at 0 0, #38bdf8 0, #2563eb 40%, #1d4ed8 70%, #020617 100%);
+  box-shadow:
+    0 0 24px rgba(37,99,235,0.7),
+    0 14px 30px rgba(0,0,0,1);
+}
+.btn-primary.accent:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow:
+    0 0 30px rgba(59,130,246,0.9),
+    0 18px 38px rgba(0,0,0,1);
+  border-color: #6b7280;
+}
+.btn-primary.accent:active {
+  transform: translateY(1px) scale(0.99);
+  box-shadow:
+    0 0 18px rgba(37,99,235,0.6),
+    0 10px 20px rgba(0,0,0,1);
 }
 
 .show-login {
@@ -247,6 +290,11 @@ input:focus {
 
 @media (max-width: 380px) {
   .app-shell { padding: 22px 14px; }
+  .circle-login {
+    width: 300px;
+    height: 300px;
+    padding: 18px 18px;
+  }
 }
 </style>
 </head>
@@ -267,34 +315,38 @@ input:focus {
     </div>
   </div>
 
-  <!-- Login card -->
-  <div id="loginView" class="login-card">
-    <div class="login-header">
+  <!-- Circular login (inline) -->
+  <div id="loginView" class="circle-login">
+    <div class="circle-header">
+      <div class="logo-pill">S</div>
       <div class="login-title">Welcome back</div>
-      <div class="login-sub">Tell us who you are before we show you services.</div>
     </div>
 
     <div class="glow-line"></div>
 
-    <div id="existingNotice" class="notice">
-      We’ve filled in your details from last time. You can change them before continuing.
-    </div>
+    <div class="form">
+      <div class="input-wrap">
+        <span class="input-icon">👤</span>
+        <input
+          id="userName"
+          type="text"
+          placeholder="Your name"
+        />
+      </div>
 
-    <label class="label" for="userName">Name</label>
-    <div class="input-wrap">
-      <span class="input-icon">👤</span>
-      <input id="userName" type="text" placeholder="Eg. Bibi Hajira" />
-    </div>
+      <div class="input-wrap">
+        <span class="input-icon">✉️</span>
+        <input
+          id="userEmail"
+          type="email"
+          placeholder="you@example.com"
+        />
+      </div>
 
-    <label class="label" for="userEmail">Email</label>
-    <div class="input-wrap">
-      <span class="input-icon">✉️</span>
-      <input id="userEmail" type="email" placeholder="Eg. you@example.com" />
+      <button class="btn-primary accent" type="button" onclick="saveProfileAndEnter()">
+        Continue to services
+      </button>
     </div>
-
-    <button class="btn-primary" type="button" onclick="saveProfileAndEnter()">
-      Continue to services
-    </button>
   </div>
 
 </div>
@@ -313,7 +365,6 @@ function showLogin() {
   if (storedName || storedEmail) {
     document.getElementById('userName').value = storedName || '';
     document.getElementById('userEmail').value = storedEmail || '';
-    document.getElementById('existingNotice').style.display = 'block';
   }
 }
 
