@@ -309,7 +309,7 @@ async function handleReviewSubmit(e) {
     const stars = document.querySelectorAll('#starRating span');
     stars.forEach((star) => { star.textContent = '☆'; });
 
-    showToast('Review added');
+    showToast('Thank you for your review! It has been added.');
 
     setTimeout(() => {
       window.location.href = '/service.html?id=' + encodeURIComponent(serviceId);
