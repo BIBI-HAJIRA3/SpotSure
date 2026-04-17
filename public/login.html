@@ -9,7 +9,7 @@
 <style>
 * { box-sizing: border-box; }
 
-/* Dark background, matching splash */
+/* Dark background, consistent with splash */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -57,7 +57,7 @@ body::before {
   z-index: 1;
 }
 
-/* Circular card */
+/* Circular login card */
 .circle-card {
   width: 340px;
   height: 340px;
@@ -68,7 +68,7 @@ body::before {
   border: 1px solid rgba(55,65,81,0.9);
   box-shadow: 0 26px 80px rgba(0,0,0,0.96);
   backdrop-filter: blur(22px);
-  padding: 22px 24px;
+  padding: 22px 26px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -79,7 +79,7 @@ body::before {
   animation: cardIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Logo + title row */
+/* Header: logo + Welcome back */
 .circle-header {
   display: flex;
   flex-direction: column;
@@ -107,7 +107,7 @@ body::before {
   color: #f9fafb;
 }
 
-/* Tiny line to separate header and form */
+/* Subtle line between header and form */
 .glow-line {
   height: 1px;
   width: 70%;
@@ -115,20 +115,13 @@ body::before {
   opacity: 0.8;
 }
 
-/* Form area */
+/* Form (no headings, just placeholders) */
 .form {
   width: 100%;
   max-width: 260px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-}
-
-/* Minimal labels (small and subtle) */
-.label {
-  font-size: 11px;
-  color: #9ca3af;
-  margin-bottom: 2px;
 }
 
 /* Inputs */
@@ -164,28 +157,39 @@ body::before {
   color: #6b7280;
 }
 
-/* Primary button */
+/* More appealing primary button */
 .btn-primary {
   width: 100%;
-  padding: 9px 12px;
+  padding: 10px 14px;
   border-radius: 999px;
   border: 1px solid #4b5563;
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
-  background: #020617;
+  background: radial-gradient(circle at 0 0, #38bdf8 0, #2563eb 40%, #1d4ed8 70%, #020617 100%);
   color: #e5e7eb;
-  box-shadow: 0 12px 26px rgba(0,0,0,1);
-  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+  box-shadow:
+    0 0 24px rgba(37,99,235,0.7),
+    0 14px 30px rgba(0,0,0,1);
+  transition:
+    transform 0.16s ease,
+    box-shadow 0.16s ease,
+    filter 0.16s ease,
+    border-color 0.16s ease;
 }
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 18px 34px rgba(0,0,0,1);
+  transform: translateY(-2px) scale(1.01);
+  box-shadow:
+    0 0 30px rgba(59,130,246,0.9),
+    0 18px 38px rgba(0,0,0,1);
+  filter: brightness(1.03);
   border-color: #6b7280;
 }
 .btn-primary:active {
-  transform: translateY(1px);
-  box-shadow: 0 8px 18px rgba(0,0,0,1);
+  transform: translateY(1px) scale(0.99);
+  box-shadow:
+    0 0 18px rgba(37,99,235,0.6),
+    0 10px 20px rgba(0,0,0,1);
 }
 
 /* Entrance animation */
@@ -212,30 +216,34 @@ body::before {
   <div class="circle-card">
     <div class="circle-header">
       <div class="logo-pill">S</div>
-      <div class="title">Sign in</div>
+      <div class="title">Welcome back</div>
     </div>
 
     <div class="glow-line"></div>
 
     <div class="form">
-      <div>
-        <div class="label">Name</div>
-        <div class="input-wrap">
-          <span class="input-icon">👤</span>
-          <input id="userName" class="input" type="text" placeholder="Your name" />
-        </div>
+      <div class="input-wrap">
+        <span class="input-icon">👤</span>
+        <input
+          id="userName"
+          class="input"
+          type="text"
+          placeholder="Your name"
+        />
       </div>
 
-      <div>
-        <div class="label">Email</div>
-        <div class="input-wrap">
-          <span class="input-icon">✉️</span>
-          <input id="userEmail" class="input" type="email" placeholder="you@example.com" />
-        </div>
+      <div class="input-wrap">
+        <span class="input-icon">✉️</span>
+        <input
+          id="userEmail"
+          class="input"
+          type="email"
+          placeholder="you@example.com"
+        />
       </div>
 
       <button class="btn-primary" type="button" onclick="saveProfileAndEnter()">
-        Continue
+        Continue to services
       </button>
     </div>
   </div>
@@ -260,7 +268,7 @@ function saveProfileAndEnter() {
   window.location.href = '/services.html';
 }
 
-// Prefill from splash
+// Prefill from splash, no extra text
 (function prefillIfExists() {
   const storedName = localStorage.getItem('spotsureUsername');
   const storedEmail = localStorage.getItem('spotsureUserEmail');
