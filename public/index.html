@@ -162,16 +162,17 @@ body::after {
 /* Inner column that holds header + form */
 .circle-inner {
   width: 100%;
-  max-width: 230px;        /* narrowed to bring content closer to visual center */
+  max-width: 220px;        /* slightly narrower */
+  margin: 0 auto;          /* ensure inner column is centered */
 
-  padding-top: 35px;       /* vertical spacing */
-  padding-bottom: 20px;
+  padding-top: 28px;       /* slightly reduced to center content */
+  padding-bottom: 18px;
 
   display: flex;
   flex-direction: column;
-  align-items: center;     /* horizontal centering */
+  align-items: center;     /* center header, line, form block */
   justify-content: center;
-  gap: 16px;
+  gap: 14px;
 }
 
 /* Header inside circle */
@@ -236,7 +237,7 @@ body::after {
 input {
   width: 100%;
   /* padding: top right bottom left */
-  padding: 10px 14px 10px 36px;
+  padding: 10px 14px 10px 32px;  /* reduced left padding */
 
   border-radius: 999px;
   border: 1px solid #374151;
@@ -258,7 +259,7 @@ input:focus {
 /* Left icon inside input */
 .input-icon {
   position: absolute;
-  left: 12px;
+  left: 10px;              /* slightly reduced */
   top: 50%;
   transform: translateY(-50%);
   font-size: 14px;
