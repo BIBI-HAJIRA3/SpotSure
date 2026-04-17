@@ -132,34 +132,52 @@ body::after {
   text-shadow: 0 2px 10px rgba(0,0,0,0.9);
 }
 
-/* === LOGIN VIEW (circular & minimal, more spacious) === */
+/* === LOGIN VIEW (rewritten circular login) === */
 
+/* Hidden by default; animation handled via .show-login */
 #loginView {
   display: none;
   opacity: 0;
-  transform: translateY(16px) scale(0.97);
 }
 
-/* Circular login inside index */
+/* Outer circle container for login */
 .circle-login {
-  width: 400px;
-  height: 400px;
+  width: 380px;
+  height: 380px;
   border-radius: 50%;
   background:
-    radial-gradient(circle at top right, rgba(59,130,246,0.18), transparent 55%),
+    radial-gradient(circle at top right, rgba(59,130,246,0.16), transparent 55%),
     rgba(15,23,42,0.96);
   border: 1px solid rgba(55,65,81,0.9);
-  box-shadow: 0 26px 80px rgba(0,0,0,0.96);
+  box-shadow: 0 24px 70px rgba(0,0,0,0.96);
   backdrop-filter: blur(22px);
-  padding: 32px 32px;
   margin: 0 auto;
   display: flex;
+  align-items: center;    /* centers inner content vertically */
+  justify-content: center;/* centers inner content horizontally */
+
+  /* If you ever want to nudge the WHOLE circle:
+     transform: translateX(4px) translateY(6px); */
+}
+
+/* Inner column that holds header + form */
+.circle-inner {
+  width: 100%;
+  max-width: 260px;
+
+  /* TOP PADDING:
+     - Increase padding-top to push content DOWN
+     - Decrease padding-top to pull content UP */
+  padding-top: 26px;   /* <--- main control for vertical offset from top */
+
+  /* You can also tweak bottom padding if needed */
+  padding-bottom: 20px;
+
+  display: flex;
   flex-direction: column;
-  align-items: center;   /* centers header + form as a block */
-  justify-content: center;
-  gap: 20px;
-  /* small nudge to the right and down */
-  transform: translate(14px, 12px);
+  align-items: center;
+  justify-content: center; /* keeps header+form vertically centered within this box */
+  gap: 16px;
 }
 
 /* Header inside circle */
@@ -167,25 +185,25 @@ body::after {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   text-align: center;
 }
 
 .logo-pill {
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(circle at 0 0, #38bdf8 0, #2563eb 40%, #1d4ed8 65%, #020617 100%);
-  box-shadow: 0 8px 20px rgba(37,99,235,0.75);
+  background: radial-gradient(circle at 0 0, #38bdf8 0, #2563eb 40%, #0b1120 100%);
+  box-shadow: 0 6px 18px rgba(37,99,235,0.8);
   font-size: 18px;
   color: #eff6ff;
 }
 
 .login-title {
-  font-size: 19px;
+  font-size: 18px;
   font-weight: 700;
   color: #f9fafb;
 }
@@ -194,28 +212,34 @@ body::after {
 .glow-line {
   height: 1px;
   width: 70%;
-  margin: 10px 0 12px;
-  background: linear-gradient(90deg, transparent, rgba(96,165,250,0.8), transparent);
-  opacity: 0.8;
+  margin: 6px 0 10px;
+  background: linear-gradient(90deg, transparent, rgba(75,85,99,0.95), transparent);
+  opacity: 0.85;
 }
 
-/* Form layout inside the circle */
+/* Form layout */
 .form {
   width: 100%;
-  max-width: 260px;      /* slightly narrower so it sits more centered */
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
-/* inputs */
+/* Input wrapper */
 .input-wrap {
   position: relative;
-  margin-bottom: 0;
 }
+
+/* Text inputs */
 input {
   width: 100%;
-  padding: 11px 14px 11px 34px; /* slightly less left padding than before */
+
+  /* LEFT PADDING:
+     order is: padding-top, padding-right, padding-bottom, padding-left
+     - Increase padding-left to push text further right
+     - Decrease padding-left to pull text closer to the left edge */
+  padding: 10px 14px 10px 36px; /* <--- left padding is the last value */
+
   border-radius: 999px;
   border: 1px solid #374151;
   font-size: 14px;
@@ -223,17 +247,26 @@ input {
   background: rgba(15,23,42,0.97);
   color: #e5e7eb;
 }
+
 input::placeholder {
   color: #6b7280;
 }
+
 input:focus {
   border-color: #4b5563;
   box-shadow: 0 0 0 1px rgba(55,65,81,0.8);
 }
+
+/* Left icon inside input */
 .input-icon {
   position: absolute;
-  left: 15px;           /* nudged in to balance */
-  top: 60%;
+
+  /* LEFT OFFSET:
+     - Increase 'left' to move icon RIGHT
+     - Decrease 'left' to move icon closer to the edge (LEFT) */
+  left: 12px;  /* <--- main control for icon's left offset */
+
+  top: 50%;
   transform: translateY(-50%);
   font-size: 14px;
   color: #6b7280;
@@ -242,7 +275,7 @@ input:focus {
 /* buttons */
 .btn-primary {
   width: 100%;
-  padding: 9px 12px;
+  padding: 10px 14px;
   border-radius: 999px;
   border: 1px solid #4b5563;
   cursor: pointer;
@@ -261,11 +294,9 @@ input:focus {
 
 /* More appealing CTA styling */
 .btn-primary.accent {
-  padding: 12px 16px;
-  font-size: 15px;
   background: radial-gradient(circle at 0 0, #38bdf8 0, #2563eb 40%, #1d4ed8 70%, #020617 100%);
   box-shadow:
-    0 0 24px rgba(37,99,235,0.7),
+    0 0 22px rgba(37,99,235,0.75),
     0 14px 30px rgba(0,0,0,1);
 }
 .btn-primary.accent:hover {
@@ -282,6 +313,7 @@ input:focus {
     0 10px 20px rgba(0,0,0,1);
 }
 
+/* Show + animate login */
 .show-login {
   display: block !important;
   animation: cardInLogin 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -296,8 +328,6 @@ input:focus {
   .circle-login {
     width: 320px;
     height: 320px;
-    padding: 24px 22px;
-    transform: translate(4px, 3px); /* proportionally smaller nudge on mobile */
   }
 }
 </style>
@@ -321,35 +351,37 @@ input:focus {
 
   <!-- Circular login (inline) -->
   <div id="loginView" class="circle-login">
-    <div class="circle-header">
-      <div class="logo-pill">S</div>
-      <div class="login-title">Welcome back</div>
-    </div>
-
-    <div class="glow-line"></div>
-
-    <div class="form">
-      <div class="input-wrap">
-        <span class="input-icon">👤</span>
-        <input
-          id="userName"
-          type="text"
-          placeholder="Your name"
-        />
+    <div class="circle-inner">
+      <div class="circle-header">
+        <div class="logo-pill">S</div>
+        <div class="login-title">Welcome back</div>
       </div>
 
-      <div class="input-wrap">
-        <span class="input-icon">✉️</span>
-        <input
-          id="userEmail"
-          type="email"
-          placeholder="you@example.com"
-        />
-      </div>
+      <div class="glow-line"></div>
 
-      <button class="btn-primary accent" type="button" onclick="saveProfileAndEnter()">
-        Continue to services
-      </button>
+      <div class="form">
+        <div class="input-wrap">
+          <span class="input-icon">👤</span>
+          <input
+            id="userName"
+            type="text"
+            placeholder="Your name"
+          />
+        </div>
+
+        <div class="input-wrap">
+          <span class="input-icon">✉️</span>
+          <input
+            id="userEmail"
+            type="email"
+            placeholder="you@example.com"
+          />
+        </div>
+
+        <button class="btn-primary accent" type="button" onclick="saveProfileAndEnter()">
+          Continue to services
+        </button>
+      </div>
     </div>
   </div>
 
