@@ -6,6 +6,29 @@
 <title>SpotSure – Discover. Decide. Trust.</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
+<!-- Preload background image for faster first paint -->
+<link
+  rel="preload"
+  as="image"
+  href="/images/bg1.jpg"
+  imagesrcset="/images/bg1.jpg 1x"
+  imagesizes="100vw"
+/>
+
+<!-- Preconnect + preload for Lottie animation and player -->
+<link rel="preconnect" href="https://lottie.host" crossorigin>
+<link
+  rel="preload"
+  as="fetch"
+  href="https://lottie.host/c740163e-18f4-4ec5-8da9-aa6bfd4ac5d3/jmImDUCtrs.lottie"
+  crossorigin
+/>
+<link
+  rel="preload"
+  as="script"
+  href="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.10/dist/dotlottie-wc.js"
+/>
+
 <script
   src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.10/dist/dotlottie-wc.js"
   type="module"
@@ -38,7 +61,7 @@ body::before {
   inset: 0;
   pointer-events: none;
   background: url("/images/bg1.jpg") center center / cover no-repeat;
-  opacity: 0.22;              /* was 0.35 – softer background */
+  opacity: 0.22;              /* softer background */
   z-index: -2;
 }
 
@@ -109,6 +132,7 @@ body::after {
   height: 100%;
   opacity: 1;
   filter: none;
+  background: transparent;
 }
 
 /* Text overlaid on the circle */
