@@ -29,7 +29,7 @@ body::before {
   inset: 0;
   pointer-events: none;
   background: url("/images/bg1.jpg") center center / cover no-repeat;
-  opacity: 0.25;           /* was 0.35 – more subtle over same bg1 */
+  opacity: 0.25;
   z-index: -2;
 }
 
@@ -67,7 +67,7 @@ body::after {
 /* TOP BAR */
 .top-bar {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 10px;
   margin-bottom: 16px;
@@ -75,13 +75,25 @@ body::after {
 }
 .top-title-block {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
 }
-.top-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: #f9fafb;
-  margin-bottom: 4px;
+.top-logo-pill {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px rgba(37,99,235,0.8);
+  background: #020617;
+}
+.top-logo-pill img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .top-sub {
   font-size: 12px;
@@ -142,6 +154,7 @@ body::after {
   margin-top: 4px;
 }
 
+/* chip row only; label removed */
 .chip-row {
   display: flex;
   overflow-x: auto;
@@ -213,14 +226,14 @@ body::after {
 .service-card {
   display: flex;
   gap: 12px;
-  background: rgba(15,23,42,0.90);              /* was 0.94 – slightly more glassy */
+  background: rgba(15,23,42,0.90);
   border-radius: 18px;
   padding: 13px;
-  box-shadow: 0 24px 70px rgba(0,0,0,0.95);      /* softened to match login vibe */
+  box-shadow: 0 24px 70px rgba(0,0,0,0.95);
   cursor: pointer;
   border: 1px solid rgba(31,41,55,0.88);
   transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
-  backdrop-filter: blur(20px);                   /* was 18px – tiny bump in blur */
+  backdrop-filter: blur(20px);
 }
 .service-card:hover {
   transform: translateY(-1px);
@@ -301,13 +314,22 @@ body::after {
     padding: 22px 18px 30px;
   }
 }
+
+/* optional small-screen adjustment for nicer stacking */
+@media (max-width: 480px) {
+  .top-bar {
+    align-items: flex-start;
+  }
+}
 </style>
 </head>
 <body>
 <div class="app-shell">
   <header class="top-bar">
     <div class="top-title-block">
-      <div class="top-title">SpotSure</div>
+      <div class="top-logo-pill">
+        <img src="/images/app_icon.jpg" alt="SpotSure icon">
+      </div>
       <div class="top-sub" id="welcomeUserLine"></div>
     </div>
     <div style="display:flex; gap:6px; align-items:center;">
@@ -326,7 +348,7 @@ body::after {
         type="button"
         title="Email SpotSure"
         style="padding:4px 8px; min-width:auto;"
-       onclick="window.location.href='https://mail.google.com/mail/?view=cm&fs=1&to=hajirabibi485@gmail.com'"
+        onclick="window.location.href='https://mail.google.com/mail/?view=cm&fs=1&to=hajirabibi485@gmail.com'"
       >
         ✉️
       </button>
@@ -346,7 +368,7 @@ body::after {
     />
   </section>
 
-  <div class="helper-text">Filter by category</div>
+  <!-- Filter label removed -->
   <div class="chip-row">
     <button class="chip active category-btn" data-category="All">
       <span class="category-icon">⭐</span><span>All</span>
