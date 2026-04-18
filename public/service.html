@@ -592,10 +592,26 @@ function buildNavigationUrl(svc) {
 /* Navigation – open Maps URL in new tab */
 function navigateToService() {
   if (!currentService) return;
-  const url = buildNavigationUrl(currentService);
-  window.open(url, '_blank');
-}
 
+  const parts = [];
+  if (currentService.address) parts.push(currentService.address);
+  else {
+    if (currentService.name) parts.push(currentService.name);
+    if (currentService.city) parts.push(currentService.city);
+    if (currentService.pincode) parts.push(currentService.pincode);
+  }
+
+  const query = parts.join(', ');
+
+  // If Kodular bridge exists, send a message to the app
+  if (window.Kodular && typeof window.Kodular.setWebViewString === 'function') {
+    window.Kodular.setWebViewString('NAVIGATE:' + query);
+  } else {
+    // Fallback for normal browser (desktop) – open in maps web
+    const url = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(query);
+    window.open(url, '_blank');
+  }
+}
 async function loadCurrentUser() {
   try {
     const res = await fetch(API_BASE + '/auth/me', {
